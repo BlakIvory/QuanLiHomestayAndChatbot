@@ -35,7 +35,7 @@ class UserService {
 
   async register(payload) {
     const JWTtoken = jwt.sign({phone: payload.phone,password: payload.password},process.env.SECRET_KEY,{expiresIn:'1d'})
-    console.log(JWTtoken)
+    // console.log(JWTtoken)
     const input = {
       "name" : payload.name,
       "phone" : payload.phone,

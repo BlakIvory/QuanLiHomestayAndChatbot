@@ -12,21 +12,21 @@ exports.register = async (req, res, next) => {
   console.log(req.body)
   try {
     if (!name || !email || !password || !phone || !address){
-      return res.status(400).json({ err: 1, msg: "Thông tin không được để trống !" })
+      return res.status(200).json({ err: 1, msg: "Thông tin không được để trống !" })
     }
     const userService = new UserService(MongoDB.client);
     const isRegisted = await userService.check({"phone" : req.body.phone})
     // console.log(isRegisted)
     if(isRegisted!=0){ 
-      return res.status(504).json({
+      return res.send(200,{
         err : -1,
         msg : "Tài khoản đã được tạo trước đó !"
-      }); 
-    }
+      })
+    } 
     else { 
       const document = await userService.register(req.body);
-      return res.status(200).json({msg : "Tạo tài khoản thành công ",
-    data : document
+      return res.status(200).json({err:0,msg : "Tạo tài khoản thành công ",
+        data : document
     } );
     }
   } catch (error) {
@@ -40,13 +40,13 @@ exports.login = async (req, res, next) => {
   const {  phone, password   } = req.body;
   try {
     if ( !password || !phone ){
-      return res.status(400).json({ err: 1, msg: "Thông tin không được để trống !" })
+      return res.status(200).json({ err: 1, msg: "Thông tin không được để trống !" })
     }
     const userService = new UserService(MongoDB.client);
     const isRegisted = await userService.check({"phone" : req.body.phone})
     // console.log(isRegisted)
     if(!isRegisted[0]){ 
-      return res.status(504).json({
+      return res.status(200).json({
         err : -1,
         msg : " Tài khoản không tồn tại !"
       }); 
