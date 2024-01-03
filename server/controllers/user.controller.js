@@ -4,206 +4,68 @@ const MongoDB = require("../utils/mongodb.util");
 // import { Jwt } from "jsonwebtoken";
 
 const jwt = require('jsonwebtoken');
-const bcrypt = require('bcryptjs')
+const bcrypt =  require ("bcrypt");
 
 
 exports.register = async (req, res, next) => {
+  const { name, email, password, phone , address } = req.body;
+  console.log(req.body)
   try {
+    if (!name || !email || !password || !phone || !address){
+      return res.status(400).json({ err: 1, msg: "Thông tin không được để trống !" })
+    }
     const userService = new UserService(MongoDB.client);
-    const document = await userService.register(req.body);
-    return res.send(document);
+    const isRegisted = await userService.check({"phone" : req.body.phone})
+    // console.log(isRegisted)
+    if(isRegisted!=0){ 
+      return res.status(504).json({
+        err : -1,
+        msg : "Tài khoản đã được tạo trước đó !"
+      }); 
+    }
+    else { 
+      const document = await userService.register(req.body);
+      return res.status(200).json({msg : "Tạo tài khoản thành công ",
+    data : document
+    } );
+    }
   } catch (error) {
     // console.log(error)
-    return next(new ApiError(500, "An error occurred while creating the User"));
+    return next(new ApiError(500, "Xảy ra lỗi trong quá trình Tạo tài khoản !"));
   }
 };
 
 exports.login = async (req, res, next) => {
-  //  console.log(req.body)
-  let documents = [];
-  try {
-    const userService = new UserService(MongoDB.client);
-    documents = await userService.check(req.body);
-    if (documents.length >= 1) {
-      return res.send(documents);
-    } else {
-      return next(new ApiError(201, "Sai tai khoản hoặc mật khẩu"));
-    }
-  } catch (error) {
-    return next(new ApiError(500, "An error occurred while retrieving Users"));
-  }
-};
-
-exports.getAllOrderProduct = async (req, res) => {
-  // console.log(req.body);
-  try {
-    const userService = new UserService(MongoDB.client);
-    // const message = "Thêm vào giỏ hàng thành công !";
-    const data = await userService.check(req.body);
-    // console.log(data[0].giohang);
-    const result = {
-      products: data[0].giohang,
-      message: "Tìm kiếm thành công !",
-    };
-    return res.send(result);
-  } catch (error) {
-    console.log(error);
-  }
-};
-exports.orderProduct = async (req, res) => {
-  // console.log(req.body);
-  try {
-    if (req.body.quality != 0) {
-      const userService = new UserService(MongoDB.client);
-      const message = "Thêm vào giỏ hàng thành công !";
-      const data = await userService.orderProduct(req.body);
-      const result = {
-        data: data,
-        message: message,
-      };
-      // console.log(result)
-      return res.send(result);
-    }
-  } catch (error) {
-    console.log(error);
-  }
-};
-
-exports.Order = async (req, res) => {
-  // console.log(req.body);
-  try {
-    const userService = new UserService(MongoDB.client);
-    let message = "";
-    const data = await userService.order(req.body);
-    if (!data) {
-      const result = {
-        message: "Đặt hàng không thành công !",
-      };
-      // console.log(result);
-      return res.send(result);
-    } else {
-      const result = {
-        data: data,
-        message: "Đặt hàng thành công !",
-      };
-      // console.log(result);
-      return res.send(result);
-    }
-  } catch (error) {
-    console.log(error);
-  }
-};
-
-exports.deleteOrderProduct = async (req, res) => {
-  // console.log(req.body);
-  try {
-    const userService = new UserService(MongoDB.client);
-
-    const data = await userService.deleteOrderProduct(req.body);
-    if (data) {
-      const result = {
-        data: data,
-        message: "Xóa Thành Công !",
-      };
-      // console.log(result)
-      return res.send(result);
-    } else {
-    }
-    const result = {
-      message: "Xóa Không Thành Công !",
-    };
-    // console.log(result)
-    return res.send(result);
-  } catch (error) {
-    console.log(error);
-  }
-};
-
-exports.deleteAllOrderProduct = async (req, res) => {
-  // console.log(req.body);
-  try {
-    const userService = new UserService(MongoDB.client);
-
-    const data = await userService.deleteAllOrderProduct(req.body);
-    if (data) {
-      const result = {
-        data: data,
-        message: "Xóa Thành Công !",
-      };
-      // console.log(result)
-      return res.send(result);
-    } else {
-      const result = {
-        message: "Xóa Không Thành Công !",
-      };
-      // console.log(result)
-      return res.send(result);
-    }
-  } catch (error) {
-    console.log(error);
-  }
-};
-
-exports.getUserOrder = async (req, res) => {
-  // console.log(req.body);
-  // return res.send("req.body");
-  try {
-    const userService = new UserService(MongoDB.client);
-
-    const data = await userService.check(req.body);
-    if (data) {
-      const result = {
-        data: data[0].order,
-        message: "Tìm Thành Công !",
-      };
-      // console.log(result)
-      return res.send(result);
-    } else {
-      const result = {
-        message: "Tìm kiếm Không Thành Công !",
-      };
-      // console.log(result)
-      return res.send(result);
-    }
-  } catch (error) {
-    console.log(error);
-  }
-};
-
-exports.getAllUserOrder = async (req, res) => {
-  try {
-    
-    const userService = new UserService(MongoDB.client);
-
-    const result = await userService.check({});
-    return res.send(result);
-  } catch (error) {
-    console.log(error);
-  }
-};
-
-exports.confirmUserOrder = async (req, res) => {
   // console.log(req.body)
+  const {  phone, password   } = req.body;
   try {
-    const userService = new UserService(MongoDB.client);
-
-    const data = await userService.comfirmUserOrderProduct(req.body);
-    let result;
-    let status;
-    if (data.modifiedCount > 0) {
-      result = {
-        status: "1",
-        message: "Xác Nhận Đơn hàng thành Công!!!",
-      };
-    } else {
-      result = {
-        status: "0",
-        message: "Xác Nhận Đơn hàng KHÔNG thành Công!!!",
-      };
+    if ( !password || !phone ){
+      return res.status(400).json({ err: 1, msg: "Thông tin không được để trống !" })
     }
+    const userService = new UserService(MongoDB.client);
+    const isRegisted = await userService.check({"phone" : req.body.phone})
+    // console.log(isRegisted)
+    if(!isRegisted[0]){ 
+      return res.status(504).json({
+        err : -1,
+        msg : " Tài khoản không tồn tại !"
+      }); 
+    }
+    else {
+      const isCorrect = bcrypt.compareSync(req.body.password, isRegisted[0].password)
+      const token = isCorrect && jwt.sign({password: isRegisted[0].password, phone: isRegisted[0].phone}, process.env.SECRET_KEY,{expiresIn:'1d'}) 
+    
+      const result = {
+        err : isCorrect ? 0 : 2,
+        msg : isCorrect ? "Đăng nhập thành công !" : "Sai mật Khẩu",
+        token : token || null,
+      }
+      return res.status(200).json(result)
 
-    return res.send(result);
+    }
+   
   } catch (error) {
-    console.log(error);
+    // console.log(error)
+    return next(new ApiError(500, "Xảy ra lỗi trong quá trình đăng nhập vào hệ thống !"));
   }
 };
