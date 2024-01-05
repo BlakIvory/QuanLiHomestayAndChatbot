@@ -2,17 +2,20 @@ const express = require("express");
 const cors = require("cors");
 
 const userRouter = require("./routers/user.route");
+const adminRouter = require("./routers/admin.route");
 
 const ApiError = require("./api-error");
 
 const app = express(); 
+
 app.use(cors());
 app.use(express.json());
 
 app.use("/api/user", userRouter);
+app.use("/api/admin", adminRouter);
 
 app.get("/", (req, res) => {
-    res.json({message: "Welcome to contact book application."});
+    res.json({message: "Welcome to website book homestay."});
 });
 app.use((req, res, next) => {
     return next(new ApiError(404, "Resource not found"));

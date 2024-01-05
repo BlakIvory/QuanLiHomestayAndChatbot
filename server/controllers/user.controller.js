@@ -58,7 +58,7 @@ exports.login = async (req, res, next) => {
       const result = {
         err : isCorrect ? 0 : 2,
         msg : isCorrect ? "Đăng nhập thành công !" : "Sai mật Khẩu",
-        phoneUser : isRegisted[0].phone,
+        User : isRegisted[0],
         token : token || null,
       }
       return res.status(200).json(result)
@@ -73,9 +73,12 @@ exports.login = async (req, res, next) => {
 
 
 exports.infoUser = async (req, res, next) => {
-  // console.log(req.body)
+  console.log(req.body)
   try{
-       
+    const userService = new UserService(MongoDB.client);
+    const infoUser = await userService.check({"phone" : req.body.phone})
+    // console.log(infoUser)
+    return res.send(infoUser[0])
   } catch (error) {
     // console.log(error)
     return next(new ApiError(500, "Xảy ra lỗi trong quá trình đăng nhập vào hệ thống !"));

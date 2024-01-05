@@ -5,7 +5,7 @@ export const apiRegister = (payload) => new Promise(async(resolve, reject)=>{
         
         const response = await axiosConfig({
             method: 'post',
-            url: '/user/register',
+            url: '/admin/register',
             data: payload
         })
         resolve(response)
@@ -19,7 +19,7 @@ export const apiLogin = (payload) => new Promise(async(resolve, reject)=>{
         
         const response = await axiosConfig({
             method: 'post',
-            url: '/user/login',
+            url: '/admin/login',
             data: payload
         })
         resolve(response)
@@ -33,7 +33,7 @@ export const apiInfoUser = (payload) => new Promise(async(resolve, reject)=>{
         console.log(payload)
         const response = await axiosConfig({
             method: 'post',
-            url: '/user/info',
+            url: '/admin/info',
             params: payload
         })
         resolve(response)

@@ -1,30 +1,33 @@
 const ApiError = require("../api-error");
-const UserService = require("../services/user.service");
+const AdminService = require("../services/admin.service");
 const MongoDB = require("../utils/mongodb.util");
 // import { Jwt } from "jsonwebtoken";
 
 const jwt = require('jsonwebtoken');
-const bcrypt = require('bcryptjs')
+const bcrypt =  require ("bcrypt");
 
 
 exports.register = async (req, res, next) => {
   const { name, email, password, phone , address } = req.body;
+  console.log(req.body)
   try {
     if (!name || !email || !password || !phone || !address){
-      return res.status(400).json({ err: 1, msg: "Thông tin không được để trống !" })
+      return res.status(200).json({ err: 1, msg: "Thông tin không được để trống !" })
     }
-    const userService = new UserService(MongoDB.client);
-    const isRegisted = await userService.check({"phone" : req.body.phone})
+    const adminService = new AdminService(MongoDB.client);
+    const isRegisted = await adminService.check({"phone" : req.body.phone})
     // console.log(isRegisted)
     if(isRegisted!=0){ 
-      return res.status(504).json({
+      return res.send(200,{
         err : -1,
         msg : "Tài khoản đã được tạo trước đó !"
-      }); 
-    }
+      })
+    } 
     else { 
-      const document = await userService.register(req.body);
-      return res.status(200).json("Tạo tài khoản thành công " + document);
+      const document = await adminService.register(req.body);
+      return res.status(200).json({err:0,msg : "Tạo tài khoản thành công ",
+        data : document
+    } );
     }
   } catch (error) {
     // console.log(error)
@@ -33,17 +36,51 @@ exports.register = async (req, res, next) => {
 };
 
 exports.login = async (req, res, next) => {
-  //  console.log(req.body)
-  let documents = [];
+  // console.log(req.body)
+  const {  phone, password   } = req.body;
   try {
-    const userService = new UserService(MongoDB.client);
-    documents = await userService.check(req.body);
-    if (documents.length >= 1) {
-      return res.send(documents);
-    } else {
-      return next(new ApiError(201, "Sai tai khoản hoặc mật khẩu"));
+    if ( !password || !phone ){
+      return res.status(200).json({ err: 1, msg: "Thông tin không được để trống !" })
     }
+    const adminService = new AdminService(MongoDB.client);
+    const isRegisted = await adminService.check({"phone" : req.body.phone})
+    // console.log(isRegisted[0].phone)
+    if(!isRegisted[0]){ 
+      return res.status(200).json({
+        err : -1,
+        msg : " Tài khoản không tồn tại !"
+      }); 
+    }
+    else {
+      const isCorrect = bcrypt.compareSync(req.body.password, isRegisted[0].password)
+      const token = isCorrect && jwt.sign({password: isRegisted[0].password, phone: isRegisted[0].phone}, process.env.SECRET_KEY,{expiresIn:'1d'}) 
+      
+      const result = {
+        err : isCorrect ? 0 : 2,
+        msg : isCorrect ? "Đăng nhập thành công !" : "Sai mật Khẩu",
+        User : isRegisted[0],
+        token : token || null,
+      }
+      return res.status(200).json(result)
+
+    }
+   
   } catch (error) {
-    return next(new ApiError(500, "An error occurred while retrieving Users"));
+    // console.log(error)
+    return next(new ApiError(500, "Xảy ra lỗi trong quá trình đăng nhập vào hệ thống !"));
+  }
+};
+
+
+exports.infoAdmin = async (req, res, next) => {
+  console.log(req.body)
+  try{
+    const adminService = new AdminService(MongoDB.client);
+    const infoAdmin = await adminService.check({"phone" : req.body.phone})
+    // console.log(infoUser)
+    return res.send(infoAdmin[0])
+  } catch (error) {
+    // console.log(error)
+    return next(new ApiError(500, "Xảy ra lỗi trong quá trình đăng nhập vào hệ thống !"));
   }
 };
