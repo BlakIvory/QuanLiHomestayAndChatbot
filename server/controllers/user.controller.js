@@ -44,7 +44,7 @@ exports.login = async (req, res, next) => {
     }
     const userService = new UserService(MongoDB.client);
     const isRegisted = await userService.check({"phone" : req.body.phone})
-    // console.log(isRegisted)
+    // console.log(isRegisted[0].phone)
     if(!isRegisted[0]){ 
       return res.status(200).json({
         err : -1,
@@ -54,16 +54,28 @@ exports.login = async (req, res, next) => {
     else {
       const isCorrect = bcrypt.compareSync(req.body.password, isRegisted[0].password)
       const token = isCorrect && jwt.sign({password: isRegisted[0].password, phone: isRegisted[0].phone}, process.env.SECRET_KEY,{expiresIn:'1d'}) 
-    
+      
       const result = {
         err : isCorrect ? 0 : 2,
         msg : isCorrect ? "Đăng nhập thành công !" : "Sai mật Khẩu",
+        phoneUser : isRegisted[0].phone,
         token : token || null,
       }
       return res.status(200).json(result)
 
     }
    
+  } catch (error) {
+    // console.log(error)
+    return next(new ApiError(500, "Xảy ra lỗi trong quá trình đăng nhập vào hệ thống !"));
+  }
+};
+
+
+exports.infoUser = async (req, res, next) => {
+  // console.log(req.body)
+  try{
+       
   } catch (error) {
     // console.log(error)
     return next(new ApiError(500, "Xảy ra lỗi trong quá trình đăng nhập vào hệ thống !"));
