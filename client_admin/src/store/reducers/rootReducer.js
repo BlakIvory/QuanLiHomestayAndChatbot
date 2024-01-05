@@ -1,5 +1,4 @@
 import authReducer from "./authReducer";
-import userReducer from "./userReducer";
 
 import { combineReducers } from "redux";
 
@@ -21,7 +20,6 @@ const authConfig = {
 
 const rootReducer = combineReducers({
     auth : persistReducer(authConfig, authReducer),
-    user : userReducer
 })
 
 export default rootReducer

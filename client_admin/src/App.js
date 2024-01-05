@@ -1,19 +1,20 @@
-import { Route, Routes } from "react-router-dom";
+import "./App.css"
 
-import { Home, Login, Register } from "./containers/Public";
-
-import { path } from "./ultils/constant";
+import AppHeader from "./components/AppHeader";
+import AppFooter from "./components/AppFooter";
+import SideMenu from "./components/SideMenu";
+import PageContent from "./components/PageContent";
+import { Space } from "antd";
 
 function App() {
   return (
-    <div className="h-screen w-full bg-primary ">
-      <Routes>
-        <Route path={path.HOME} element={<Home />}>
-          <Route path={path.LOGIN} element={<Login />}></Route>
-          <Route path={path.REGISTER} element={<Register />}></Route>
-        </Route>
-        {/* <Route path=""></Route> */}
-      </Routes>
+    <div className=" App bg-primary ">
+        <AppHeader></AppHeader>
+        <Space className="SideMenuAndPageContent">
+          <SideMenu></SideMenu>
+          <PageContent></PageContent>
+        </Space>
+        <AppFooter></AppFooter>
     </div>
   );
 }
