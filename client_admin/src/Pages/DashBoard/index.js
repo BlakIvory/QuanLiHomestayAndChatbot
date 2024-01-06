@@ -1,5 +1,5 @@
 import { DollarCircleOutlined, ShoppingCartOutlined, ShoppingOutlined, UserOutlined } from '@ant-design/icons'
-import { Card, Space, Statistic, Table, Typography } from 'antd'
+import { Avatar, Card, Space, Statistic, Table, Typography } from 'antd'
 import React, { useEffect, useState } from 'react'
 import  { getOrders, getRevenue } from '../../API'
 
@@ -26,7 +26,7 @@ import {Bar} from 'react-chartjs-2'
 const DashBoard = () => {
 
     const [orders, setOrders] = useState(0)
-    const [Inventor, setInventor] = useState(0)
+    const [inventor, setInventor] = useState(0)
     const [customer, setcustomer] = useState(0)
     const [revenue, setRevenue] = useState(0)
 
@@ -57,7 +57,7 @@ const DashBoard = () => {
                             padding: 8,
                         }} />}
                     title={"Inventor"}
-                    value={Inventor} >
+                    value={inventor} >
                 </DashBoardCard>
                 <DashBoardCard
                     icon={<UserOutlined style={{

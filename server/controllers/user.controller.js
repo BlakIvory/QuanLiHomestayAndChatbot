@@ -1,5 +1,5 @@
 const ApiError = require("../api-error");
-const UserService = require("../services/user.service");
+const UserService = require("../services/user/user.service");
 const MongoDB = require("../utils/mongodb.util");
 // import { Jwt } from "jsonwebtoken";
 

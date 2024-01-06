@@ -20,7 +20,7 @@ class AdminService {
 
   async check(filter) {
     // console.log( filter.email);
-    const cursor = await this.admin.find(filter);
+    const cursor = await this.Admin.find(filter);
     return await cursor.toArray();
   }
 

@@ -1,11 +1,10 @@
 const ApiError = require("../api-error");
-const AdminService = require("../services/admin.service");
+const AdminService = require("../services/admin/admin.service");
+const SectorService  = require("../services/sector/sector.service"); 
 const MongoDB = require("../utils/mongodb.util");
-// import { Jwt } from "jsonwebtoken";
-
 const jwt = require('jsonwebtoken');
 const bcrypt =  require ("bcrypt");
-
+const multer = require("multer");
 
 exports.register = async (req, res, next) => {
   const { name, email, password, phone , address } = req.body;
@@ -84,3 +83,32 @@ exports.infoAdmin = async (req, res, next) => {
     return next(new ApiError(500, "Xảy ra lỗi trong quá trình đăng nhập vào hệ thống !"));
   }
 };
+
+
+exports.addSector = async (req, res, next) => {
+  // console.log(req.body)
+  // console.log(req.file);
+  try{
+
+    const sectorService = new SectorService(MongoDB.client);
+    const isInvalids = await sectorService.check({"nameSector" : req.body.nameSector});
+    if(isInvalids.length >0) return res.send({status :1 ,msg: "Đã tồn tại khu vực có cùng tên !"})
+    if(isInvalids.length ==0 ){
+      const input = {
+        nameSector: req.body.nameSector,
+        discSector : req.body.discSector,
+        noteSector : req.body.noteSector,
+        imgSector : req.file
+      }
+      console.log(input)
+      const result = await sectorService.addSectorService(input)
+      return res.send({
+        status :0 ,msg: "Tạo Khu vực thành công !"
+      })
+    } 
+  } catch (error) {
+    // console.log(error)
+    return next(new ApiError(500, "Xảy ra lỗi trong quá trình tạo khu vực !"));
+  }
+};
+
