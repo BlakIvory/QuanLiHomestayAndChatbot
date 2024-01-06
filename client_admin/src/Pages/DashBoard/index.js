@@ -23,13 +23,13 @@ import {Bar} from 'react-chartjs-2'
         Legend,
     )
 
-
-
-
-
-
-
 const DashBoard = () => {
+
+    const [orders, setOrders] = useState(0)
+    const [Inventor, setInventor] = useState(0)
+    const [customer, setcustomer] = useState(0)
+    const [revenue, setRevenue] = useState(0)
+
     return (
         <Space size={20} direction='vertical'>
         <Typography.Title level={4}> DashBoard</Typography.Title>
@@ -45,7 +45,7 @@ const DashBoard = () => {
                         }}
                     />}
                     title={"Orders"}
-                    value={12234} >
+                    value={orders} >
                 </DashBoardCard>
                 <DashBoardCard
                     icon={<ShoppingOutlined
@@ -57,7 +57,7 @@ const DashBoard = () => {
                             padding: 8,
                         }} />}
                     title={"Inventor"}
-                    value={12234} >
+                    value={Inventor} >
                 </DashBoardCard>
                 <DashBoardCard
                     icon={<UserOutlined style={{
@@ -68,7 +68,9 @@ const DashBoard = () => {
                         padding: 8,
                     }} />}
                     title={"Customers"}
-                    value={12234} />
+                    value={customer} >
+
+                    </DashBoardCard>
                 <DashBoardCard
                     icon={<DollarCircleOutlined
                         style={{
@@ -78,8 +80,8 @@ const DashBoard = () => {
                             fontSize: 24,
                             padding: 8,
                         }} />}
-                    title={"Reventue"}
-                    value={12234} >
+                    title={"Revenue"}
+                    value={revenue} >
 
                 </DashBoardCard>
 
@@ -122,8 +124,9 @@ const RecentOrder = () => {
         })
     }, [])
 
+    // console.log(dataSource)
     return (
-        <>
+        <div>
         <Typography.Text>Recent Orders</Typography.Text>
         <Table
             columns={[
@@ -140,12 +143,13 @@ const RecentOrder = () => {
                     dataIndex: 'discountedPrice',
                 },
             ]}
-            pagination={false}
+           
             loading={loading}
             dataSource={dataSource}
+            pagination={false}
         >
         </Table>
-        </>
+        </div>
     )
 }
 
@@ -172,7 +176,7 @@ const DashBoardChart = ()=>{
                   {
                     label: 'Revenue',
                     data: data,
-                    backgroundColor: 'rgba(255, 99, 132, 0.5)',
+                    backgroundColor: 'rgba(255, 0, 0, 1)',
                   },
                 ],
               };
@@ -194,24 +198,6 @@ const DashBoardChart = ()=>{
         }
     };
 
-
-    // const labels = ['January', 'February', 'March', 'April', 'May', 'June', 'July'];
-
-    // const data = {
-    //   labels,
-    //   datasets: [
-    //     {
-    //       label: 'Dataset 1',
-    //       data: labels.map(() => Math.random()*10000),
-    //       backgroundColor: 'rgba(255, 99, 132, 0.5)',
-    //     },
-    //     {
-    //       label: 'Dataset 2',
-    //       data: labels.map(() => Math.random()*10000),
-    //       backgroundColor: 'rgba(53, 162, 235, 0.5)',
-    //     },
-    //   ],
-    // };
     return ( 
         <Card style={{
             width:500,
