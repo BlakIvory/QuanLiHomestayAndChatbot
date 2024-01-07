@@ -1,7 +1,7 @@
 import React,{ useEffect, useState } from 'react'
 import { Avatar, Rate, Space, Table, Typography } from 'antd'
 import { getInventory } from '../../api'
-
+import { EditOutlined, DeleteOutlined ,UnorderedListOutlined} from '@ant-design/icons'
 const Sector = () => {
   const [loading, setLoading] = useState(false)
   const [dataSource, setDataSource] = useState([])
@@ -60,6 +60,14 @@ const Sector = () => {
           {
             title: 'Category',
             dataIndex: 'category',
+          },
+          {
+            title: 'Chỉnh sửa',
+
+            render: (text) => <div className='flex justify-between'>
+              <UnorderedListOutlined  className='m-1 flex items-center justify-center'  style={{ fontSize: '20px', color: 'green' ,  }} onClick={() => { console.log(text) }} />
+              <EditOutlined className='m-1 flex items-center justify-center'  style={{ fontSize: '20px', color: 'green' ,  }} onClick={() => { console.log(text) }} /> 
+              <DeleteOutlined className='m-1 flex items-center justify-center' style={{ fontSize: '20px', color: 'red' }} onClick={() => { console.log(text) }} /></div>
           },
         ]}
         dataSource={dataSource}

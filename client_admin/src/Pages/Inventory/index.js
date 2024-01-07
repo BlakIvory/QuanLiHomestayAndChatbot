@@ -61,6 +61,7 @@ const Inventory = () => {
             title: 'Category',
             dataIndex: 'category',
           },
+          
         ]}
         dataSource={dataSource}
         pagination={{

@@ -7,7 +7,7 @@ import { useNavigate } from 'react-router-dom';
 const SideMenu = () => {
   const navigate = useNavigate()
   return (
-    <div className='SideMenu w-[250px]  '>
+    <div className='SideMenu   '>
      <Menu 
      className='bg-primary'
      onClick={(item)=>{
@@ -16,7 +16,7 @@ const SideMenu = () => {
       navigate(item.key)
      }}
      items={[
-      {label : "DashBoard",
+      {label : "Quản Lý DashBoard",
       icon : <AppstoreOutlined/>,
       key : "/",
     },
@@ -24,19 +24,19 @@ const SideMenu = () => {
       key : "/inventory",
       icon : <ShopFilled/>,
     },
-    {label : "Orders",
+    {label : "Quản Lý Đặt Phòng",
       key : "/orders",
       icon : <ShoppingCartOutlined></ShoppingCartOutlined>
     },
-    {label : "Customers",
+    {label : "Quản Lý Tài Khoản",
       key : "/customers",
       icon : <UserOutlined></UserOutlined>
     },
-    {label : "Khu Vực",
+    {label : "Quản Lý Khu Vực",
       key : "/sectors",
       icon : <MenuFoldOutlined></MenuFoldOutlined>
     },
-    {label : "Phòng",
+    {label : "Quản Lý Phòng",
       key : "/rooms",
       icon : <HomeOutlined />
     }
