@@ -1,6 +1,7 @@
 const ApiError = require("../api-error");
 const AdminService = require("../services/admin/admin.service");
 const SectorService  = require("../services/sector/sector.service"); 
+const RoomService = require("../services/room/room.service");
 const MongoDB = require("../utils/mongodb.util");
 const jwt = require('jsonwebtoken');
 const bcrypt =  require ("bcrypt");
@@ -112,3 +113,51 @@ exports.addSector = async (req, res, next) => {
   }
 };
 
+
+exports.getAllSector = async (req, res, next) => {
+  try{
+    const sectorService = new SectorService(MongoDB.client);
+    const data = await sectorService.check();
+    const result = {
+      sectors: data,
+      length: data.length,
+    }
+    if(result){
+      return res.status(200).json(result);
+    }else{
+      return res.send("Đã xảy ra lỗi")
+    }
+    
+  } catch (error) {
+    // console.log(error)
+    return next(new ApiError(500, "Xảy ra lỗi trong quá trình tạo khu vực !"));
+  }
+};
+
+
+
+exports.addRoom = async (req, res, next) => {
+  // console.log(req.files)
+  try{
+    const inputData = {
+      nameRoom: req.body.nameRoom,
+      idSectorRoom : req.body.idSectorRoom,
+      giaRoom : req.body.giaRoom,
+      loaiRoom : req.body.loaiRoom,
+      imgRoom: req.files
+    }
+
+    const roomService = new RoomService(MongoDB.client);
+    const result = await roomService.addRoom(inputData);
+    if(result){
+      return res.status(200).json(result);
+    }
+    // else{
+    //   return res.send("Đã xảy ra lỗi")
+    // }
+    
+  } catch (error) {
+    // console.log(error)
+    return next(new ApiError(500, "Xảy ra lỗi trong quá trình tạo phong !"));
+  }
+};

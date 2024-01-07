@@ -4,14 +4,6 @@ const instance = axios.create({
     baseURL: process.env.REACT_APP_SERVER_URL
 })
 
-// instance.interceptors.request.use( function (config) {
-//     const token = localStorage.getItem('persist:auth')
-//     return config;
-// }, function (error){
-//     console.log(error)
-//     return Promise.reject(error);
-// })
-
 // Add a request interceptor
 instance.interceptors.request.use(function (config) {
     // Do something before request is sent

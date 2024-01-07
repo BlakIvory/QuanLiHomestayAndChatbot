@@ -25,4 +25,9 @@ router.post('/addSector',upload.single('imgSector'), admins.addSector);
 
 // router.post("/test", admins.testAddIMG);
 
+router.get("/getAllSector", admins.getAllSector);
+
+router.post('/addRoom',upload.array('imgRoom',3), admins.addRoom);
+
+
 module.exports = router;

@@ -18,7 +18,7 @@ class SectorService {
     }
 
     async check(filter) {
-        console.log(filter);
+        // console.log(filter);
         const cursor = await this.Sector.find(filter);
         return await cursor.toArray();
     }
@@ -34,6 +34,9 @@ class SectorService {
         return result;
     }
 
+
+
+
     async addRoomToSectorService(payload) {
           console.log(payload)
         const setor = await this.extractSectorData(payload);
@@ -44,20 +47,6 @@ class SectorService {
         );
         return result;
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 }

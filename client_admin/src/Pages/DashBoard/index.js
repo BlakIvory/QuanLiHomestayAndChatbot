@@ -1,8 +1,8 @@
 import { DollarCircleOutlined, ShoppingCartOutlined, ShoppingOutlined, UserOutlined } from '@ant-design/icons'
 import { Avatar, Card, Space, Statistic, Table, Typography } from 'antd'
 import React, { useEffect, useState } from 'react'
-import  { getOrders, getRevenue } from '../../API'
-
+import  { getOrders, getRevenue } from '../../api'
+import * as api from '../../api'
 import { 
     Chart as ChartJS,
     CategoryScale,
@@ -13,6 +13,7 @@ import {
     Legend,
 } from 'chart.js'
 import {Bar} from 'react-chartjs-2'
+import Item from 'antd/es/list/Item'
 
     ChartJS.register(
         CategoryScale,
@@ -23,12 +24,28 @@ import {Bar} from 'react-chartjs-2'
         Legend,
     )
 
+
+
+
 const DashBoard = () => {
 
     const [orders, setOrders] = useState(0)
     const [inventor, setInventor] = useState(0)
     const [customer, setcustomer] = useState(0)
     const [revenue, setRevenue] = useState(0)
+
+    const getAllSector = async ()=>{
+        const result =  await api.apiGetAllSector()
+        // console.log(result.data.data.length)
+        const lengthdata = result.data.data.length
+        // console.log(lengthdata)
+        setInventor(lengthdata)
+        return lengthdata
+    }
+    useEffect(  ()=>{
+         getAllSector()
+    
+    },[])
 
     return (
         <Space size={20} direction='vertical'>
@@ -124,7 +141,6 @@ const RecentOrder = () => {
         })
     }, [])
 
-    // console.log(dataSource)
     return (
         <div>
         <Typography.Text>Recent Orders</Typography.Text>
@@ -143,7 +159,7 @@ const RecentOrder = () => {
                     dataIndex: 'discountedPrice',
                 },
             ]}
-           
+      
             loading={loading}
             dataSource={dataSource}
             pagination={false}

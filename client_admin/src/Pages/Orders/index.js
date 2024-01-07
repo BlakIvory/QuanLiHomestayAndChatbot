@@ -1,6 +1,6 @@
 import React,{ useEffect, useState } from 'react'
 import { Avatar, Rate, Space, Table, Typography } from 'antd'
-import { getInventory, getOrders } from '../../API'
+import { getInventory, getOrders } from '../../api'
 
 const Orders = () => {
   const [loading, setLoading] = useState(false)
