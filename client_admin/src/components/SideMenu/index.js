@@ -1,5 +1,5 @@
 import { Menu } from 'antd'
-import { AppstoreOutlined, ShopFilled, ShoppingCartOutlined, UserOutlined } from '@ant-design/icons';
+import { AppstoreOutlined, ShopFilled, ShoppingCartOutlined,HomeOutlined, UserOutlined,MenuFoldOutlined } from '@ant-design/icons';
 
 import React from 'react'
 import { useNavigate } from 'react-router-dom';
@@ -31,6 +31,14 @@ const SideMenu = () => {
     {label : "Customers",
       key : "/customers",
       icon : <UserOutlined></UserOutlined>
+    },
+    {label : "Khu Vực",
+      key : "/sectors",
+      icon : <MenuFoldOutlined></MenuFoldOutlined>
+    },
+    {label : "Phòng",
+      key : "/rooms",
+      icon : <HomeOutlined />
     }
      ]}>
 

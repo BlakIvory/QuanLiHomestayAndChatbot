@@ -1,4 +1,4 @@
-import { DollarCircleOutlined, ShoppingCartOutlined, ShoppingOutlined, UserOutlined } from '@ant-design/icons'
+import { DollarCircleOutlined, HomeOutlined, MenuFoldOutlined, ShoppingCartOutlined, ShoppingOutlined, UserOutlined } from '@ant-design/icons'
 import { Avatar, Card, Space, Statistic, Table, Typography } from 'antd'
 import React, { useEffect, useState } from 'react'
 import  { getOrders, getRevenue } from '../../api'
@@ -28,7 +28,7 @@ import Item from 'antd/es/list/Item'
 
 
 const DashBoard = () => {
-
+    
     const [orders, setOrders] = useState(0)
     const [inventor, setInventor] = useState(0)
     const [customer, setcustomer] = useState(0)
@@ -36,22 +36,41 @@ const DashBoard = () => {
 
     const getAllSector = async ()=>{
         const result =  await api.apiGetAllSector()
-        // console.log(result.data.data.length)
-        const lengthdata = result.data.data.length
+        // console.log(result.data)
+        const lengthdata = result.data.length
         // console.log(lengthdata)
         setInventor(lengthdata)
         return lengthdata
     }
+    const getAllRoom = async ()=>{
+        const result =  await api.apiGetAllRoom()
+        console.log(result.data)
+        const lengthdata = result.data.length
+        // console.log(lengthdata)
+        setRevenue(lengthdata)
+        return lengthdata
+    }
+    const getAllUser = async ()=>{
+        const result =  await api.apiGetAllUser()
+        console.log(result.data)
+        const lengthdata = result.data.length
+        // console.log(lengthdata)
+        setcustomer(lengthdata)
+        return lengthdata
+    }
     useEffect(  ()=>{
-         getAllSector()
-    
+   
+        getAllSector()
+        getAllRoom()
+        getAllUser()
     },[])
 
     return (
-        <Space size={20} direction='vertical'>
+        <Space size={20} direction='vertical'  >
         <Typography.Title level={4}> DashBoard</Typography.Title>
-            <Space direction='horizontal'>
+            <Space direction='horizontal' >
                 <DashBoardCard
+                   
                     icon={<ShoppingCartOutlined
                         style={{
                             color: 'green',
@@ -65,7 +84,7 @@ const DashBoard = () => {
                     value={orders} >
                 </DashBoardCard>
                 <DashBoardCard
-                    icon={<ShoppingOutlined
+                    icon={<MenuFoldOutlined
                         style={{
                             color: 'purplr',
                             backgroundColor: 'rgba(0,255,255,0.25)',
@@ -73,8 +92,22 @@ const DashBoard = () => {
                             fontSize: 24,
                             padding: 8,
                         }} />}
-                    title={"Inventor"}
+                    title={"Khu Vực"}
                     value={inventor} >
+                </DashBoardCard>
+              
+                <DashBoardCard
+                    icon={<HomeOutlined
+                        style={{
+                            color: 'blue',
+                            backgroundColor: 'rgba(0,0,255,0.25)',
+                            borderRadius: 20,
+                            fontSize: 24,
+                            padding: 8,
+                        }} />}
+                    title={"Phòng"}
+                    value={revenue} >
+
                 </DashBoardCard>
                 <DashBoardCard
                     icon={<UserOutlined style={{
@@ -88,20 +121,6 @@ const DashBoard = () => {
                     value={customer} >
 
                     </DashBoardCard>
-                <DashBoardCard
-                    icon={<DollarCircleOutlined
-                        style={{
-                            color: 'blue',
-                            backgroundColor: 'rgba(0,0,255,0.25)',
-                            borderRadius: 20,
-                            fontSize: 24,
-                            padding: 8,
-                        }} />}
-                    title={"Revenue"}
-                    value={revenue} >
-
-                </DashBoardCard>
-
             </Space>
             <Space>
                 <RecentOrder></RecentOrder>

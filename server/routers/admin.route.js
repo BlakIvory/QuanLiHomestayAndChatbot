@@ -29,5 +29,9 @@ router.get("/getAllSector", admins.getAllSector);
 
 router.post('/addRoom',upload.array('imgRoom',3), admins.addRoom);
 
+router.get("/getAllRoom", admins.getAllRoom);
+
+router.get("/getAllUser", admins.getAllUser);
+
 
 module.exports = router;
