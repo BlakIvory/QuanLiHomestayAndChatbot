@@ -35,15 +35,18 @@ const Inventory = () => {
           {
             title: 'Title',
             dataIndex: 'title',
+            key: 'title',
           },
           {
             title: 'Price',
             dataIndex: 'price',
+            key: 'price',
             render: (value)=> <span>${value}</span>
           },
           {
             title: 'Rating',
             dataIndex: 'rating',
+            key: 'rating',
             render: (rating)=>{
               return <Rate value={rating} allowHalf disabled></Rate>
             }
@@ -51,15 +54,18 @@ const Inventory = () => {
           {
             title: 'Stock',
             dataIndex: 'stock',
+            key: 'stock',
           },
          
           {
             title: 'Brand',
             dataIndex: 'brand',
+            key:'brand'
           },
           {
             title: 'Category',
             dataIndex: 'category',
+            key:'category'
           },
           
         ]}

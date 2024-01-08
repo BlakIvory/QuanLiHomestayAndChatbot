@@ -153,9 +153,9 @@ exports.addRoom = async (req, res, next) => {
     if(result){
       return res.status(200).json(result);
     }
-    // else{
-    //   return res.send("Đã xảy ra lỗi")
-    // }
+    else{
+      return res.send("Đã xảy ra lỗi")
+    }
     
   } catch (error) {
     // console.log(error)

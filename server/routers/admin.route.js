@@ -3,23 +3,14 @@ const admins = require("../controllers/admin.controller");
 const multer = require("multer");
 
 const router = express.Router();
+const fileUploader = require('../config/cloudinary.config');
 
-const storage = multer.diskStorage({
-    destination: function (req, file,cb) {
-        return cb(null,"D://LuanVan/Project/client_admin/src/uploads");
-    },
-    filename: function (req,file,cb) {
-        return cb(null, `${Date.now()}_${file.originalname}`)
-    }
-
-})
-const upload = multer({storage})
 
 router.post("/register", admins.register);
 
 // router.post("/addSector", admins.addSector);
 
-router.post('/addSector',upload.single('imgSector'), admins.addSector);
+router.post('/addSector',fileUploader.single('imgSector'), admins.addSector);
 
 // router.post("/infoAdmin", admins.infoAdmin);
 
@@ -27,7 +18,7 @@ router.post('/addSector',upload.single('imgSector'), admins.addSector);
 
 router.get("/getAllSector", admins.getAllSector);
 
-router.post('/addRoom',upload.array('imgRoom',3), admins.addRoom);
+router.post('/addRoom',fileUploader.array('imgRoom',3), admins.addRoom);
 
 router.get("/getAllRoom", admins.getAllRoom);
 

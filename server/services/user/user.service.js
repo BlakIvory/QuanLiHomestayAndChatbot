@@ -19,6 +19,7 @@ class UserService {
       address : payload.address,
       phone : payload.phone,
       token:payload.token,
+      img:  payload.img,
       isAdmin: payload.isAdmin,
     };
     Object.keys(user).forEach(
@@ -47,7 +48,7 @@ class UserService {
     const user = await this.extractUserData(input);
     const result = await this.User.findOneAndUpdate(
       user,
-      { $set: { isAdmin: true, } },
+      { $set: { isAdmin: true, img:{}} },
       { returnDocument: "after", upsert: true }
     );
     

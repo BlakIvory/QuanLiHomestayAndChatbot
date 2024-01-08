@@ -32,7 +32,7 @@ class RoomService {
         const room = await this.extractRoomData(payload);
         const result = await this.Room.findOneAndUpdate(
             room,
-            { $set: { statusRoom:0, ordersRoom: [],danhgiaRoom : 0,  } },
+            { $set: { statusRoom: 0, ordersRoom: [],danhgiaRoom : 0,  } },
             { returnDocument: "after", upsert: true }
         );
         return result;
