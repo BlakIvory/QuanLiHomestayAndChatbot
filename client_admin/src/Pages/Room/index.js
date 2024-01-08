@@ -1,9 +1,9 @@
 import React, { useEffect, useState, useRef, } from 'react'
-import { Rate, Space, Table, Typography, Image, Button, Input,  } from 'antd'
-import { EditOutlined, DeleteOutlined, UnorderedListOutlined, SearchOutlined } from '@ant-design/icons'
-import {  apiGetAllRoom } from '../../api'
+import { Rate, Space, Table, Typography, Image, Button, Input, } from 'antd'
+import { EditOutlined, DeleteOutlined, UnorderedListOutlined, SearchOutlined, PlusOutlined } from '@ant-design/icons'
+import { apiGetAllRoom } from '../../api'
 import Highlighter from 'react-highlight-words';
-
+import Popup from '../../components/Popup';
 
 const Room = () => {
   const [loading, setLoading] = useState(false)
@@ -12,6 +12,10 @@ const Room = () => {
   const [searchText, setSearchText] = useState('');
   const [searchedColumn, setSearchedColumn] = useState('');
   const searchInput = useRef(null);
+
+  const [showPopup, setShowPopup] = useState(true)
+  const [dataPopup, setDataPopup] = useState('')
+
 
   const handleSearch = (selectedKeys, confirm, dataIndex) => {
     confirm();
@@ -43,7 +47,7 @@ const Room = () => {
         />
         <Space>
           <Button
-            type="primary"
+
             onClick={() => handleSearch(selectedKeys, confirm, dataIndex)}
             icon={<SearchOutlined />}
             size="small"
@@ -63,7 +67,7 @@ const Room = () => {
             Reset
           </Button>
           <Button
-            type="link"
+
             size="small"
             onClick={() => {
               confirm({
@@ -117,15 +121,14 @@ const Room = () => {
       ),
   });
 
-
-
+  
   const columns = [
     {
       title: 'Tên Phòng',
       dataIndex: 'nameRoom',
       key: 'nameRoom',
       ...getColumnSearchProps('nameRoom'),
-      sorter: (a, b) => a.address.length - b.address.length,
+      sorter: (a, b) => a.nameRoom.length - b.nameRoom.length,
       sortDirections: ['descend', 'ascend'],
 
     },
@@ -134,7 +137,7 @@ const Room = () => {
       dataIndex: 'giaRoom',
       key: 'giaRoom',
       render: (value) => <span>{value} vnđ</span>,
-  
+      sorter: (a, b) => a.giaRoom.length - b.giaRoom.length,
     },
     {
       title: 'Loại Phòng',
@@ -169,27 +172,20 @@ const Room = () => {
     },
     {
       title: 'Chỉnh sửa',
-      render: (index) => 
+      render: (index) =>
         <div className='flex justify-between'>
-        <UnorderedListOutlined className='m-1 flex items-center justify-center' style={{ fontSize: '20px', color: 'green', }} onClick={() => { console.log(index) }} />
-        <EditOutlined className='m-1 flex items-center justify-center' style={{ fontSize: '20px', color: 'green', }} onClick={() => { console.log(index) }} />
-        <DeleteOutlined className='m-1 flex items-center justify-center' style={{ fontSize: '20px', color: 'red' }} onClick={() => { console.log(index) }} />
+         
+          <UnorderedListOutlined className='m-1 flex items-center justify-center' style={{ fontSize: '20px', color: 'green', }} onClick={() => {setDataPopup(index); setShowPopup(true) }} />
+          <EditOutlined className='m-1 flex items-center justify-center' style={{ fontSize: '20px', color: 'green', }} onClick={() => { console.log(index) }} />
+          <DeleteOutlined className='m-1 flex items-center justify-center' style={{ fontSize: '20px', color: 'red' }} onClick={() => { console.log(index) }} />
         </div>
-      
+
     },
   ]
-
-
-
-
-
-
-
 
   useEffect(() => {
     setLoading(true)
     apiGetAllRoom().then(res => {
-
       setDataSource(res.data.rooms)
       // console.log(res.data.rooms)
       setLoading(false)
@@ -201,8 +197,17 @@ const Room = () => {
 
   return (
     <div className='p-5'>
+       {showPopup && <Popup dataPopup={dataPopup} setShowPopup={setShowPopup}/>}
       <Space size={20} direction='vertical'>
-        <Typography.Title level={4}>Phòng HomeStay</Typography.Title>
+
+        <div className='flex justify-between'>
+          <Typography.Title level={4}>Phòng HomeStay</Typography.Title>
+          <Button className='bg-primary border text-green'
+            size={40}
+            icon={<PlusOutlined />}
+          >Thêm phòng</Button>
+
+        </div>
         <Table
           loading={loading}
           bordered
@@ -210,10 +215,10 @@ const Room = () => {
           dataSource={dataSource}
           pagination={{
             pageSize: 6,
-      
           }}
         ></Table>
       </Space>
+
     </div>
   )
 }
