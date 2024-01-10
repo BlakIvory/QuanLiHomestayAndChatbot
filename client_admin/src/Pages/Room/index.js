@@ -4,6 +4,7 @@ import { EditOutlined, DeleteOutlined, UnorderedListOutlined, SearchOutlined, Pl
 import { apiGetAllRoom } from '../../api'
 import Highlighter from 'react-highlight-words';
 import Popup from '../../components/Popup';
+import AddRoomForm from '../../components/AddRoomForm';
 
 const Room = () => {
   const [loading, setLoading] = useState(false)
@@ -13,9 +14,10 @@ const Room = () => {
   const [searchedColumn, setSearchedColumn] = useState('');
   const searchInput = useRef(null);
 
-  const [showPopup, setShowPopup] = useState(true)
+  const [showPopup, setShowPopup] = useState(false);
   const [dataPopup, setDataPopup] = useState('')
-
+  const [showAddRoomPopup, setShowAddRoomPopup] = useState(false);
+  
 
   const handleSearch = (selectedKeys, confirm, dataIndex) => {
     confirm();
@@ -197,18 +199,22 @@ const Room = () => {
 
   return (
     <div className='p-5'>
+     
+      {showAddRoomPopup && <AddRoomForm setShowAddRoomPopup={setShowAddRoomPopup}></AddRoomForm>}
        {showPopup && <Popup dataPopup={dataPopup} setShowPopup={setShowPopup}/>}
-      <Space size={20} direction='vertical'>
-
+      <Space 
+       size={20} direction='vertical'>
+        
         <div className='flex justify-between'>
           <Typography.Title level={4}>Phòng HomeStay</Typography.Title>
           <Button className='bg-primary border text-green'
             size={40}
             icon={<PlusOutlined />}
+            onClick={() =>{setShowAddRoomPopup(true)}}
           >Thêm phòng</Button>
 
         </div>
-        <Table
+        <Table 
           loading={loading}
           bordered
           columns={columns}
