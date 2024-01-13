@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef, } from 'react'
 import { Rate, Space, Table, Typography, Image, Button, Input, } from 'antd'
 import { EditOutlined, DeleteOutlined, UnorderedListOutlined, SearchOutlined, PlusOutlined } from '@ant-design/icons'
-import { apiGetAllRoom } from '../../api'
+import { apiDeleteRoom, apiGetAllRoom } from '../../api'
 import Highlighter from 'react-highlight-words';
 import Popup from '../../components/Popup';
 import AddRoomForm from '../../components/AddRoomForm';
@@ -151,17 +151,20 @@ const Room = () => {
     {
       title: 'Hình Ảnh 1',
       render: (value) =>
-        <Image width={100} src={value.imgRoom[0].path} />
+        <Image width={100} src={value.imgRoom[0].url
+        } />
     },
     {
       title: 'Hình Ảnh 2',
 
       render: (value) =>
-        <Image width={100} src={value.imgRoom[1].path} />
+        <Image width={100} src={value.imgRoom[1].url 
+        } />
     },
     {
       title: 'Hình Ảnh 3',
-      render: (value) => <Image width={100} src={value.imgRoom[2].path} />
+      render: (value) => <Image width={100} src={value.imgRoom[2].url
+      } />
     },
     {
       title: 'Đánh giá',
@@ -179,7 +182,11 @@ const Room = () => {
          
           <UnorderedListOutlined className='m-1 flex items-center justify-center' style={{ fontSize: '20px', color: 'green', }} onClick={() => {setDataPopup(index); setShowPopup(true) }} />
           <EditOutlined className='m-1 flex items-center justify-center' style={{ fontSize: '20px', color: 'green', }} onClick={() => { console.log(index) }} />
-          <DeleteOutlined className='m-1 flex items-center justify-center' style={{ fontSize: '20px', color: 'red' }} onClick={() => { console.log(index) }} />
+          <DeleteOutlined className='m-1 flex items-center justify-center' style={{ fontSize: '20px', color: 'red' }} 
+          onClick={async() => {
+             const result = await apiDeleteRoom(index)
+            }
+             } />
         </div>
 
     },

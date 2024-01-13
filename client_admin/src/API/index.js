@@ -62,3 +62,33 @@ export const apiGetAllUser = () => new Promise(async(resolve, reject)=>{
       reject(error)
   }
 })
+
+
+export const apiAddRoom = (payload) => new Promise(async(resolve, reject)=>{
+  try {
+      console.log(payload)
+      const response = await axiosConfig({
+          method: 'post',
+          url: '/admin/addRoom',
+          data:payload,
+      })
+      resolve(response)
+  } catch (error) {
+      reject(error)
+  }
+})
+
+
+export const apiDeleteRoom = (payload) => new Promise(async(resolve, reject)=>{
+  try {
+      console.log(payload)
+      const response = await axiosConfig({
+          method: 'post',
+          url: '/admin/deleteRoom',
+          data:payload,
+      })
+      resolve(response)
+  } catch (error) {
+      reject(error)
+  }
+})

@@ -138,20 +138,20 @@ exports.getAllSector = async (req, res, next) => {
 
 
 exports.addRoom = async (req, res, next) => {
-  // console.log(req.files)
+  console.log(req.body)
   try{
     const inputData = {
       nameRoom: req.body.nameRoom,
       idSectorRoom : req.body.idSectorRoom,
       giaRoom : req.body.giaRoom,
       loaiRoom : req.body.loaiRoom,
-      imgRoom: req.files
+      imgRoom: req.body.imgRoom
     }
 
     const roomService = new RoomService(MongoDB.client);
     const result = await roomService.addRoom(inputData);
     if(result){
-      return res.status(200).json(result);
+      return res.status(200).json("result");
     }
     else{
       return res.send("Đã xảy ra lỗi")
@@ -201,5 +201,25 @@ exports.getAllUser = async (req, res, next) => {
   } catch (error) {
     // console.log(error)
     return next(new ApiError(500, "Xảy ra lỗi trong quá trình truy xuat phong !"));
+  }
+};
+
+
+exports.deleteRoom = async (req, res, next) => {
+  // console.log(req.body)
+  try{
+    const roomService = new RoomService(MongoDB.client);
+    const result = await roomService.deleteRoom(req.body);
+    console.log(result)
+    if(result){
+      return res.status(200).json("result");
+    }
+    else{
+      return res.status(200).json("code lỗi");
+    }
+    
+  } catch (error) {
+    console.log(error)
+    return next(new ApiError(500, "Xảy ra lỗi trong quá trình xoa phong !"));
   }
 };

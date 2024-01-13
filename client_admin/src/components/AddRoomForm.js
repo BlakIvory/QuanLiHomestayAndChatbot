@@ -1,7 +1,9 @@
 import React, { useEffect, useState, useRef, } from 'react'
 import { IoMdCloseCircle } from "react-icons/io";
 import { PlusOutlined } from '@ant-design/icons';
-import  axios  from 'axios';
+import axios from 'axios';
+import { apiAddRoom } from '../api';
+import swal from 'sweetalert';
 import {
     Button,
     Form,
@@ -12,7 +14,11 @@ import {
 } from 'antd';
 
 const AddRoomForm = props => {
-    const [selectedFile, setSelectedFile] = useState('');
+    const [selectedFile, setSelectedFile] = useState([]);
+    const [nameRoom, setNameRoom] = useState('')
+    const [giaRoom, setGiaRoom] = useState('')
+    const [khuvucId, setKhuvucId] = useState('View biển');
+    const [loaiRoom, setLoaiRoom] = useState('1-2 người')
     const normFile = (e) => {
         if (Array.isArray(e)) {
             return e;
@@ -21,43 +27,59 @@ const AddRoomForm = props => {
     };
 
     const [formData, setFormData] = useState({
-        nameRoom: "",
-        giaRoom: "",
-        loaiRoom: "",
-        khuvucid: "",
+        nameRoom: nameRoom,
+        giaRoom: giaRoom,
+        loaiRoom: loaiRoom,
+        idSectorRoom: khuvucId,
         imgRoom: selectedFile,
+    });
 
-      
-     });
+    function beforeUpload(file) {
+        const isJpgOrPng = file.type === "image/jpeg" || file.type === "image/png";
+        if (!isJpgOrPng) {
+            console.error("You can only upload JPG/PNG file!");
+            swal('Cảnh báo !', 'Bạn không thể tải tệp không phải hình ảnh ! Vui lòng xóa tệp và tải lại', 'warning');
+        }
+        return isJpgOrPng;
+    }
 
-    
-    const uploadImage = async (e)=>{
-       const formData = new FormData()
-        formData.append('file',e)
-        formData.append('upload_preset',"btj12veg");
-       await axios.post("https://api.cloudinary.com/v1_1/doqqlyjb2/image/upload",formData
+    const uploadImage = async(e) => {
+            const formdata = new FormData()
+        formdata.append('file', e)
+        formdata.append('upload_preset', "btj12veg");
+        await axios.post("https://api.cloudinary.com/v1_1/doqqlyjb2/image/upload", formdata
         ).then(
-            (response)=>{
-                console.log(response);
-                setSelectedFile(response.data.url);
+            (response) => {
+                console.log(response.data);
+                setSelectedFile([...selectedFile,response.data]);
+                // setFormData({...formData,imgRoom : selectedFile});
+                formData.imgRoom.push(response.data);
+                // console.log(formData);   
             }
-            ).catch((err) => {
-                console.log(err)
-            });;
+        ).catch((err) => {
+            console.log(err)
+        });;
+        
+   
     }
 
     const dummyRequest = ({ file, onSuccess }) => {
         setTimeout(() => {
-          onSuccess("ok");
+            onSuccess("ok");
         }, 0);
-      };
+    };
+    const submitform = async () => {
 
-      const submitform = (e) => {
-        // console.log(formData);
-        console.log(selectedFile)
-        
-         
-        }
+        console.log(formData);
+        const result = await apiAddRoom(formData)
+        console.log(result)
+        // if (result.status===200){
+        //     swal('Thông báo !','Thêm phòng mới thành công  !', 'success')
+        //     props.setShowAddRoomPopup.bind('', false)
+        // }else {
+        //     swal('Thông báo !','Đã xảy ra lỗi ! Vui lòng thực hiện lại  !', 'warning')
+        // }
+    }
     return (
 
         <div
@@ -94,7 +116,7 @@ const AddRoomForm = props => {
                     </div>
 
                 </div>
-                <div className=' w-[750px] mt-4'>
+                <div className=' w-[750px] mt-4  flex flex-col'>
                     <Form
                         onFinish={submitform}
                         labelCol={{
@@ -106,45 +128,77 @@ const AddRoomForm = props => {
                         style={{
                             maxWidth: 750,
                         }}
-                        
                     >
-                        <Form.Item name="nameRoom" label="Tên phòng : " className=''>
-                            <Input className='w-[200px]' />
-                        </Form.Item>
-                        <Form.Item name="loaiRoom" label="Loại Phòng : ">
-                            <div className='flex row w-[200px]'>
-                                <Select >
-                                    <Select.Option value="1-2 người">1-2 người </Select.Option>
-                                    <Select.Option value="3-4 người">3-4 người </Select.Option>
-                                    <Select.Option value="5-7 người">5-7 người </Select.Option>
-                                </Select>
-                            </div>
-                        </Form.Item>
-                        <Form.Item name='khuVucId'  label="Khu vực phòng : ">
-                            <div className='flex row w-[200px]'>
-
-                                <Select name='khuvucId' >
-                                    <Select.Option value="View biển">View biển </Select.Option>
-                                    <Select.Option value="View núi">View núi </Select.Option>
-                                    <Select.Option value="Vip 1">Vip 1 </Select.Option>
-                                    <Select.Option value="Vip 2">Vip 2 </Select.Option>
-                                </Select>
-                            </div>
-                        </Form.Item>
-
-
-                        <Form.Item name='giaRoom' label="Giá phòng : ">
-                            <InputNumber className='w-[200px]' step={10000} />
-                        </Form.Item>
-
-                        <Form.Item label="Hình ảnh:" name='img' valuePropName="file" getValueFromEvent={normFile} className=''>
-                            <Upload name='img'  customRequest={dummyRequest} action={uploadImage}  maxCount='3' listType="picture-card">
-                                <PlusOutlined />
-                                <div>
-                                    Uploads
+                        <div className='col'>
+                            <Form.Item name="nameRoom" label="Tên phòng : " className=''>
+                                <Input  className='w-[200px]' onChange={(e) => {
+                                    
+                                    setNameRoom(e.target.value)
+                                    setFormData({ ...formData, nameRoom: e.target.value });
+                                }}
+                                />
+                            </Form.Item>
+                            <Form.Item label="Loại Phòng : ">
+                                <div className='flex row w-[200px]'>
+                                    <Select name="loaiRoom"
+                                        onChange={(e) => {
+                                            console.log(e)
+                                            setLoaiRoom(e)
+                                            setFormData({ ...formData, loaiRoom: e });
+                                        }}
+                                        defaultValue="1-2 người"
+                                    >
+                                        <Select.Option value="1-2 người">1-2 người </Select.Option>
+                                        <Select.Option value="3-4 người">3-4 người </Select.Option>
+                                        <Select.Option value="5-7 người">5-7 người </Select.Option>
+                                    </Select>
                                 </div>
-                            </Upload>
-                        </Form.Item>
+                            </Form.Item>
+                            <Form.Item name='khuVucId' label="Khu vực phòng : ">
+                                <div className='flex row w-[200px]'>
+
+                                    <Select name='khuvucId' onChange={(e) => {
+                                        setKhuvucId(e)
+                                        setFormData({ ...formData, khuvucId: e });
+                                    }}
+                                        defaultValue="View biển"
+                                    >
+                                        <Select.Option value="View biển">View biển </Select.Option>
+                                        <Select.Option value="View núi">View núi </Select.Option>
+                                        <Select.Option value="Vip 1">Vip 1 </Select.Option>
+                                        <Select.Option value="Vip 2">Vip 2 </Select.Option>
+                                    </Select>
+                                </div>
+                            </Form.Item>
+
+
+                            <Form.Item label="Giá phòng : " >
+                                <InputNumber name='giaRoom' onChange={(e) => {
+                                    console.log(e)
+                                    setGiaRoom(e)
+                                    setFormData({ ...formData, giaRoom: e });
+                                }
+
+                                } className='w-[200px]' step={10000} />
+                            </Form.Item>
+                        </div>
+
+                        <div className='col'>
+
+                            <Form.Item label="Hình ảnh 1:" valuePropName="file" getValueFromEvent={normFile} className=''>
+                                <Upload name='imgRoom' beforeUpload={beforeUpload} customRequest={dummyRequest}
+                                    action={uploadImage}
+                                  
+                                    maxCount='3' listType="picture-card"
+                                >
+                                    <PlusOutlined />
+                                    <div>
+                                        Uploads
+                                    </div>
+                                </Upload>
+                            </Form.Item>
+                        </div>
+
                         <div
                             className='flex justify-center items-center' >
                             <Button htmlType='submit' className='border border-blue m-3  bg-green-400' >Save</Button>

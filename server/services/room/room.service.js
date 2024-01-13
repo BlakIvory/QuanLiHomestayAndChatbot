@@ -1,3 +1,4 @@
+const { ObjectId } = require("mongodb");
 class RoomService {
     constructor(client) {
         this.Room = client.db().collection("rooms");
@@ -38,6 +39,16 @@ class RoomService {
         return result;
     }
 
+    async deleteRoom(payload) {
+          console.log(payload)
+        
+          const result = await this.Room.findOneAndDelete(
+           {
+            _id: ObjectId(payload._id) ? new ObjectId(payload._id) : null
+           }
+        );
+        return result;
+    }
 }
 
 module.exports = RoomService;

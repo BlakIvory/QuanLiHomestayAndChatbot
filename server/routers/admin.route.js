@@ -17,6 +17,8 @@ router.get("/getAllSector", admins.getAllSector);
 
 router.post('/addRoom', admins.addRoom);
 
+router.post('/deleteRoom', admins.deleteRoom);
+
 router.get("/getAllRoom", admins.getAllRoom);
 
 router.get("/getAllUser", admins.getAllUser);
