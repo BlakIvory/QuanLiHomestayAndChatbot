@@ -5,6 +5,7 @@ import { apiDeleteRoom, apiGetAllRoom } from '../../api'
 import Highlighter from 'react-highlight-words';
 import Popup from '../../components/Popup';
 import AddRoomForm from '../../components/AddRoomForm';
+import swal from 'sweetalert';
 
 const Room = () => {
   const [loading, setLoading] = useState(false)
@@ -185,6 +186,9 @@ const Room = () => {
           <DeleteOutlined className='m-1 flex items-center justify-center' style={{ fontSize: '20px', color: 'red' }} 
           onClick={async() => {
              const result = await apiDeleteRoom(index)
+             if(result.status===0){
+              swal('Thành Công !',result.msg, 'success')
+             }
             }
              } />
         </div>

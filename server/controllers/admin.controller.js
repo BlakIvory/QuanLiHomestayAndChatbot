@@ -210,9 +210,12 @@ exports.deleteRoom = async (req, res, next) => {
   try{
     const roomService = new RoomService(MongoDB.client);
     const result = await roomService.deleteRoom(req.body);
-    console.log(result)
-    if(result){
-      return res.status(200).json("result");
+    // console.log(result)
+    if(result.deletedCount>0){
+      return res.status(200).json({
+        status: 0,
+        msg: "Xóa Phòng Thành Công !!!"
+      });
     }
     else{
       return res.status(200).json("code lỗi");

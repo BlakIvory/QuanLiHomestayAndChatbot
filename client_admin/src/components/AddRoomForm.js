@@ -72,13 +72,14 @@ const AddRoomForm = props => {
 
         console.log(formData);
         const result = await apiAddRoom(formData)
-        console.log(result)
-        // if (result.status===200){
-        //     swal('Thông báo !','Thêm phòng mới thành công  !', 'success')
-        //     props.setShowAddRoomPopup.bind('', false)
-        // }else {
-        //     swal('Thông báo !','Đã xảy ra lỗi ! Vui lòng thực hiện lại  !', 'warning')
-        // }
+        // console.log(result)
+        if (result.status===200){
+            props.setShowAddRoomPopup.bind('', false)
+            swal('Thông báo !','Thêm phòng mới thành công  !', 'success')
+            // props.setShowAddRoomPopup.bind('', false)
+        }else {
+            swal('Thông báo !','Đã xảy ra lỗi ! Vui lòng thực hiện lại  !', 'warning')
+        }
     }
     return (
 
@@ -136,6 +137,7 @@ const AddRoomForm = props => {
                                     setNameRoom(e.target.value)
                                     setFormData({ ...formData, nameRoom: e.target.value });
                                 }}
+                                rules={[{ required: true, message: 'Vui lòng nhập thông tin !' }]}
                                 />
                             </Form.Item>
                             <Form.Item label="Loại Phòng : ">
@@ -179,7 +181,9 @@ const AddRoomForm = props => {
                                     setFormData({ ...formData, giaRoom: e });
                                 }
 
-                                } className='w-[200px]' step={10000} />
+                                } className='w-[200px]' step={10000} 
+                                rules={[{ required: true, message: 'Vui lòng nhập thông tin !' }]}
+                                />
                             </Form.Item>
                         </div>
 
@@ -188,8 +192,8 @@ const AddRoomForm = props => {
                             <Form.Item label="Hình ảnh 1:" valuePropName="file" getValueFromEvent={normFile} className=''>
                                 <Upload name='imgRoom' beforeUpload={beforeUpload} customRequest={dummyRequest}
                                     action={uploadImage}
-                                  
                                     maxCount='3' listType="picture-card"
+                                    rules={[{ required: true, message: 'Vui lòng cập nhật hình ảnh !' }]}
                                 >
                                     <PlusOutlined />
                                     <div>
@@ -202,7 +206,7 @@ const AddRoomForm = props => {
                         <div
                             className='flex justify-center items-center' >
                             <Button htmlType='submit' className='border border-blue m-3  bg-green-400' >Save</Button>
-                            <Button onClick={props.setShowAddRoomPopup.bind('', false)} className='border border-blue m-3 bg-gray-400'>Close</Button>
+                            <Button onClick={props.setShowAddRoomPopup.bind('', false) } className='border border-blue m-3 bg-gray-400'>Close</Button>
                         </div>
                     </Form>
 

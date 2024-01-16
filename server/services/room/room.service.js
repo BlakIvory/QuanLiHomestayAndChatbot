@@ -42,11 +42,9 @@ class RoomService {
     async deleteRoom(payload) {
           console.log(payload)
         
-          const result = await this.Room.findOneAndDelete(
-           {
-            _id: ObjectId(payload._id) ? new ObjectId(payload._id) : null
-           }
-        );
+          const result = await this.Room.deleteOne(
+           { _id: ObjectId.isValid(payload._id) ? new ObjectId(payload._id) : null,}
+            );
         return result;
     }
 }
