@@ -35,7 +35,7 @@ const Header = () => {
     return (
         <div className='w-full flex items-center justify-center'>
             <div className='w-1100 flex items-center justify-between'>
-                <Link to='./home'>
+                <Link to='/trangchu'>
                     <img className='w-[300px] h-[70px] object-cover'
                         src={logo}
                         alt='logo'

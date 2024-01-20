@@ -11,7 +11,7 @@ const Button = ({ text, textColor, bgColor, IcAfter,onClick,fullwidth }) => {
       <div className="flex items-center gap-1">
         
         <span className="">{text}</span>
-        <span>{IcAfter && <IcAfter  size="25px" />}</span>
+        <span>{IcAfter && <IcAfter  size="18px" />}</span>
       </div>
     </button>
   );

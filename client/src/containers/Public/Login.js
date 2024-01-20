@@ -58,7 +58,7 @@ const Login = () => {
   }
 
   useEffect(() => {
-    IsLoggedIn && navigate('/')
+    IsLoggedIn && navigate('/trangchu')
   }, [IsLoggedIn])
 
  

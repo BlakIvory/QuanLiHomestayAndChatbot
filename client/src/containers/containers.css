@@ -1,0 +1,131 @@
+.navbars{
+    color:  white;
+    font-size: medium;
+    z-index: 1;
+}
+
+.navbars li:hover{
+    color: #FCCD04;
+    cursor: pointer;
+}
+
+.footer{
+    margin-top: 2px;
+    border-top:solid 3px;
+}
+.tc-bg-banner{
+    position: relative;
+    box-shadow: rgba(0, 0, 0, 0.25) 0px 54px 55px, 
+    rgba(0, 0, 0, 0.12) 0px -12px 30px, 
+    rgba(0, 0, 0, 0.12) 0px 4px 6px,
+    rgba(0, 0, 0, 0.17) 0px 12px 13px,
+    rgba(0, 0, 0, 0.09) 0px -3px 5px;
+    border-radius: 20px;
+}
+.tc-bg-banner img {
+    margin-top: 2px;
+    border-radius: 10px;
+}
+.banner{
+    position: absolute;
+    z-index: 2;
+    bottom: 0;
+    right: 200px;
+    display: flex;
+    color: white;
+}
+
+.bannerImage {
+    display: flex;
+    width: 570px;
+}
+
+.banner div img:hover {
+    width: 200px;
+    height: 200px;
+    border: 10px solid #17E9E0;
+    border-radius: 100%;
+}
+.banner_active {
+    border: 10px solid #17E9E0 !important;
+}
+.bannerImg1{
+    width: 150px!important;
+    height: 150px!important;
+    border: 10px solid white;
+    border-radius: 100px;
+    margin-top: 20px !important;
+}
+.bannerImg2{
+    width: 100px!important;
+    height: 100px !important;
+    border: 10px solid white;
+    border-radius: 100px;
+    margin-top: 20px !important;
+}
+.bannerImg3{
+    width: 200px!important;
+    height: 200px!important;
+    border: 10px solid white;
+    border-radius: 100px;
+}
+
+.bannerTilte{
+    align-items: center;
+    justify-content: center;
+
+}
+.bannerItem{
+    /* display: flex; */
+    align-items: center;
+    justify-content: center;
+    font-size: 50px;
+    color: #17E9E0;
+    text-shadow: -2px 1px 5px #0b0b0b;
+    font-size: 40px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 120%;
+    text-transform: uppercase;
+    font-family: "Baloo 2", cursive;
+    height: 60px;   
+}
+.bannerDisc{
+    color: red;
+    font-size: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: antiquewhite;
+    border-radius: 20px;
+    border: 2px solid #17E9E0;
+}
+.banner-total{
+    color: white;
+    font-size: 20px;
+    display: flex;
+    justify-content: end;
+    align-items: center;
+    height: 100px;
+    background-color: #FFB48F;
+    border-radius: 0 5px 5px 170px;
+    width: 800px;
+    right: 155px;
+    float: right;
+    /* position: absolute; */
+}
+.banner-total-content{
+    margin-right: 40px;
+    padding-right: 20px;
+    border-right: 5px solid white;
+}
+.banner-intro{
+    margin: 20px;
+    float: left;
+    display: flex;
+}
+.banner-intro img {
+    width: 500px;
+    height: 400px;
+    border-radius: 20px;
+}

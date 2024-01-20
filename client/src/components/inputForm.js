@@ -15,7 +15,7 @@ const InputForm = ({label, value, setValue,type, typeinput, required, placeholde
       />
       {invalidatefield.length > 0 && 
        invalidatefield.some(i => i.name===type ) && 
-       <small className='text-red-500 italic'>
+       <small className='text-red-400 italic'>
         {invalidatefield.find(i=>i.name === type)?.message}
         </small>}
     </div>
