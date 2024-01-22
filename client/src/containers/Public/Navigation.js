@@ -30,12 +30,12 @@ const Navigation = () => {
           Trang Chủ
         </NavLink>
         <NavLink
-        to ='/tran'
+        to ='/gioithieu'
         style={({ isActive }) => ({
           color: isActive ? "#FCCD04": "white" 
         })}
         >
-          Về Chúng Tôi
+         Giới Thiệu
         </NavLink>
         <NavLink
         to ='/thu'
@@ -43,8 +43,17 @@ const Navigation = () => {
           color: isActive ? "#FCCD04": "white" 
         })}
         >
+          Xem Phòng
+        </NavLink>
+        <NavLink
+        to ='/thádu'
+        style={({ isActive }) => ({
+          color: isActive ? "#FCCD04": "white" 
+        })}
+        >
           Đặt Phòng
         </NavLink>
+       
         <NavLink
         to ='/trgchu'
         style={({ isActive }) => ({

@@ -21,6 +21,7 @@
     margin-top: 2px;
     border-top:solid 3px;
 }
+/*css cho trang chu */
 .tc-bg-banner{
     position: relative;
     box-shadow: rgba(0, 0, 0, 0.25) 0px 54px 55px, 
@@ -39,8 +40,7 @@
 .banner{
     position: absolute;
     z-index: 2;
-    bottom: 0;
-    right: 200px;
+    top: 500px;
     display: flex;
     color: white;
 }
@@ -98,6 +98,7 @@
     line-height: 120%;
     text-transform: uppercase;
     font-family: "Baloo 2", cursive;
+    text-shadow: 0.05em 0.05em black;
     height: 60px;   
 }
 .bannerDisc{
@@ -157,8 +158,9 @@
 }
 .imgabc{
     color: var(--rootColorVang);
-    font-size: 30px;
+    font-size: 40px;
     margin-right: 5px;
+
 }
 .imgabc:hover{
     margin-right: 15px;
@@ -180,4 +182,59 @@
     color: var(--rootColorTim);
     display: flex;
     align-items: center;
+    
+}
+
+
+/* Css cho trang giới thiệu */
+
+.about{
+    width: 1100px;
+    margin-top: 2px;
+}
+.imgc{
+    z-index: 2;
+    width: 1100px;
+    height: 350px;
+    border-radius: 10px;
+    box-shadow: rgba(0, 0, 0, 0.25) 0px 54px 55px, rgba(0, 0, 0, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px, rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px;
+}
+
+/* Css chữ giới thiệu ở trên ảnh banner */
+.aboutBanner{
+    position: absolute;
+    right: 400px;
+    top:    300px;
+    z-index: 20;
+    color: var(--rootColorVang);
+    font-size: 40px;
+    font-style: oblique ;
+    transform: skew(-25deg);
+    /* font-family: "Comic Sans MS", cursive, sans-serif; */
+    font-family: "Monaco", cursive, sans-serif;
+}
+.aboutBannerContent{
+    font-size: small;
+    color: white;
+
+}
+.contentBanner:hover {
+    color: var(--rootColorVang);
+}
+.aboutTitle {
+    font-size: 50px;
+    font-family: "Monaco", cursive, sans-serif;
+    font-style: oblique ;
+    text-shadow: 0.1em 0.1em var(--rootColorTim);
+    color: var(--rootColorVang);
+   
+}
+
+.aboutTieuChiContent{
+    text-align: justify;
+}
+.imgtieuchi{
+    width: 500px;
+   position: absolute;
+   z-index: 0;
 }

@@ -3,5 +3,5 @@ export const path = {
     TRANGCHU: 'trangchu',
     LOGIN : 'login',
     REGISTER : 'register',
-
+    ABOUT : 'gioithieu',
 }

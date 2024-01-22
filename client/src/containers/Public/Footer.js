@@ -35,10 +35,10 @@ const Footer = () => {
       <div>
         <div className='font-medium'>Liên hệ với chúng tôi</div>
         <div>
-          <div className='bc'><FaLocationDot/> Khu 2, Đ. 3/2, P. Xuân Khánh, Q. Ninh Kiều, TP. CT</div>
-          <div className='bc'><FaPhoneVolume/> ĐT: +84292 3832 663</div>
-          <div className='bc'><MdMarkEmailUnread/>dhct@ctu.edu.vn</div>
-          <div className='bc'><FaClock/>8:00 - 17:00</div>
+          <div className='bc'><FaLocationDot size={20} className='mr-2' /> Khu 2, Đ. 3/2, P. Xuân Khánh, Q. Ninh Kiều, TP. CT</div>
+          <div className='bc'><FaPhoneVolume size={20} className='mr-2' /> ĐT: +84292 3832 663</div>
+          <div className='bc'><MdMarkEmailUnread size={20} className='mr-2' />dhct@ctu.edu.vn</div>
+          <div className='bc'><FaClock size={20} className='mr-2' />8:00 - 17:00</div>
         </div>
         <img className=' flex justify-center w-[500px] h-[240px]' src={oip}></img>
 
