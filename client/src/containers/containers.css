@@ -238,3 +238,27 @@
    position: absolute;
    z-index: 0;
 }
+
+/* css trang xem phòng */
+.searchRooms div{
+    height: 40px;
+    margin-right: 10px;
+    border-radius: 10px;
+    background-color: white;
+}
+.searchRooms div {
+    margin-left: 10px;
+}
+input:focus {
+    outline: none;
+}
+.searchRoomsButton {
+    width: 100px;
+    height: 40px;
+    border-radius: 20px;
+    background-color: var(--rootColorXanh);
+    border: 2px solid var(--rootColorXanh);
+}
+.searchRoomsFilter{
+    width: 300px;
+}

@@ -3,6 +3,7 @@ import { FaHome,FaClock } from "react-icons/fa";
 import { MdPeopleAlt ,MdOutlineCheckCircleOutline,MdMarkEmailUnread} from "react-icons/md";
 import { BsImage } from "react-icons/bs";
 import { FaLocationDot, FaPhoneVolume } from "react-icons/fa6";
+import { CiSearch } from "react-icons/ci";
 const icons  = { 
     CgLogIn,
     CgLogOut,
@@ -15,6 +16,7 @@ const icons  = {
     FaPhoneVolume,
     MdMarkEmailUnread,
     FaClock,
+    CiSearch,
 }
 
 export default icons;
