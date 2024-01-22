@@ -38,7 +38,7 @@ const Navigation = () => {
          Giới Thiệu
         </NavLink>
         <NavLink
-        to ='/thu'
+        to ='/xemphong'
         style={({ isActive }) => ({
           color: isActive ? "#FCCD04": "white" 
         })}
@@ -46,7 +46,7 @@ const Navigation = () => {
           Xem Phòng
         </NavLink>
         <NavLink
-        to ='/thádu'
+        to ='/datphong'
         style={({ isActive }) => ({
           color: isActive ? "#FCCD04": "white" 
         })}
@@ -55,7 +55,7 @@ const Navigation = () => {
         </NavLink>
        
         <NavLink
-        to ='/trgchu'
+        to ='/canhan'
         style={({ isActive }) => ({
           color: isActive ? "#FCCD04": "white" 
         })}

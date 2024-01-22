@@ -4,4 +4,7 @@ export const path = {
     LOGIN : 'login',
     REGISTER : 'register',
     ABOUT : 'gioithieu',
+    ROOMS : 'xemphong',
+    ORDERROOM : 'datphong',
+    CANHAN : 'canhan',
 }

@@ -2,6 +2,7 @@ import React from 'react'
 import { NavLink } from 'react-router-dom'
 import { path } from '../../ultils/constant'
 import icons from '../../ultils/icons'
+import banner4 from '../../assets/banner4.jpg'
 import tieuchi from '../../assets/batieuchi.png'
 require('../containers.css')
 const { MdOutlineCheckCircleOutline } = icons;
@@ -10,7 +11,7 @@ const About = () => {
     return (
         <div className='about mb-5'>
             <div className='flex justify-center items-center '>
-                <img className='imgc' src='https://www.imghoteles.com/wp-content/uploads/sites/1709/nggallery/desktop-pics/fott1.jpg'></img>
+                <img className='imgc' alt='' src={banner4}></img>
                 <div className='aboutBanner  justify-center items-center'>
                     Giới Thiệu
                     <div className='aboutBannerContent flex justify-center items-center'>
