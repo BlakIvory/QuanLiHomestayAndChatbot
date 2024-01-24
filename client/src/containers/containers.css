@@ -239,6 +239,9 @@
    z-index: 0;
 }
 
+
+
+
 /* css trang xem phòng */
 .searchRooms div{
     height: 40px;
@@ -261,4 +264,15 @@ input:focus {
 }
 .searchRoomsFilter{
     width: 300px;
+}
+
+.filterUnder{
+
+    border-radius: 10px;
+    width: 200px;
+    
+    box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
+}
+.rollSliderContent{
+    font-size: 14px;
 }

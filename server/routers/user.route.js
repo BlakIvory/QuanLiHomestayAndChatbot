@@ -12,5 +12,6 @@ router.post("/login", users.login);
 
 router.post("/info", users.infoUser);
 
+router.get("/getAllRoom", users.getAllRoom);
 
 module.exports = router;

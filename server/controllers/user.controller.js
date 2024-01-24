@@ -5,6 +5,7 @@ const MongoDB = require("../utils/mongodb.util");
 
 const jwt = require('jsonwebtoken');
 const bcrypt =  require ("bcrypt");
+const RoomService = require("../services/room/room.service");
 
 
 exports.register = async (req, res, next) => {
@@ -71,7 +72,6 @@ exports.login = async (req, res, next) => {
   }
 };
 
-
 exports.infoUser = async (req, res, next) => {
   console.log(req.body)
   try{
@@ -84,3 +84,18 @@ exports.infoUser = async (req, res, next) => {
     return next(new ApiError(500, "Xảy ra lỗi trong quá trình đăng nhập vào hệ thống !"));
   }
 };
+
+
+exports.getAllRoom = async (req, res, next) => {
+  
+  try{
+    const roomService = new RoomService(MongoDB.client);
+    const allRoom = await roomService.check()
+    // console.log(infoUser)
+    return res.send(allRoom)
+  } catch (error) {
+    // console.log(error)
+    return next(new ApiError(500, "Xảy ra lỗi trong quá trình truy xuất tất cả phòng !"));
+  }
+};
+
