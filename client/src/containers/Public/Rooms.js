@@ -5,6 +5,7 @@ import dayjs from 'dayjs';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
 import { DatePicker, Select, Slider } from 'antd';
 import { apiGetAllRoom } from '../../services'
+import { ListRooms, RoomItem } from '../../components';
 
 dayjs.extend(customParseFormat);
 
@@ -33,14 +34,17 @@ const Rooms = () => {
         return formattedDate.toString();
     }
 
+
+
     const getdataRooms = async () => {
         const data = await apiGetAllRoom()
         setDataRooms(data.data)
     };
     useEffect(() => {
         getdataRooms()
+       
     }, [])
-
+    // console.log(dataRooms)
 
     const [inputData, setInputData] = useState(
         {
@@ -53,9 +57,6 @@ const Rooms = () => {
         }
     )
 
-
-
-
     function disabledDate(current) {
         // Can not select days after today
         return current && current < moment().endOf('day');
@@ -63,7 +64,7 @@ const Rooms = () => {
 
     const handleChangeSelect = (value) => {
         inputData.loaiPhong = value
-        console.log(inputData)
+        // console.log(inputData)
     };
     const handleChangeDate = (data) => {
         if (data !== null) {
@@ -74,14 +75,14 @@ const Rooms = () => {
             inputData.dateStart = dateStart;
             inputData.dateEnd = dateEnd;
         }
-        console.log(inputData)
+        // console.log(inputData)
     };
     const handleOnChangeSlider = (value) => {
         setRollSliderStart(value[0])
         setRollSliderEnd(value[1])
-        console.log(value[0])
-        inputData.giaStart= value[0]
-        inputData.giaEnd= value[1]
+        // console.log(value[0])
+        inputData.giaStart = value[0]
+        inputData.giaEnd = value[1]
 
     }
     const handleSubmitSearch = (value) => {
@@ -89,20 +90,22 @@ const Rooms = () => {
         console.log(inputData)
     }
 
+
+
+
+
     return (
         <div className='w-1100 ml-10 '>
             <div className='h-[70px] w-full rounded-md bg-slate-500 searchRooms flex justify-center items-center'>
                 <div className='flex items-center' >
                     <CiSearch className='ml-2' size={24} />
-                    <input placeholder='Nhập nơi cần tìm ...' 
-                    onChange={(e)=>{
-                        // console.log(e.target.value);
-                        setSearchPlace(e.target.value);
-                    }}
-                     />
+                    <input placeholder='Nhập nơi cần tìm ...'
+                        onChange={(e) => {
+                            // console.log(e.target.value);
+                            setSearchPlace(e.target.value);
+                        }}
+                    />
                 </div>
-
-
                 <RangePicker
                     className='w-[300px]   '
                     disabledDate={disabledDate}
@@ -179,8 +182,10 @@ const Rooms = () => {
                     </div>
                 </div>
                 <div className='w-full'>
-                    <div>filters</div>
-                    <div>rooms</div>
+                    <div className='w-full h-[70px] border border-red-700 justify-center items-center flex'>filters</div>
+                    <div>
+                       <ListRooms dataRooms={dataRooms}/>
+                    </div>
                 </div>
 
                 <div>

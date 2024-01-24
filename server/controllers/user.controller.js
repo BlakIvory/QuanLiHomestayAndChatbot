@@ -91,7 +91,6 @@ exports.getAllRoom = async (req, res, next) => {
   try{
     const roomService = new RoomService(MongoDB.client);
     const allRoom = await roomService.check()
-    // console.log(infoUser)
     return res.send(allRoom)
   } catch (error) {
     // console.log(error)
