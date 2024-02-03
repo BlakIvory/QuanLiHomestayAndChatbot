@@ -14,6 +14,8 @@ class RoomService {
             imgRoom: payload.imgRoom,
             danhgiaRoom : payload.danhgiaRoom, 
             ordersRoom : payload.ordersRoom,
+            cmtRoom : payload.cmtRoom, 
+            discRoom : payload.discRoom,
         };
         Object.keys(room).forEach(
             (key) => room[key] === undefined && delete room[key]
@@ -33,7 +35,13 @@ class RoomService {
         const room = await this.extractRoomData(payload);
         const result = await this.Room.findOneAndUpdate(
             room,
-            { $set: { statusRoom: 0, ordersRoom: [],danhgiaRoom : 0,  } },
+            { $set: { 
+                statusRoom: 0, 
+                ordersRoom: [],
+                danhgiaRoom : 5,
+                discRoom : '',
+                cmtRoom : [],
+            } },
             { returnDocument: "after", upsert: true }
         );
         return result;

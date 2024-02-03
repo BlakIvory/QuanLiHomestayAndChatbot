@@ -4,6 +4,9 @@ import { PlusOutlined } from '@ant-design/icons';
 import axios from 'axios';
 import { apiAddRoom } from '../api';
 import swal from 'sweetalert';
+
+
+
 import {
     Button,
     Form,
@@ -12,13 +15,19 @@ import {
     Select,
     Upload,
 } from 'antd';
+const { TextArea } = Input;
+
+
+
 
 const AddRoomForm = props => {
     const [selectedFile, setSelectedFile] = useState([]);
     const [nameRoom, setNameRoom] = useState('')
-    const [giaRoom, setGiaRoom] = useState('')
+    const [giaRoom, setGiaRoom] = useState(0)
     const [khuvucId, setKhuvucId] = useState('View biển');
     const [loaiRoom, setLoaiRoom] = useState('1-2 người')
+    const [discRoom, setDiscRoom] = useState('')
+    const [loi, setLoi] = useState(1)
     const normFile = (e) => {
         if (Array.isArray(e)) {
             return e;
@@ -32,6 +41,7 @@ const AddRoomForm = props => {
         loaiRoom: loaiRoom,
         idSectorRoom: khuvucId,
         imgRoom: selectedFile,
+        discRoom: discRoom,
     });
 
     function beforeUpload(file) {
@@ -43,24 +53,26 @@ const AddRoomForm = props => {
         return isJpgOrPng;
     }
 
-    const uploadImage = async(e) => {
-            const formdata = new FormData()
+    const uploadImage = async (e) => {
+        const formdata = new FormData()
         formdata.append('file', e)
         formdata.append('upload_preset', "btj12veg");
         await axios.post("https://api.cloudinary.com/v1_1/doqqlyjb2/image/upload", formdata
         ).then(
             (response) => {
                 console.log(response.data);
-                setSelectedFile([...selectedFile,response.data]);
+                setSelectedFile([...selectedFile, response.data]);
                 // setFormData({...formData,imgRoom : selectedFile});
                 formData.imgRoom.push(response.data);
-                // console.log(formData);   
+                // console.log(formData);  
+                setLoi(0)
+
             }
         ).catch((err) => {
             console.log(err)
         });;
-        
-   
+
+
     }
 
     const dummyRequest = ({ file, onSuccess }) => {
@@ -70,15 +82,42 @@ const AddRoomForm = props => {
     };
     const submitform = async () => {
 
-        console.log(formData);
-        const result = await apiAddRoom(formData)
-        // console.log(result)
-        if (result.status===200){
+        console.log('img :' + formData.imgRoom.length);
+        if (formData.nameRoom.length === 0) {
+            setLoi(1)
+            swal('Thông báo !', 'Vui lòng nhập thông tin đầy đủ  !', 'warning')
+
+        }
+        console.log('igia :' + formData.giaRoom);
+        if (formData.giaRoom === 0) {
+            setLoi(1)
+            swal('Thông báo !', 'Vui lòng nhập thông tin đầy đủ  !', 'warning')
+
+        }
+        console.log('disc :' + formData.discRoom.length);
+        if (formData.discRoom.length === 0) {
+            setLoi(1)
+            swal('Thông báo !', 'Vui lòng nhập thông tin đầy đủ  !', 'warning')
+
+        }
+        if (formData.imgRoom.length < 3) {
+            setLoi(1)
+            swal('Thông báo !', 'Vui lòng nhập thông tin đầy đủ  !', 'warning')
+
+        }
+
+        console.log(loi)
+
+        if (loi === 0) {
+            // const result = await apiAddRoom(formData)
+            // // console.log(result)
+            // if (result.status === 200) {
+
+            swal('Thông báo !', 'Thêm phòng mới thành công  !', 'success')
             props.setShowAddRoomPopup.bind('', false)
-            swal('Thông báo !','Thêm phòng mới thành công  !', 'success')
-            // props.setShowAddRoomPopup.bind('', false)
-        }else {
-            swal('Thông báo !','Đã xảy ra lỗi ! Vui lòng thực hiện lại  !', 'warning')
+            // } else {
+            //     swal('Thông báo !', 'Đã xảy ra lỗi ! Vui lòng thực hiện lại  !', 'warning')
+            // }
         }
     }
     return (
@@ -131,20 +170,25 @@ const AddRoomForm = props => {
                         }}
                     >
                         <div className='col'>
-                            <Form.Item name="nameRoom" label="Tên phòng : " className=''>
-                                <Input  className='w-[200px]' onChange={(e) => {
-                                    
+                            <Form.Item name="nameRoom" label="Tên phòng : " className='' 
+                            rules={[{ required: true, message: 'Vui lòng nhập thông tin !' }]}
+                            >
+                                <Input className='w-[200px]' onChange={(e) => {
+
                                     setNameRoom(e.target.value)
                                     setFormData({ ...formData, nameRoom: e.target.value });
                                 }}
-                                rules={[{ required: true, message: 'Vui lòng nhập thông tin !' }]}
+                                    placeholder="Tên phòng ..."
+
                                 />
                             </Form.Item>
-                            <Form.Item label="Loại Phòng : ">
+                            <Form.Item label="Loại Phòng : "
+                            
+                            >
                                 <div className='flex row w-[200px]'>
                                     <Select name="loaiRoom"
                                         onChange={(e) => {
-                                            console.log(e)
+
                                             setLoaiRoom(e)
                                             setFormData({ ...formData, loaiRoom: e });
                                         }}
@@ -160,6 +204,8 @@ const AddRoomForm = props => {
                                 <div className='flex row w-[200px]'>
 
                                     <Select name='khuvucId' onChange={(e) => {
+
+
                                         setKhuvucId(e)
                                         setFormData({ ...formData, khuvucId: e });
                                     }}
@@ -174,26 +220,63 @@ const AddRoomForm = props => {
                             </Form.Item>
 
 
-                            <Form.Item label="Giá phòng : " >
-                                <InputNumber name='giaRoom' onChange={(e) => {
-                                    console.log(e)
-                                    setGiaRoom(e)
-                                    setFormData({ ...formData, giaRoom: e });
-                                }
+                            <Form.Item label="Giá phòng : " name='giaRoom'
+                                rules={[
+                                    { required: true, message: 'Vui lòng nhập thông tin !' },
+                                    { required: true,
+                                        message: 'Vui lòng nhập số tiền 100000!',
+                                        type: 'number',
+                                        min: 100000,
+                                      },
+                                ]}>
+                                <InputNumber
+                                    onChange={(e) => {
+                                        console.log(e)
 
-                                } className='w-[200px]' step={10000} 
-                                rules={[{ required: true, message: 'Vui lòng nhập thông tin !' }]}
+                                        setGiaRoom(e)
+                                        setFormData({ ...formData, giaRoom: e });
+                                    }
+
+                                    } className='w-[200px]'
+                                    step={10000}
+                                    placeholder=" Giá phòng ..."
+                                    min={100000}
+                                    formatter={(value) => `${value} VND`}
+                                    parser={(value) => value.replace(' VND', '')}
                                 />
                             </Form.Item>
+                            <Form.Item name="discRoom" label="Mô tả : " className='' rules={[{ required: true, message: 'Vui lòng nhập thông tin !' }]}>
+                                <TextArea
+                                    showCount
+                                    maxLength={200}
+
+                                    onChange={(e) => {
+                                        setLoi(0)
+
+                                        setDiscRoom(e.target.value)
+                                        setFormData({ ...formData, discRoom: e.target.value });
+                                    }}
+                                    placeholder="Mô tả..."
+                                    style={{ height: 70, width: 400, resize: 'none' }}
+                                />
+                            </Form.Item>
+
                         </div>
 
                         <div className='col'>
 
-                            <Form.Item label="Hình ảnh 1:" valuePropName="file" getValueFromEvent={normFile} className=''>
-                                <Upload name='imgRoom' beforeUpload={beforeUpload} customRequest={dummyRequest}
+                            <Form.Item label="Hình ảnh 1:" name='imgRoom' valuePropName="file"
+                                getValueFromEvent={normFile}
+                                className=''
+                                rules={[
+                                    { required: true, message: 'Vui lòng cập nhật hình ảnh !' },
+                                    { required: true, message: 'Vui lòng cập nhật 3  hình ảnh !', len: 3, type: 'array' },
+                                ]}>
+                                <Upload beforeUpload={beforeUpload} customRequest={dummyRequest}
                                     action={uploadImage}
-                                    maxCount='3' listType="picture-card"
-                                    rules={[{ required: true, message: 'Vui lòng cập nhật hình ảnh !' }]}
+                                    maxCount='3'
+                                    listType="picture-card"
+
                                 >
                                     <PlusOutlined />
                                     <div>
@@ -201,12 +284,15 @@ const AddRoomForm = props => {
                                     </div>
                                 </Upload>
                             </Form.Item>
+
                         </div>
 
-                        <div
-                            className='flex justify-center items-center' >
+                        <div className='flex justify-center items-center' >
+
                             <Button htmlType='submit' className='border border-blue m-3  bg-green-400' >Save</Button>
-                            <Button onClick={props.setShowAddRoomPopup.bind('', false) } className='border border-blue m-3 bg-gray-400'>Close</Button>
+                            <Button onClick={props.setShowAddRoomPopup.bind('', false)} className='border border-blue m-3 bg-gray-400'>Close</Button>
+
+
                         </div>
                     </Form>
 

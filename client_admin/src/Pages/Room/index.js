@@ -152,19 +152,19 @@ const Room = () => {
     {
       title: 'Hình Ảnh 1',
       render: (value) =>
-        <Image width={100} src={value.imgRoom[0].url
+        <Image width={100} src={value.imgRoom[0].secure_url
         } />
     },
     {
       title: 'Hình Ảnh 2',
 
       render: (value) =>
-        <Image width={100} src={value.imgRoom[1].url 
+        <Image width={100} src={value.imgRoom[1].secure_url
         } />
     },
     {
       title: 'Hình Ảnh 3',
-      render: (value) => <Image width={100} src={value.imgRoom[2].url
+      render: (value) => <Image width={100} src={value.imgRoom[2].secure_url
       } />
     },
     {

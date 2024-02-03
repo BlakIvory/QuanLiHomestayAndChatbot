@@ -15,7 +15,7 @@ const {  FaLocationDot,
 
 const Footer = () => {
   return (
-    <div className='w-1100 h-[400px] footer flex  gap-5 mt-10 pt-7'>
+    <div className='w-1100 h-[400px] footer flex  gap-5 pt-7 '>
       <div className='flex-col justify-center items-center row mt-3 w-[400px] h-[200px] '>
           <div className='flex justify-center '><Avatar src={avatar} size={200}></Avatar></div>
           <div className='flex justify-center items-center'>Nguyễn Lê Thế Anh</div>

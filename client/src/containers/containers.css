@@ -276,3 +276,38 @@ input:focus {
 .rollSliderContent{
     font-size: 14px;
 }
+
+.z{
+    box-shadow: rgba(14, 30, 37, 0.12) 0px 2px 4px 0px, rgba(14, 30, 37, 0.32) 0px 2px 16px 0px;
+}
+.text_bigSize1{
+    font-size: 25px;
+}
+.text_bigSize2{
+    font-size: 20px; 
+    color: red;
+}
+.button_editAntd{
+    margin-top: 10px;
+    background-color: #FCCD04;
+    width: 300px;
+    height: 35px;
+}
+.button_editAntd:hover{
+    border: 2px solid white var(--rootColorTim);
+    color: white !important;
+}
+.detailRoom_Charactic{
+    
+    margin-top: 10px;
+    font-size: 20px;
+    padding-left: 20px;
+    box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 12px;
+    border-radius: 10px;
+}
+.comment_box{
+    padding: 10px;
+    margin-bottom:  10px;
+    border-radius: 5px;
+    box-shadow: rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px;
+}

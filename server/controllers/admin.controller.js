@@ -139,6 +139,7 @@ exports.getAllSector = async (req, res, next) => {
 
 exports.addRoom = async (req, res, next) => {
   console.log(req.body)
+  
   try{
     const inputData = {
       nameRoom: req.body.nameRoom,

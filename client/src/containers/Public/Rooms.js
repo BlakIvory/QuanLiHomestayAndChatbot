@@ -4,7 +4,7 @@ import moment from 'moment';
 import dayjs from 'dayjs';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
 import { DatePicker, Select, Slider } from 'antd';
-import { apiGetAllRoom } from '../../services'
+
 import { ListRooms, RoomItem } from '../../components';
 
 dayjs.extend(customParseFormat);
@@ -18,9 +18,9 @@ require('../containers.css')
 const { CiSearch } = icons;
 
 const Rooms = () => {
-    const [dataRooms, setDataRooms] = useState('')
-    const [rollSliderStart, setRollSliderStart] = useState(600)
-    const [rollSliderEnd, setRollSliderEnd] = useState(2000)
+   
+    const [rollSliderStart, setRollSliderStart] = useState(600000)
+    const [rollSliderEnd, setRollSliderEnd] = useState(2000000)
     const [searchPlace, setSearchPlace] = useState('')
     const formatter = (value) => `${value.toLocaleString()},000 nvđ`;
     const validateDate = (data) => {
@@ -36,14 +36,7 @@ const Rooms = () => {
 
 
 
-    const getdataRooms = async () => {
-        const data = await apiGetAllRoom()
-        setDataRooms(data.data)
-    };
-    useEffect(() => {
-        getdataRooms()
-       
-    }, [])
+   
     // console.log(dataRooms)
 
     const [inputData, setInputData] = useState(
@@ -113,6 +106,7 @@ const Rooms = () => {
                         dayjs(`${moment().format('DD/MM/YYYY')}`, dateFormat),
                         dayjs(`${moment().format('DD/MM/YYYY')}`, dateFormat)
                     ]}
+                    placeholder={['Ngày Đi','Ngày Về']}
                     format={dateFormat}
                     onChange={(e) => {
                         handleChangeDate(e)
@@ -146,10 +140,10 @@ const Rooms = () => {
                         <div>
                             <Slider
                                 className='w-[160px mt-7'
-                                min={100}
-                                max={5000}
-                                step={100}
-                                range defaultValue={[600, 2000]}
+                                min={100000}
+                                max={5000000}
+                                step={10000}
+                                range defaultValue={[600000, 2000000]}
                                 onChange={handleOnChangeSlider}
                                 tooltip={{
                                     formatter,
@@ -166,10 +160,10 @@ const Rooms = () => {
                         </div>
                         <div className='flex w-full gap-2 rollSliderContent'>
                             <div className=' justify-center items-center flex'>
-                                {rollSliderStart.toLocaleString()},000 vnđ
+                                {rollSliderStart.toLocaleString()} vnđ
                             </div>
                             <div className='  justify-center items-center flex'>
-                                {rollSliderEnd.toLocaleString()},000 vnđ
+                                {rollSliderEnd.toLocaleString()} vnđ
                             </div>
                         </div>
                         <div >
@@ -184,7 +178,7 @@ const Rooms = () => {
                 <div className='w-full'>
                     <div className='w-full h-[70px] border border-red-700 justify-center items-center flex'>filters</div>
                     <div>
-                       <ListRooms dataRooms={dataRooms}/>
+                       <ListRooms />
                     </div>
                 </div>
 

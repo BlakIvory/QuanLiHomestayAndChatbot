@@ -1,8 +1,19 @@
 import React, { useState, useEffect } from 'react'
 import * as api from '../services'
 import RoomItem from './RoomItem'
-const ListRooms = (props) => {
-    const [rooms, setRooms] = useState(props.dataRooms)
+import { apiGetAllRoom } from '../services'
+const ListRooms = () => {
+    const [rooms, setRooms] = useState([])
+    
+    const getdataRooms = async () => {
+        const data = await apiGetAllRoom()
+        setRooms(data.data)
+    };
+    useEffect(() => {
+        getdataRooms()
+       
+    }, [])
+
     return (
         <div className='ml-2 mt-2'>
             {rooms?.map((room) => (

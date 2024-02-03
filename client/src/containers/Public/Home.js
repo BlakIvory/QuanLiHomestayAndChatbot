@@ -12,7 +12,7 @@ const Home = () => {
     <div className="w-full flex flex-col items-center justify-start  h-full   ">
       <Header />
       <Navigation />
-      <div className="w-1100 flex flex-col items-center justify-start">
+      <div className="w-1100 flex flex-col items-center justify-start mb-5">
         <Outlet></Outlet>
       </div>
       <FloatButton.Group
@@ -24,7 +24,7 @@ const Home = () => {
      
      <Chatbot />
     </FloatButton.Group>
-      <Footer></Footer>
+      <Footer ></Footer>
     </div>
   );
 };

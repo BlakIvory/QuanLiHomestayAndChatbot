@@ -7,4 +7,5 @@ export const path = {
     ROOMS : 'xemphong',
     ORDERROOM : 'datphong',
     CANHAN : 'canhan',
+    DETAILROOM : 'chitietphong',
 }
