@@ -10,6 +10,7 @@ require('./component.css')
 const RoomItem = (props) => {
     const navigate = useNavigate()
     var {
+        _id,
         nameRoom,
         imgRoom,
         danhgiaRoom,

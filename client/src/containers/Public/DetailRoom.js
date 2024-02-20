@@ -1,17 +1,18 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { Image } from "antd";
 import { TbSquareRoundedArrowUpFilled } from "react-icons/tb";
-import { path } from '../../ultils/constant'
+import { path } from "../../ultils/constant";
 import moment from "moment";
 import dayjs from "dayjs";
 import { useSelector } from "react-redux";
-import { DatePicker, Form, Input, Button, Radio, Space, Rate } from "antd";
+import { DatePicker, Form, Input, Button, Rate } from "antd";
 import customParseFormat from "dayjs/plugin/customParseFormat";
 import PayButton from "../../components/PayButton";
-import {
-  LoginOutlined
-} from '@ant-design/icons';
+import { LoginOutlined } from "@ant-design/icons";
+import { apiPostOrderRoom } from "../../services";
+import Item from "antd/es/list/Item";
+import swal from "sweetalert";
 const { RangePicker } = DatePicker;
 
 dayjs.extend(customParseFormat);
@@ -19,46 +20,67 @@ dayjs.extend(customParseFormat);
 const dateFormat = "DD/MM/YYYY";
 
 const DetailRoom = () => {
-  const navigate = useNavigate()
-  const { IsLoggedIn, nameUser, phoneUser } = useSelector(
+  const navigate = useNavigate();
+
+  const { IsLoggedIn, nameUser, phoneUser, idUser } = useSelector(
     (state) => state.auth
   );
   const location = useLocation();
 
   var {
+    _id,
     nameRoom,
     imgRoom,
     danhgiaRoom,
     loaiRoom,
     idSectorRoom,
     discRoom,
-    orderRoom,
+    ordersRoom,
     giaRoom,
     cmtRoom,
   } = location.state.detailData;
+  const r = location.state.detailData;
   const [bigImg, setBigImg] = useState(imgRoom[0].secure_url);
   const [arrayDateInput, setArrayDateInput] = useState([]);
-
-
-  const options = [
-    { label: "thanh toán qua Paypal", value: "true" },
-    { label: "Tiền mặt", value: "false" },
-  ];
-
-  const handleSetBigImg1 = () => {
-    setBigImg(imgRoom[0].secure_url);
+  const [paymentByPaypal, setPaymentByPaypal] = useState(false);
+  const [disabledDateData, setDisabledDateData] = useState([]);
+  const [amount, setAmount] = useState(10)
+  // const [onError, setOnError] = useState(false)
+  const [formData, setFormData] = useState({
+    idUser: idUser,
+    userInput: nameUser,
+    phoneInput: phoneUser,
+    idRoom: _id,
+    dateInput: arrayDateInput,
+    totalMoney: amount,
+    pay: paymentByPaypal,
+  });
+  // console.log(formData)
+  
+  const onChange1 = ({ target: { value } }) => {
+    setPaymentByPaypal(value);
+    setFormData({ ...formData, pay: value });
+    // alert(value)
   };
-  const handleSetBigImg2 = () => {
-    setBigImg(imgRoom[1].secure_url);
+
+  const handleSetBigImg = (srcImg) => {
+    setBigImg(srcImg);
   };
-  const handleSetBigImg3 = () => {
-    setBigImg(imgRoom[2].secure_url);
-  };
+
   const dateFormat = "DD/MM/YYYY";
-  function disabledDate(current) {
-    // Can not select days after today
-    return current && current < moment().endOf("day");
-  }
+  const disabledDate = (current) => {
+    const formattedDisabledDays = disabledDateData.map((day) =>
+      dayjs(day, "DD/MM/YYYY")
+    );
+    // Kiểm tra xem ngày hiện tại có nằm trong mảng formattedDisabledDays không
+    // hoặc ngày hiện tại có phải là ngày trong quá khứ không
+    return (
+      current < dayjs().startOf("day") ||
+      formattedDisabledDays.some((disabledDay) =>
+        current.isSame(disabledDay, "day")
+      )
+    );
+  };
   // Hàm nhận vào hai ngày dạng chuỗi (YYYY-MM-DD) và trả về một mảng chứa các ngày từ ngày bắt đầu đến ngày kết thúc
   function getDaysBetween(startDate, endDate) {
     // Sử dụng thư viện dayjs để làm việc với ngày tháng
@@ -82,9 +104,75 @@ const DetailRoom = () => {
     // Trả về mảng kết quả
     setArrayDateInput(result);
   }
-  
-  const submitFormOrder = () => {
-    console.log("form");
+
+  const handleDateChange = (e) => {
+    // console.log(e)
+
+    getDaysBetween(e[0].$d, e[1].$d);
+
+    setFormData({ ...formData, dateInput: arrayDateInput });
+    const isOverlap = arrayDateInput.some((date) =>
+      disabledDateData.includes(date)
+    );
+    if (isOverlap) {
+      swal(
+        "Thông báo ! ",
+        "Vui lòng chọn những ngày đã vô hiệu hóa trước đó !",
+        "warning"
+      );
+    }
+    setAmount(Number(((arrayDateInput.length*giaRoom)/24000).toFixed(2)))
+   
+  };
+ 
+  useEffect(() => {
+    setFormData((prevFormData) => ({
+      ...prevFormData,
+      dateInput: arrayDateInput,
+      totalMoney: arrayDateInput.length * giaRoom,
+    }));
+    
+    const isOverlap = arrayDateInput.some((date) =>
+      disabledDateData.includes(date)
+    );
+    if (isOverlap) {
+      swal(
+        "Thông báo ! ",
+        "Vui lòng chọn những ngày đã vô hiệu hóa trước đó !",
+        "warning"
+      );
+    }
+    setAmount(Number(((arrayDateInput.length*giaRoom)/24000).toFixed(2)))
+  }, [arrayDateInput]);
+
+  useEffect(() => {
+    const newDisabledDateData = [...disabledDateData];
+    // Assuming ordersRoom is an array of objects and each object has a dateInput array
+    ordersRoom.forEach((order) => {
+      order.forEach((date) => {
+        newDisabledDateData.push(date);
+      });
+    });
+    setDisabledDateData(newDisabledDateData);
+
+    // console.log(disabledDateData)
+  }, [ordersRoom]);
+
+  const apiOrder = async (payload) => {
+    const result = await apiPostOrderRoom(payload);
+    // console.log(result)
+    return result;
+  };
+
+  const submitFormOrder = async () => {
+    const datainput = {
+      Room: location.state.detailData,
+      infoOrder: formData,
+    };
+    const response = await apiOrder(datainput);
+    if (response.status === 200)
+      swal("Thành Công !", " Đặt phòng thành công !", "success");
+ 
   };
 
   return (
@@ -108,7 +196,11 @@ const DetailRoom = () => {
             {/* dong img lon */}
             {/* img nho */}
             <div className="m-1 b w-[200px] column-1 h-[400px] align-middle">
-              <div onClick={handleSetBigImg1}>
+              <div
+                onClick={() => {
+                  handleSetBigImg(imgRoom[0].secure_url);
+                }}
+              >
                 <Image
                   preview={false}
                   className=" cursor-pointer rounded-md"
@@ -117,7 +209,11 @@ const DetailRoom = () => {
                   width={200}
                 />
               </div>
-              <div onClick={handleSetBigImg2}>
+              <div
+                onClick={() => {
+                  handleSetBigImg(imgRoom[1].secure_url);
+                }}
+              >
                 <Image
                   preview={false}
                   className=" cursor-pointer rounded-md"
@@ -126,7 +222,11 @@ const DetailRoom = () => {
                   width={200}
                 />
               </div>
-              <div onClick={handleSetBigImg3}>
+              <div
+                onClick={() => {
+                  handleSetBigImg(imgRoom[2].secure_url);
+                }}
+              >
                 <Image
                   preview={false}
                   className=" cursor-pointer rounded-md"
@@ -165,8 +265,10 @@ const DetailRoom = () => {
               <div className="flex justify-around items-center">
                 <Form.Item
                   label="Tên người Đặt :"
-                  initialValues={`${nameUser}`}
                   name="nameUser"
+                  onChange={(e) => {
+                    setFormData({ ...formData, userInput: e.target.value });
+                  }}
                   className="w-[80%]"
                   rules={[
                     {
@@ -188,7 +290,15 @@ const DetailRoom = () => {
                       required: true,
                       message: "Vui lòng nhập thông tin người đặt !",
                     },
+                    {
+                      pattern: /^0\d{9}$/,
+                      message:
+                        "Số điện thoại phải bắt đầu bằng số 0 và có 10 chữ số.",
+                    },
                   ]}
+                  onChange={(e) => {
+                    setFormData({ ...formData, phoneInput: e.target.value });
+                  }}
                 >
                   <Input placeholder="Nhập SĐT người đặt ..." />
                 </Form.Item>
@@ -200,7 +310,7 @@ const DetailRoom = () => {
                   rules={[
                     {
                       required: true,
-                      message: "Vui lòng nhập thông tin ngày đặt !",
+                      message: "Vui lòng nhập thông tin ngày đặt phòng !",
                     },
                   ]}
                 >
@@ -209,15 +319,11 @@ const DetailRoom = () => {
                     disabledDate={disabledDate}
                     placeholder={["Ngày Đi", "Ngày Về"]}
                     initialValues={[
-                      dayjs(`${moment().format("DD/MM/YYYY")}`, dateFormat),
-                      dayjs(`${moment().format("DD/MM/YYYY")}`, dateFormat),
+                      dayjs(dayjs().format(dateFormat), dateFormat),
+                      dayjs(dayjs().format(dateFormat), dateFormat),
                     ]}
                     format={dateFormat}
-                    onChange={(e) => {
-                      if (e) {
-                        getDaysBetween(e[0].$d, e[1].$d);
-                      }
-                    }}
+                    onChange={handleDateChange}
                   />
                 </Form.Item>
               </div>
@@ -252,32 +358,49 @@ const DetailRoom = () => {
                 </div>
               </div>
               {IsLoggedIn ? (
-                 <PayButton/>
-              ):(
+                <PayButton
+                  Room={r}
+                  infoOrder={formData}
+                  submitFormOrder={submitFormOrder}
+                  paymentByPaypal={paymentByPaypal}
+                  setPaymentByPaypal={setPaymentByPaypal}
+                  onChange1={onChange1}
+                  amount={amount}
+
+                />
+              ) : (
                 <div className="w-full flex justify-center icons-center mt-5 mb-5">
-                  <Button danger type="text"   icon={<LoginOutlined />} size={40}>
-                Đăng Nhâp để tiếp tục
-              </Button>
+                  <Button
+                    danger
+                    type="text"
+                    icon={<LoginOutlined />}
+                    onClick={() => {
+                      navigate("/login");
+                    }}
+                    size={40}
+                  >
+                    Đăng Nhâp để tiếp tục
+                  </Button>
                 </div>
               )}
-             
-
             </Form>
           </div>
           {/* đóng card */}
         </div>
-        <div className="bg-black w-1100 h-[2px] mt-5 mb-5 flex justify-center items-center"></div>
+        <div className="bg-black w-1100 h-[2px] mt-5 mb-5 flex justify-center items-center">
+
+        </div>
         <div className="detailRoom_Charactic w-1100  ">
           <div>{nameRoom}</div>
           <div>
             <Rate value={danhgiaRoom} disabled allowHalf />
           </div>
-          <div>{discRoom}</div>
+          <div>Mô tả : {discRoom}</div>
         </div>
         <div className="bg-black w-1100 h-[2px] mt-5 mb-5 flex justify-center items-center"></div>
         <div className="comment_box w-1100  ">
-          <div>Bình Luận</div>
-     
+          <div>Bình Luận : {cmtRoom.length}</div>
+
           {cmtRoom.length === 0 ? (
             <div className=" comment_box">
               <div>Chưa có bình luận nào ... </div>
@@ -285,15 +408,14 @@ const DetailRoom = () => {
             </div>
           ) : (
             <div>
-              {cmtRoom?.map( cmt => 
+              {cmtRoom?.map((cmt) => (
                 <div className=" comment_box">
                   <div>
                     <Rate value={cmt.rate} disabled allowHalf />
                   </div>
                   <div>{cmt.content}</div>
                 </div>
-              )
-              }
+              ))}
             </div>
           )}
         </div>

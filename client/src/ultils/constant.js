@@ -1,5 +1,5 @@
 export const path = {
-    HOME : '/*',
+    HOME : '/',
     TRANGCHU: 'trangchu',
     LOGIN : 'login',
     REGISTER : 'register',

@@ -1,11 +1,12 @@
 const ApiError = require("../api-error");
 const UserService = require("../services/user/user.service");
 const MongoDB = require("../utils/mongodb.util");
+const RoomService = require("../services/room/room.service");
 // import { Jwt } from "jsonwebtoken";
 
 const jwt = require('jsonwebtoken');
 const bcrypt =  require ("bcrypt");
-const RoomService = require("../services/room/room.service");
+
 
 
 exports.register = async (req, res, next) => {
@@ -73,7 +74,7 @@ exports.login = async (req, res, next) => {
 };
 
 exports.infoUser = async (req, res, next) => {
-  console.log(req.body)
+  // console.log(req)
   try{
     const userService = new UserService(MongoDB.client);
     const infoUser = await userService.check({"phone" : req.body.phone})
@@ -98,3 +99,25 @@ exports.getAllRoom = async (req, res, next) => {
   }
 };
 
+exports.orderRoom = async (req, res, next) => {
+ 
+  const room = {
+    idRoom  : req.query.Room._id,
+    dateOrderRoom : req.query.infoOrder.dateInput,
+  }
+  const user = {
+    info : req.query.infoOrder,
+    room : room
+  }
+  console.log(req.query)
+  try{
+    const userService = new UserService(MongoDB.client);
+    const roomService = new RoomService(MongoDB.client);
+    const result1 = await roomService.OrderRoom(room)
+    const result2 = await userService.OrderRoomUser(user)
+    return res.send(result2)
+  } catch (error) {
+    // console.log(error)
+    return next(new ApiError(500, "Xảy ra lỗi trong quá trình đặt phòng !"));
+  }
+};

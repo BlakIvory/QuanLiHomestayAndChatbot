@@ -30,11 +30,11 @@ export const apiLogin = (payload) => new Promise(async(resolve, reject)=>{
 
 export const apiInfoUser = (payload) => new Promise(async(resolve, reject)=>{
     try {
-        console.log(payload)
+        // console.log(payload)
         const response = await axiosConfig({
             method: 'post',
             url: '/user/info',
-            params: payload
+            data: payload
         })
         resolve(response)
     } catch (error) {

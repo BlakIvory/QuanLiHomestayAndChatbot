@@ -14,6 +14,7 @@ export const register = (payload) => async (dispatch) => {
                       User : {
                         phone : response.data.data.phone,
                         name : response.data.data.name,
+                        id : response.data.data._id
                       }
                     }
                 

@@ -166,7 +166,7 @@ const Rooms = () => {
                                 {rollSliderEnd.toLocaleString()} vnđ
                             </div>
                         </div>
-                        <div >
+                        <div className='mt-1 mb-1'>
                             <button className='w-full flex justify-center bg-blue-500 border rounded-lg'
                                 onClick={handleSubmitSearch}
                             >
@@ -176,7 +176,7 @@ const Rooms = () => {
                     </div>
                 </div>
                 <div className='w-full'>
-                    <div className='w-full h-[70px] border border-red-700 justify-center items-center flex'>filters</div>
+                  
                     <div>
                        <ListRooms />
                     </div>

@@ -5,6 +5,7 @@
 }
 .roomItem:hover {
     background-color: RGB(235, 240, 252);
+    cursor: pointer;
 }
 .roomName {
     margin-top: 10px;

@@ -173,8 +173,8 @@ const AddRoomForm = props => {
                             <Form.Item name="nameRoom" label="Tên phòng : " className='' 
                             rules={[{ required: true, message: 'Vui lòng nhập thông tin !' }]}
                             >
-                                <Input className='w-[200px]' onChange={(e) => {
-
+                                <Input className='w-[200px]' 
+                                onChange={(e) => {
                                     setNameRoom(e.target.value)
                                     setFormData({ ...formData, nameRoom: e.target.value });
                                 }}
@@ -245,7 +245,8 @@ const AddRoomForm = props => {
                                     parser={(value) => value.replace(' VND', '')}
                                 />
                             </Form.Item>
-                            <Form.Item name="discRoom" label="Mô tả : " className='' rules={[{ required: true, message: 'Vui lòng nhập thông tin !' }]}>
+                            <Form.Item name="discRoom" label="Mô tả : " className=''
+                             rules={[{ required: true, message: 'Vui lòng nhập thông tin !' }]}>
                                 <TextArea
                                     showCount
                                     maxLength={200}

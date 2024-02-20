@@ -288,14 +288,15 @@ input:focus {
     color: red;
 }
 .button_editAntd{
-    margin-top: 10px;
+    font-size: 30px;
+    color: white;
     background-color: #FCCD04;
-    width: 300px;
-    height: 35px;
+    width: 330px;
+    height: 50px;
 }
 .button_editAntd:hover{
-    border: 2px solid white var(--rootColorTim);
-    color: white !important;
+    /* border: 2px solid white var(--rootColorTim); */
+    color: white !important; 
 }
 .detailRoom_Charactic{
     
