@@ -1,9 +1,11 @@
 import React from 'react'
 import { useNavigate , NavLink } from 'react-router-dom'
 import { path  } from '../../ultils/constant'
+import { useSelector,useDispatch} from 'react-redux'
 // import { Image } from 'antd';
 require('../containers.css')
 const Navigation = () => {
+  const { IsLoggedIn , nameUser } = useSelector(state => state.auth)
   const navigate = useNavigate()
   return (
     <div className='w-full flex justify-center items-center h-[50px] bg-[#A64AC9] mt-2'>
@@ -45,23 +47,38 @@ const Navigation = () => {
         >
           Xem Phòng
         </NavLink>
-        <NavLink
-        to ='/datphong'
-        style={({ isActive }) => ({
-          color: isActive ? "#FCCD04": "white" 
-        })}
-        >
-          Đặt Phòng
-        </NavLink>
+        {
+        IsLoggedIn ? 
+        ( <div className='navbars flex gap-3'>
+          <NavLink
+          to ='/datphong'
+          style={({ isActive }) => ({
+            color: isActive ? "#FCCD04": "white" 
+          })}
+          >
+            Đặt Phòng
+          </NavLink>
+         
+          <NavLink
+          to ='/canhan'
+          style={({ isActive }) => ({
+            color: isActive ? "#FCCD04": "white" 
+          })}
+          >
+            Cá Nhân
+          </NavLink>
+        </div>):(
+           <NavLink
+           to ='/login'
+           style={({ isActive }) => ({
+             color: isActive ? "#FCCD04": "white" 
+           })}
+           >
+             Đăng nhập để xem thêm
+           </NavLink>
+        )
+        }
        
-        <NavLink
-        to ='/canhan'
-        style={({ isActive }) => ({
-          color: isActive ? "#FCCD04": "white" 
-        })}
-        >
-          Cá Nhân
-        </NavLink>
         
         </ul>
 

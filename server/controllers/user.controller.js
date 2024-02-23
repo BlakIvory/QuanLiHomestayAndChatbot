@@ -107,9 +107,10 @@ exports.orderRoom = async (req, res, next) => {
   }
   const user = {
     info : req.query.infoOrder,
-    room : room
+    room : room,
+    status  : 0
   }
-  console.log(req.query)
+  // console.log(req.query)
   try{
     const userService = new UserService(MongoDB.client);
     const roomService = new RoomService(MongoDB.client);
@@ -119,5 +120,21 @@ exports.orderRoom = async (req, res, next) => {
   } catch (error) {
     // console.log(error)
     return next(new ApiError(500, "Xảy ra lỗi trong quá trình đặt phòng !"));
+  }
+};
+
+
+exports.getInfoRoom = async (req, res, next) => {
+
+  // console.log(req.body)
+  try{
+   
+    const roomService = new RoomService(MongoDB.client);
+    const result1 = await roomService.checkByIdRoom(req.body)
+
+    return res.send(result1)
+  } catch (error) {
+    // console.log(error)
+    return next(new ApiError(500, "Xảy ra lỗi trong truy xuat phòng !"));
   }
 };

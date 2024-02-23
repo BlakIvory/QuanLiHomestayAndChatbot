@@ -16,4 +16,6 @@ router.get("/getAllRoom", users.getAllRoom);
 
 router.post("/orderRoom", users.orderRoom);
 
+router.post("/infoRoom", users.getInfoRoom);
+
 module.exports = router;

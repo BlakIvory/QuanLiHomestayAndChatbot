@@ -23,6 +23,7 @@ const Rooms = () => {
     const [rollSliderEnd, setRollSliderEnd] = useState(2000000)
     const [searchPlace, setSearchPlace] = useState('')
     const formatter = (value) => `${value.toLocaleString()},000 nvđ`;
+    
     const validateDate = (data) => {
         let d = new Date(data);
         let date = new Date(d); // chuyển chuỗi thành đối tượng Date

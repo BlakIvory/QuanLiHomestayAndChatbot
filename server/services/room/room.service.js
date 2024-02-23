@@ -29,6 +29,14 @@ class RoomService {
     return await cursor.toArray();
   }
 
+  async checkByIdRoom(filter) {
+    console.log(filter);
+    const cursor = await this.Room.find({
+      _id: ObjectId.isValid(filter.idRoom) ? new ObjectId(filter.idRoom) : null,
+    });
+    return await cursor.toArray();
+  }
+
   async addRoom(payload) {
     //   console.log(payload)
     const room = await this.extractRoomData(payload);

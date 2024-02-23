@@ -138,7 +138,7 @@ const DetailRoom = () => {
     if (isOverlap) {
       swal(
         "Thông báo ! ",
-        "Vui lòng chọn những ngày đã vô hiệu hóa trước đó !",
+        "Vui lòng không chọn những ngày đã vô hiệu hóa trước đó !",
         "warning"
       );
     }
@@ -171,8 +171,8 @@ const DetailRoom = () => {
     };
     const response = await apiOrder(datainput);
     if (response.status === 200)
-      swal("Thành Công !", " Đặt phòng thành công !", "success");
- 
+      swal("Thành Công !", " Đặt phòng thành công !", "success" );
+    window.location.reload()
   };
 
   return (

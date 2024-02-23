@@ -25,9 +25,9 @@ const PayButton = (props) => {
         <Form.Item>
           <PayPalButton
             amount={props.amount}
-            options={{
-              clientId: process.env.PAYPAL_CLIENT_ID
-            }}
+            // options={{
+            //   clientId: process.env.PAYPAL_CLIENT_ID
+            // }}
             // shippingPreference="NO_SHIPPING" // default is "GET_FROM_FILE"
             onSuccess={(details, data) => {
               props.submitFormOrder()
