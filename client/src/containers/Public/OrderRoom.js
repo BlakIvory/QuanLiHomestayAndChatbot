@@ -57,6 +57,7 @@ const OrderRoom = () => {
     // console.log(inputData)
   };
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   const getOrderInfo = async () => {
     const res = await apiInfoUser({ phone: phoneUser });
     const result  = res.data.order
@@ -74,7 +75,7 @@ const OrderRoom = () => {
     }
     fetchInfoOrder()
     // console.log(dataOrder)
-  }, []);
+  }, [getOrderInfo]);
 
   return (
     <div className="w-1100 ">

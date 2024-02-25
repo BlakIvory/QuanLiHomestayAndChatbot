@@ -108,7 +108,7 @@ exports.orderRoom = async (req, res, next) => {
   const user = {
     info : req.query.infoOrder,
     room : room,
-    status  : 0
+    statusOrder  : 0
   }
   // console.log(req.query)
   try{

@@ -65,7 +65,10 @@ const Header = () => {
                     textColor='text-white' 
                     bgColor='bg-secondary2' 
                     IcAfter={CgLogOut}
-                    onClick={()=>{dispatch(actions.logout())}}
+                    onClick={()=>{
+                        navigate('/trangchu')
+                        dispatch(actions.logout())
+                    }}
                     />
                     </div>}
                     

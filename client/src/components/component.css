@@ -1,3 +1,10 @@
+:root{
+    --rootColorTim: #A64AC9; 
+    --rootColorVang: #FCCD04;
+    --rootColorbackround: #F5E6CC;
+    --rootColorNau: #FFB48F;
+    --rootColorXanh: #17E9E0;
+}
 .roomItem{
     border-radius: 10px;
     padding: 7px;
@@ -46,4 +53,13 @@
 }
 .bg-item {
     background: RGB(243, 245, 233);
+}
+.btn_V {
+    background-color: var(--rootColorVang);
+}
+.btn_T {
+    background-color: var(--rootColorTim);
+}
+.btn_X {
+    background-color: var(--rootColorXanh);
 }

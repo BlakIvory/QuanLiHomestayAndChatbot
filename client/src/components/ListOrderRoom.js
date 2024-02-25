@@ -12,7 +12,7 @@ const ListOrderRoom = (props) => {
     <div>
       {dataOrder.map((order,index)=>
       (
-      <div key={order.idRoom + '-' + index }>
+      <div className='' key={order.idRoom + '-' + index }>
         <OrderRoomItem order={order}  />
         </div>
       )

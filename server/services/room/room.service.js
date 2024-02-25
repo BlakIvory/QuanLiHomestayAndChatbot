@@ -30,7 +30,7 @@ class RoomService {
   }
 
   async checkByIdRoom(filter) {
-    console.log(filter);
+    // console.log(filter);
     const cursor = await this.Room.find({
       _id: ObjectId.isValid(filter.idRoom) ? new ObjectId(filter.idRoom) : null,
     });

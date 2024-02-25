@@ -12,6 +12,7 @@ import PayButton from "../../components/PayButton";
 import { LoginOutlined } from "@ant-design/icons";
 import { apiPostOrderRoom } from "../../services";
 import Item from "antd/es/list/Item";
+
 import swal from "sweetalert";
 const { RangePicker } = DatePicker;
 
@@ -54,6 +55,7 @@ const DetailRoom = () => {
     dateInput: arrayDateInput,
     totalMoney: amount,
     pay: paymentByPaypal,
+    statusOrder: 1,
   });
   // console.log(formData)
   
@@ -366,7 +368,6 @@ const DetailRoom = () => {
                   setPaymentByPaypal={setPaymentByPaypal}
                   onChange1={onChange1}
                   amount={amount}
-
                 />
               ) : (
                 <div className="w-full flex justify-center icons-center mt-5 mb-5">
