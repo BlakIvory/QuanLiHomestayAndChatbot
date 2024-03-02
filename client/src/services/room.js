@@ -42,3 +42,31 @@ export const apiGetInfoRoom = (payload) => new Promise(async(resolve, reject)=>{
         reject(error)
     }
 })
+export const apiCancleRoom = (payload) => new Promise(async(resolve, reject)=>{
+    try {
+        // console.log(payload)
+        const response = await axiosConfig({
+            method: 'post',
+            url: '/user/cancleOrderRoom',
+            data : payload,
+        })
+        resolve(response)
+    } catch (error) {
+        reject(error)
+    }
+})
+
+
+export const apiUpdatePaypalOrder = (payload) => new Promise(async(resolve, reject)=>{
+    try {
+        // console.log(payload)
+        const response = await axiosConfig({
+            method: 'post',
+            url: '/user/updatePaypalOrder',
+            data : payload,
+        })
+        resolve(response)
+    } catch (error) {
+        reject(error)
+    }
+})

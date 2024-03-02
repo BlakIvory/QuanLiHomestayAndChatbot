@@ -227,3 +227,27 @@ exports.deleteRoom = async (req, res, next) => {
     return next(new ApiError(500, "Xảy ra lỗi trong quá trình xoa phong !"));
   }
 };
+
+
+exports.confirmOrderRoom = async (req, res, next) => {
+  // console.log(req.body)
+  try{
+    const userService = new UserService(MongoDB.client);
+    const result = await userService.ConfirmOrder(req.body);
+    // console.log(result)
+    if(result){
+      return res.status(200).json({
+        status: 1,
+        data : result,
+        msg: "Xác nhận đơn thành công !"
+      });
+    }
+    else{
+      return res.status(200).json("code lỗi");
+    }
+    
+  } catch (error) {
+    console.log(error)
+    return next(new ApiError(500, "Xảy ra lỗi trong quá trình xác nhận đơn đặt phòng !"));
+  }
+};

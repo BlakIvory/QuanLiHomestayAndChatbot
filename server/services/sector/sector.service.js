@@ -8,8 +8,9 @@ class SectorService {
             nameSector: payload.nameSector,
             discSector: payload.discSector,
             noteSector: payload.noteSector,
-            imgSector : payload.imgSector,
-            room: payload.room,
+            totalRoomInSector : payload.totalRoomInSector,
+            statusSector: payload.statusSector
+        
         };
         Object.keys(sector).forEach(
             (key) => sector[key] === undefined && delete sector[key]
@@ -28,7 +29,7 @@ class SectorService {
         const setor = await this.extractSectorData(payload);
         const result = await this.Sector.findOneAndUpdate(
             setor,
-            { $set: { noteSector: '', room: {} } },
+            { $set: {totalRoomInSector: 0 ,statusSector : 0 } },
             { returnDocument: "after", upsert: true }
         );
         return result;
@@ -37,16 +38,7 @@ class SectorService {
 
 
 
-    async addRoomToSectorService(payload) {
-          console.log(payload)
-        const setor = await this.extractSectorData(payload);
-        const result = await this.Sector.findOneAndUpdate(
-            setor,
-            { $push: { noteSector: '', room: {} } },
-            { returnDocument: "after", upsert: true }
-        );
-        return result;
-    }
+
 
 
 }

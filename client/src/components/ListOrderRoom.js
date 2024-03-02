@@ -5,7 +5,8 @@ const ListOrderRoom = (props) => {
   // console.log(props.dataOrder)
   const [dataOrder, setDataOrder] = useState(props.dataOrder)
   useEffect(() => {
-    setDataOrder(props.dataOrder)
+    const reversedList = [...props.dataOrder].reverse();
+    setDataOrder(reversedList)
   }, [props.dataOrder])
   
   return (

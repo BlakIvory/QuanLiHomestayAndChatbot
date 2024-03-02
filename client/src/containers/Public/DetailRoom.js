@@ -177,6 +177,10 @@ const DetailRoom = () => {
     window.location.reload()
   };
 
+
+  
+
+
   return (
     <div className=" m-1 w-1100 ">
       <div className="font-semibold flex justify-center w-1100 text_bigSize1">
@@ -409,8 +413,8 @@ const DetailRoom = () => {
             </div>
           ) : (
             <div>
-              {cmtRoom?.map((cmt) => (
-                <div className=" comment_box">
+              {cmtRoom?.map((cmt,index) => (
+                <div className=" comment_box" key={index}>
                   <div>
                     <Rate value={cmt.rate} disabled allowHalf />
                   </div>

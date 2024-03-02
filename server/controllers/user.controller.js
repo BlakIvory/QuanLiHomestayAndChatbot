@@ -3,7 +3,7 @@ const UserService = require("../services/user/user.service");
 const MongoDB = require("../utils/mongodb.util");
 const RoomService = require("../services/room/room.service");
 // import { Jwt } from "jsonwebtoken";
-
+const { v4: uuidv4 } = require('uuid');
 const jwt = require('jsonwebtoken');
 const bcrypt =  require ("bcrypt");
 
@@ -100,15 +100,25 @@ exports.getAllRoom = async (req, res, next) => {
 };
 
 exports.orderRoom = async (req, res, next) => {
- 
+  const idv4 = uuidv4();
   const room = {
     idRoom  : req.query.Room._id,
     dateOrderRoom : req.query.infoOrder.dateInput,
   }
+  console.log(req.query.infoOrder)
+  const infoOrder  =  { 
+    idUser : req.query.infoOrder.idUser,
+    userInput : req.query.infoOrder.userInput,
+    phoneInput : req.query.infoOrder.phoneInput,
+    idRoom : req.query.infoOrder.idRoom,
+    dateInput : req.query.infoOrder.dateInput,
+    totalMoney : req.query.infoOrder.totalMoney,
+    pay: req.query.infoOrder.pay,
+    statusOrder : req.query.infoOrder.statusOrder,
+    idOrder :  idv4
+  } 
   const user = {
-    info : req.query.infoOrder,
-    room : room,
-    statusOrder  : 0
+    info : infoOrder,
   }
   // console.log(req.query)
   try{
@@ -138,3 +148,46 @@ exports.getInfoRoom = async (req, res, next) => {
     return next(new ApiError(500, "Xảy ra lỗi trong truy xuat phòng !"));
   }
 };
+
+
+exports.cancleOrderRoom = async (req, res, next) => {
+  const idUser = req.body.idUser;
+  const idOrder = req.body.idOrder;
+  console.log(req.body)
+  const payload = {
+    idUser: idUser,
+    idOrder: idOrder,
+  }
+  try{
+   
+    const userService = new UserService(MongoDB.client);
+    const result1 = await userService.CancleOrderRoomUser(payload)
+
+    return res.send(result1)
+  } catch (error) {
+    // console.log(error)
+    return next(new ApiError(500, "Xảy ra lỗi trong truy xuat phòng !"));
+  }
+};
+
+
+exports.updatePaypalOrder = async (req, res, next) => {
+  const idUser = req.body.idUser;
+  const idOrder = req.body.idOrder;
+  // console.log(req.body)
+  const payload = {
+    idUser: idUser,
+    idOrder: idOrder,
+  }
+  try{
+   
+    const userService = new UserService(MongoDB.client);
+    const result1 = await userService.PayOrder(payload)
+
+    return res.send(result1)
+  } catch (error) {
+    // console.log(error)
+    return next(new ApiError(500, "Xảy ra lỗi trong truy xuat phòng !"));
+  }
+};
+

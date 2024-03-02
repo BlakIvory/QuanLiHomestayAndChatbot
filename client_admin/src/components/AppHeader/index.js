@@ -11,7 +11,7 @@ const AppHeader = () => {
                 className='rounded-full'
             >
             </Image>
-            <Typography.Title>HomeStay ADMIN DASHBOARD</Typography.Title>
+            <Typography.Title>HOMESTAY ADMIN DASHBOARD</Typography.Title>
             <Space>
                 <Badge count={10}>
                     <MailOutlined style={{ fontSize: 24 }} />

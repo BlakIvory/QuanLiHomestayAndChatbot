@@ -18,4 +18,8 @@ router.post("/orderRoom", users.orderRoom);
 
 router.post("/infoRoom", users.getInfoRoom);
 
+router.post("/cancleOrderRoom", users.cancleOrderRoom);
+
+router.post("/updatePaypalOrder", users.updatePaypalOrder);
+
 module.exports = router;

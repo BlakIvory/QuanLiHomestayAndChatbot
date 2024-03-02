@@ -134,17 +134,11 @@ const Customer = () => {
 
     <div className='p-5'>
       <Space size={20} direction='vertical'>
-        <Typography.Title level={4}>Khach hang</Typography.Title>
+        <Typography.Title level={4}>QUẢN LÝ TÀI KHOẢN KHÁCH HÀNG</Typography.Title>
         <Table
           loading={loading}
+          rowKey="_id"
           columns={[
-            // {
-            //   title: 'Photo',
-            //   dataIndex: 'img',
-            //   render: (img) => {
-            //      <Avatar size={20} src={"https://th.bing.com/th/id/OIP.z4no5tqp2ryBdMMD5NU9OgHaEv?rs=1&pid=ImgDetMain"}/>
-            //   },
-            // },
             {
               title: 'Họ và tên',
               dataIndex: 'name',
@@ -160,7 +154,9 @@ const Customer = () => {
             {
               title: 'Email',
               dataIndex: 'email',
-              key:'email'
+              key:'email',
+              sorter: (a, b) => a.email.localeCompare(b.email),
+              sortDirections: ['ascend', 'descend'],
             },
             {
               title: 'Số điện thoại',

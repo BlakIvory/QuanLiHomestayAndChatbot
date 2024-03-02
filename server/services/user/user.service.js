@@ -56,7 +56,7 @@ class UserService {
     const user = await this.extractUserData(input);
     const result = await this.User.findOneAndUpdate(
       user,
-      { $set: { isAdmin: true, img: {}, order: [] } },
+      { $set: {  img: {}, order: [] } },
       { returnDocument: "after", upsert: true }
     );
 
@@ -73,6 +73,64 @@ class UserService {
         $push: {
           order: payload.info
         },
+      },
+      { returnDocument: "after", }
+    );
+
+    return result;
+  }
+  async CancleOrderRoomUser(payload) {
+    
+    const idUser = payload.idUser;
+    const idOrder = payload.idOrder;
+    console.log(payload)
+    const result = await this.User.findOneAndUpdate(
+      {
+        _id:  ObjectId.isValid(idUser) ? new ObjectId(idUser) : null,
+        "order.idOrder":idOrder,
+      },
+      {
+         $set: { "order.$.statusOrder": "10" }
+      },
+      { returnDocument: "after", }
+    );
+
+    return result;
+  }
+
+
+  async PayOrder(payload) {
+    
+    const idUser = payload.idUser;
+    const idOrder = payload.idOrder;
+    // console.log(payload)
+    const result = await this.User.findOneAndUpdate(
+      {
+        _id:  ObjectId.isValid(idUser) ? new ObjectId(idUser) : null,
+        "order.idOrder":idOrder,
+      },
+      {
+         $set: { "order.$.pay": true }
+      },
+      { returnDocument: "after", }
+    );
+
+    return result;
+  }
+
+
+  async ConfirmOrder(payload) {
+    
+    const idUser = payload.idUser;
+    const idOrder = payload.idOrder;
+    console.log(payload)
+    const result = await this.User.findOneAndUpdate(
+      {
+        _id:  ObjectId.isValid(idUser) ? new ObjectId(idUser) : null,
+        "order.idOrder":idOrder,
+      },
+      {
+         $set: { "order.$.statusOrder": "2" }
       },
       { returnDocument: "after", }
     );

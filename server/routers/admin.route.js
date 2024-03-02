@@ -23,5 +23,7 @@ router.get("/getAllRoom", admins.getAllRoom);
 
 router.get("/getAllUser", admins.getAllUser);
 
+router.post('/confirmOrderRoom', admins.confirmOrderRoom);
+
 
 module.exports = router;

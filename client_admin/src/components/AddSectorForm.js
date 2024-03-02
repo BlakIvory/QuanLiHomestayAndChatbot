@@ -20,7 +20,7 @@ const { TextArea } = Input;
 
 
 
-const AddRoomForm = props => {
+const AddSectorForm = props => {
     const [selectedFile, setSelectedFile] = useState([]);
     const [nameRoom, setNameRoom] = useState('')
     const [giaRoom, setGiaRoom] = useState(0)
@@ -306,4 +306,4 @@ const AddRoomForm = props => {
     )
 }
 
-export default AddRoomForm
+export default AddSectorForm

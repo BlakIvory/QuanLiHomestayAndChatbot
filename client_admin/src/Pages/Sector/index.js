@@ -1,73 +1,63 @@
 import React,{ useEffect, useState } from 'react'
-import { Avatar, Rate, Space, Table, Typography } from 'antd'
-import { getInventory } from '../../api'
-import { EditOutlined, DeleteOutlined ,UnorderedListOutlined} from '@ant-design/icons'
+import { Avatar, Rate, Space, Table, Typography ,Button} from 'antd'
+import { apiGetAllSector, getInventory, getOrders } from '../../api'
+import { EditOutlined, DeleteOutlined ,UnorderedListOutlined,PlusOutlined} from '@ant-design/icons'
+import  AddSectorForm from '../../components/AddSectorForm'
 const Sector = () => {
   const [loading, setLoading] = useState(false)
   const [dataSource, setDataSource] = useState([])
-
-
-  useEffect(()=>{
-    setLoading(true)
-    getInventory().then(res=>{
-      setDataSource(res.products)
-      setLoading(false)
-    })
-
-
-  },[])
-
+ 
+  useEffect(() => {
+    setLoading(true);
+    getOrders().then(res => {
+      setDataSource(res.products);
+      setLoading(false);
+    });
+  }, []);
 
   return (
     <div className='p-5'>
+      
        <Space size={20} direction='vertical'>
-       <Typography.Title level={4}>Kho Hàng</Typography.Title>
+       <div className='flex justify-between'>
+          <Typography.Title level={4}>QUẢN LÝ KHU VỰC</Typography.Title>
+          <Button className='bg-primary border text-green'
+            size={40}
+            icon={<PlusOutlined />}
+          
+          >Thêm Khu Vực</Button>
+
+        </div>
         <Table
         loading={loading}
         columns={[
           {
-            title: 'Thumbnail',
-            dataIndex: 'thumbnail',
-            render: (link) => {
-              return <Avatar src={link}/>
-            },
+            title: 'Tên khu vực',
+            dataIndex: 'id',
           },
           {
-            title: 'Title',
+            title: 'Đặt điểm khu vực ',
             dataIndex: 'title',
           },
           {
-            title: 'Price',
-            dataIndex: 'price',
+            title: 'Vị trí',
+            dataIndex: 'áđá',
             render: (value)=> <span>${value}</span>
           },
           {
-            title: 'Rating',
-            dataIndex: 'rating',
-            render: (rating)=>{
-              return <Rate value={rating} allowHalf disabled></Rate>
-            }
+            title: 'Số lượng phòng',
+            dataIndex: 'sada',
           },
           {
-            title: 'Stock',
-            dataIndex: 'stock',
-          },
-         
-          {
-            title: 'Brand',
-            dataIndex: 'brand',
-          },
-          {
-            title: 'Category',
-            dataIndex: 'category',
+            title: 'tình trạng',
+            dataIndex: 'sda',
           },
           {
             title: 'Chỉnh sửa',
-
             render: (text) => <div className='flex justify-between'>
-              <UnorderedListOutlined  className='m-1 flex items-center justify-center'  style={{ fontSize: '20px', color: 'green' ,  }} onClick={() => { console.log(text) }} />
-              <EditOutlined className='m-1 flex items-center justify-center'  style={{ fontSize: '20px', color: 'green' ,  }} onClick={() => { console.log(text) }} /> 
-              <DeleteOutlined className='m-1 flex items-center justify-center' style={{ fontSize: '20px', color: 'red' }} onClick={() => { console.log(text) }} /></div>
+              <UnorderedListOutlined  className='m-1 flex items-center justify-center'  style={{ fontSize: '20px', color: 'green' ,  }} onClick={() => { console.log("text") }} />
+              <EditOutlined className='m-1 flex items-center justify-center'  style={{ fontSize: '20px', color: 'green' ,  }} onClick={() => { console.log("text") }} /> 
+              <DeleteOutlined className='m-1 flex items-center justify-center' style={{ fontSize: '20px', color: 'red' }} onClick={() => { console.log("text") }} /></div>
           },
         ]}
         dataSource={dataSource}

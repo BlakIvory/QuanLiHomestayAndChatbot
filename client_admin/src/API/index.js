@@ -92,3 +92,18 @@ export const apiDeleteRoom = (payload) => new Promise(async(resolve, reject)=>{
       reject(error)
   }
 })
+
+
+export const apiConfirmOrderRoom = (payload) => new Promise(async(resolve, reject)=>{
+  try {
+      console.log(payload)
+      const response = await axiosConfig({
+          method: 'post',
+          url: '/admin/confirmOrderRoom',
+          data:payload,
+      })
+      resolve(response)
+  } catch (error) {
+      reject(error)
+  }
+})
