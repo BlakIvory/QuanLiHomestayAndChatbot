@@ -1,6 +1,32 @@
 import React from 'react'
 import axiosConfig from '../axiosConfig'
 
+export const apiAdminRegister = (payload) => new Promise(async(resolve, reject)=>{
+    try {
+        
+        const response = await axiosConfig({
+            method: 'post',
+            url: '/admin/register',
+            data: payload,
+        })
+        resolve(response)
+    } catch (error) {
+        reject(error)
+    }
+})
+export const apiAdminLogin = (payload) => new Promise(async(resolve, reject)=>{
+    try {
+        
+        const response = await axiosConfig({
+            method: 'post',
+            url: '/admin/login',
+            data: payload,
+        })
+        resolve(response)
+    } catch (error) {
+        reject(error)
+    }
+})
 
 export const getOrders = () => {
   return (
@@ -50,6 +76,9 @@ export const apiGetAllRoom = () => new Promise(async(resolve, reject)=>{
       reject(error)
   }
 })
+
+
+
 export const apiGetAllUser = () => new Promise(async(resolve, reject)=>{
   try {
       
@@ -63,6 +92,18 @@ export const apiGetAllUser = () => new Promise(async(resolve, reject)=>{
   }
 })
 
+export const apiGetAllAdmin = () => new Promise(async(resolve, reject)=>{
+    try {
+        
+        const response = await axiosConfig({
+            method: 'get',
+            url: '/admin/getAllAdmin',
+        })
+        resolve(response)
+    } catch (error) {
+        reject(error)
+    }
+  })
 
 export const apiAddRoom = (payload) => new Promise(async(resolve, reject)=>{
   try {
@@ -107,3 +148,105 @@ export const apiConfirmOrderRoom = (payload) => new Promise(async(resolve, rejec
       reject(error)
   }
 })
+export const apiCompleteOrderRoom = (payload) => new Promise(async(resolve, reject)=>{
+  try {
+      console.log(payload)
+      const response = await axiosConfig({
+          method: 'post',
+          url: '/admin/completeOrderRoom',
+          data:payload,
+      })
+      resolve(response)
+  } catch (error) {
+      reject(error)
+  }
+})
+export const apiDeleteOrderRoom = (payload) => new Promise(async(resolve, reject)=>{
+  try {
+      console.log(payload)
+      const response = await axiosConfig({
+          method: 'post',
+          url: '/admin/deleteOrderRoom',
+          data:payload,
+      })
+      resolve(response)
+  } catch (error) {
+      reject(error)
+  }
+})
+
+export const apiGetInfoRoom = (payload) => new Promise(async(resolve, reject)=>{
+  try {
+
+      const response = await axiosConfig({
+          method: 'post',
+          url: '/admin/infoRoom',
+          data:payload,
+      })
+      resolve(response)
+  } catch (error) {
+      reject(error)
+  }
+})
+
+export const apiAddSector = (payload) => new Promise(async(resolve, reject)=>{
+  try {
+      console.log(payload)
+      const response = await axiosConfig({
+          method: 'post',
+          url: '/admin/addRoom',
+          data:payload,
+      })
+      resolve(response)
+  } catch (error) {
+      reject(error)
+  }
+})
+
+export const apiGetInfoSector = (payload) => new Promise(async(resolve, reject)=>{
+  try {
+
+      const response = await axiosConfig({
+          method: 'post',
+          url: '/admin/infoSector',
+          data:payload,
+      })
+      resolve(response)
+  } catch (error) {
+      reject(error)
+  }
+})
+
+
+
+export const apiAddAdmin = (payload) => new Promise(async(resolve, reject)=>{
+    try {
+        console.log(payload)
+        const response = await axiosConfig({
+            method: 'post',
+            url: '/admin/addAdmin',
+            data:payload,
+        })
+        resolve(response)
+    } catch (error) {
+        reject(error)
+    }
+  })
+  
+  export const apiDeleteAdmin = (payload) => new Promise(async(resolve, reject)=>{
+    try {
+        // console.log(payload)
+        const input = {
+            "idAdmin": payload._id
+        }
+        const response = await axiosConfig({
+            method: 'post',
+            url: '/admin/deleteAdmin',
+            data: input,
+        })
+        resolve(response)
+    } catch (error) {
+        reject(error)
+    }
+  })
+  

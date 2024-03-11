@@ -1,309 +1,177 @@
-import React, { useEffect, useState, useRef, } from 'react'
+import React, { useEffect, useState, useRef } from "react";
 import { IoMdCloseCircle } from "react-icons/io";
-import { PlusOutlined } from '@ant-design/icons';
-import axios from 'axios';
-import { apiAddRoom } from '../api';
-import swal from 'sweetalert';
+import { PlusOutlined } from "@ant-design/icons";
+import axios from "axios";
+import { apiAddRoom, apiGetAllSector } from "../api";
+import swal from "sweetalert";
 
-
-
-import {
-    Button,
-    Form,
-    Input,
-    InputNumber,
-    Select,
-    Upload,
-} from 'antd';
+import { Button, Form, Input, InputNumber, Select, Upload } from "antd";
 const { TextArea } = Input;
 
+const AddSectorForm = (props) => {
+  const [nameSector, setNameSector] = useState("");
+  const [addressSector, setAddressSector] = useState(0);
+  const [discSector, setDiscSector] = useState("");
+ 
 
+  const [formData, setFormData] = useState({
+    nameSector: nameSector,
+    discSector: discSector,
+    addressSector: addressSector,
+  });
 
+  const submitForm = async () => {
+    // console.log(loi)
+    // console.log(formData);
 
-const AddSectorForm = props => {
-    const [selectedFile, setSelectedFile] = useState([]);
-    const [nameRoom, setNameRoom] = useState('')
-    const [giaRoom, setGiaRoom] = useState(0)
-    const [khuvucId, setKhuvucId] = useState('View biển');
-    const [loaiRoom, setLoaiRoom] = useState('1-2 người')
-    const [discRoom, setDiscRoom] = useState('')
-    const [loi, setLoi] = useState(1)
-    const normFile = (e) => {
-        if (Array.isArray(e)) {
-            return e;
-        }
-        return e?.fileList;
-    };
-
-    const [formData, setFormData] = useState({
-        nameRoom: nameRoom,
-        giaRoom: giaRoom,
-        loaiRoom: loaiRoom,
-        idSectorRoom: khuvucId,
-        imgRoom: selectedFile,
-        discRoom: discRoom,
-    });
-
-    function beforeUpload(file) {
-        const isJpgOrPng = file.type === "image/jpeg" || file.type === "image/png";
-        if (!isJpgOrPng) {
-            console.error("You can only upload JPG/PNG file!");
-            swal('Cảnh báo !', 'Bạn không thể tải tệp không phải hình ảnh ! Vui lòng xóa tệp và tải lại', 'warning');
-        }
-        return isJpgOrPng;
+    const result = await apiAddRoom(formData);
+    // console.log(result)
+    if (result.status === 200) {
+      swal("Thông báo !", "Thêm phòng mới thành công  !", "success");
+      props.setShowAddRoomPopup.bind("", false);
+    } else {
+      swal(
+        "Thông báo !",
+        "Đã xảy ra lỗi ! Vui lòng thực hiện lại  !",
+        "warning"
+      );
     }
-
-    const uploadImage = async (e) => {
-        const formdata = new FormData()
-        formdata.append('file', e)
-        formdata.append('upload_preset', "btj12veg");
-        await axios.post("https://api.cloudinary.com/v1_1/doqqlyjb2/image/upload", formdata
-        ).then(
-            (response) => {
-                console.log(response.data);
-                setSelectedFile([...selectedFile, response.data]);
-                // setFormData({...formData,imgRoom : selectedFile});
-                formData.imgRoom.push(response.data);
-                // console.log(formData);  
-                setLoi(0)
-
-            }
-        ).catch((err) => {
-            console.log(err)
-        });;
+  };
 
 
-    }
 
-    const dummyRequest = ({ file, onSuccess }) => {
-        setTimeout(() => {
-            onSuccess("ok");
-        }, 0);
-    };
-    const submitform = async () => {
+  
 
-        console.log('img :' + formData.imgRoom.length);
-        if (formData.nameRoom.length === 0) {
-            setLoi(1)
-            swal('Thông báo !', 'Vui lòng nhập thông tin đầy đủ  !', 'warning')
-
-        }
-        console.log('igia :' + formData.giaRoom);
-        if (formData.giaRoom === 0) {
-            setLoi(1)
-            swal('Thông báo !', 'Vui lòng nhập thông tin đầy đủ  !', 'warning')
-
-        }
-        console.log('disc :' + formData.discRoom.length);
-        if (formData.discRoom.length === 0) {
-            setLoi(1)
-            swal('Thông báo !', 'Vui lòng nhập thông tin đầy đủ  !', 'warning')
-
-        }
-        if (formData.imgRoom.length < 3) {
-            setLoi(1)
-            swal('Thông báo !', 'Vui lòng nhập thông tin đầy đủ  !', 'warning')
-
-        }
-
-        // console.log(loi)
-
-        if (loi === 0) {
-            const result = await apiAddRoom(formData)
-            // console.log(result)
-            if (result.status === 200) {
-
-            swal('Thông báo !', 'Thêm phòng mới thành công  !', 'success')
-            props.setShowAddRoomPopup.bind('', false)
-            } else {
-                swal('Thông báo !', 'Đã xảy ra lỗi ! Vui lòng thực hiện lại  !', 'warning')
-            }
-        }
-    }
-    return (
-
+  return (
+    <div
+      style={{
+        position: "absolute",
+        backgroundColor: "rgba(0,0,0,0.5)",
+        bottom: "0",
+        top: "0",
+        left: "0",
+        right: "0",
+        zIndex: "2",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+      }}
+    >
+      <div
+        style={{
+          background: "white",
+          width: "800px",
+          borderRadius: "8px",
+          padding: "20px 10px",
+        }}
+      >
         <div
-            style={{
-                position: 'absolute',
-                backgroundColor: 'rgba(0,0,0,0.5)',
-                bottom: '0',
-                top: '0',
-                left: '0',
-                right: '0',
-                zIndex: '2',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-            }}
+          style={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            width: "700px",
+          }}
         >
-            <div
-                style={{
-                    background: 'white',
-                    width: '800px',
-                    borderRadius: '8px',
-                    padding: '20px 10px',
-                }}
-            >
-                <div
-                    style={{
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        width: '700px',
-                    }}>
-                    <div className='flex justify-center font-semibold'>
-                        <h1 >Thêm Phòng Mới</h1>
-                    </div>
-
+          <div className="flex justify-center items-center font-semibold">
+            <h1>Thêm Khu Vực Mới</h1>
+          </div>
+        </div>
+        <div className=" w-[750px] mt-4  flex flex-col">
+          <Form
+            onFinish={submitForm}
+            labelCol={{
+              span: 5,
+            }}
+            wrapperCol={{
+              span: 14,
+            }}
+            style={{
+              maxWidth: 750,
+            }}
+          >
+            <div className="col">
+              <Form.Item
+                name="nameSector"
+                label="Tên Khu Vực : "
+                className=""
+                rules={[
+                  { required: true, message: "Vui lòng nhập thông tin !" },
+                ]}
+              >
+                <Input
+                  className="w-[400px]"
+                  onChange={(e) => {
+                    setNameSector(e.target.value);
+                    setFormData({ ...formData, nameSector: e.target.value });
+                  }}
+                  placeholder="tên khu vực ..."
+                />
+              </Form.Item>
+              <Form.Item
+                name="discSector"
+                label="Đặc điểm : "
+                rules={[
+                  { required: true, message: "Vui lòng nhập thông tin !" },
+                ]}
+              >
+                <div className="flex row ">
+                  <TextArea
+                    showCount
+                    maxLength={200}
+                    onChange={(e) => {
+                      setDiscSector(e.target.value);
+                      setFormData({ ...formData, discSector: e.target.value });
+                    }}
+                    placeholder="Đặc điểm ..."
+                    style={{ height: 70, width: 400, resize: "none" }}
+                  />
                 </div>
-                <div className=' w-[750px] mt-4  flex flex-col'>
-                    <Form
-                        onFinish={submitform}
-                        labelCol={{
-                            span: 5,
-                        }}
-                        wrapperCol={{
-                            span: 14,
-                        }}
-                        style={{
-                            maxWidth: 750,
-                        }}
-                    >
-                        <div className='col'>
-                            <Form.Item name="nameRoom" label="Tên phòng : " className='' 
-                            rules={[{ required: true, message: 'Vui lòng nhập thông tin !' }]}
-                            >
-                                <Input className='w-[200px]' 
-                                onChange={(e) => {
-                                    setNameRoom(e.target.value)
-                                    setFormData({ ...formData, nameRoom: e.target.value });
-                                }}
-                                    placeholder="Tên phòng ..."
-
-                                />
-                            </Form.Item>
-                            <Form.Item label="Loại Phòng : "
-                            
-                            >
-                                <div className='flex row w-[200px]'>
-                                    <Select name="loaiRoom"
-                                        onChange={(e) => {
-
-                                            setLoaiRoom(e)
-                                            setFormData({ ...formData, loaiRoom: e });
-                                        }}
-                                        defaultValue="1-2 người"
-                                    >
-                                        <Select.Option value="1-2 người">1-2 người </Select.Option>
-                                        <Select.Option value="3-4 người">3-4 người </Select.Option>
-                                        <Select.Option value="5-7 người">5-7 người </Select.Option>
-                                    </Select>
-                                </div>
-                            </Form.Item>
-                            <Form.Item name='khuVucId' label="Khu vực phòng : ">
-                                <div className='flex row w-[200px]'>
-
-                                    <Select name='khuvucId' onChange={(e) => {
-
-
-                                        setKhuvucId(e)
-                                        setFormData({ ...formData, khuvucId: e });
-                                    }}
-                                        defaultValue="View biển"
-                                    >
-                                        <Select.Option value="View biển">View biển </Select.Option>
-                                        <Select.Option value="View núi">View núi </Select.Option>
-                                        <Select.Option value="Vip 1">Vip 1 </Select.Option>
-                                        <Select.Option value="Vip 2">Vip 2 </Select.Option>
-                                    </Select>
-                                </div>
-                            </Form.Item>
-
-
-                            <Form.Item label="Giá phòng : " name='giaRoom'
-                                rules={[
-                                    { required: true, message: 'Vui lòng nhập thông tin !' },
-                                    { required: true,
-                                        message: 'Vui lòng nhập số tiền 100000!',
-                                        type: 'number',
-                                        min: 100000,
-                                      },
-                                ]}>
-                                <InputNumber
-                                    onChange={(e) => {
-                                        console.log(e)
-
-                                        setGiaRoom(e)
-                                        setFormData({ ...formData, giaRoom: e });
-                                    }
-
-                                    } className='w-[200px]'
-                                    step={10000}
-                                    placeholder=" Giá phòng ..."
-                                    min={100000}
-                                    formatter={(value) => `${value} VND`}
-                                    parser={(value) => value.replace(' VND', '')}
-                                />
-                            </Form.Item>
-                            <Form.Item name="discRoom" label="Mô tả : " className=''
-                             rules={[{ required: true, message: 'Vui lòng nhập thông tin !' }]}>
-                                <TextArea
-                                    showCount
-                                    maxLength={200}
-
-                                    onChange={(e) => {
-                                        setLoi(0)
-
-                                        setDiscRoom(e.target.value)
-                                        setFormData({ ...formData, discRoom: e.target.value });
-                                    }}
-                                    placeholder="Mô tả..."
-                                    style={{ height: 70, width: 400, resize: 'none' }}
-                                />
-                            </Form.Item>
-
-                        </div>
-
-                        <div className='col'>
-
-                            <Form.Item label="Hình ảnh 1:" name='imgRoom' valuePropName="file"
-                                getValueFromEvent={normFile}
-                                className=''
-                                rules={[
-                                    { required: true, message: 'Vui lòng cập nhật hình ảnh !' },
-                                    { required: true, message: 'Vui lòng cập nhật 3  hình ảnh !', len: 3, type: 'array' },
-                                ]}>
-                                <Upload beforeUpload={beforeUpload} customRequest={dummyRequest}
-                                    action={uploadImage}
-                                    maxCount='3'
-                                    listType="picture-card"
-
-                                >
-                                    <PlusOutlined />
-                                    <div>
-                                        Uploads
-                                    </div>
-                                </Upload>
-                            </Form.Item>
-
-                        </div>
-
-                        <div className='flex justify-center items-center' >
-
-                            <Button htmlType='submit' className='border border-blue m-3  bg-green-400' >Save</Button>
-                            <Button onClick={props.setShowAddRoomPopup.bind('', false)} className='border border-blue m-3 bg-gray-400'>Close</Button>
-
-
-                        </div>
-                    </Form>
-
+              </Form.Item>
+              <Form.Item
+                name="addressSector"
+                label="Vị trí   : "
+                rules={[
+                  { required: true, message: "Vui lòng nhập thông tin !" },
+                ]}
+              >
+                <div className="flex row ">
+                  <TextArea
+                    showCount
+                    maxLength={200}
+                    onChange={(e) => {
+                      setAddressSector(e.target.value);
+                      setFormData({
+                        ...formData,
+                        addressSector: e.target.value,
+                      });
+                    }}
+                    placeholder="Mô tả..."
+                    style={{ height: 70, width: 400, resize: "none" }}
+                  />
                 </div>
-
+              </Form.Item>
             </div>
 
-
+            <div className="flex justify-center items-center">
+              <Button
+                htmlType="submit"
+                className="border border-blue m-3  bg-green-400"
+              >
+                Save
+              </Button>
+              <Button
+                onClick={props.setShowAddSectorPopup.bind("", false)}
+                className="border border-blue m-3 bg-gray-400"
+              >
+                Close
+              </Button>
+            </div>
+          </Form>
         </div>
-    )
-}
+      </div>
+    </div>
+  );
+};
 
-export default AddSectorForm
+export default AddSectorForm;

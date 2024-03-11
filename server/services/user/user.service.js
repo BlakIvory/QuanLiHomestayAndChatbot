@@ -1,4 +1,3 @@
-
 const { ObjectId } = require("mongodb");
 // import { Jwt } from "jsonwebtoken";
 const jwt = require("jsonwebtoken");
@@ -56,7 +55,7 @@ class UserService {
     const user = await this.extractUserData(input);
     const result = await this.User.findOneAndUpdate(
       user,
-      { $set: {  img: {}, order: [] } },
+      { $set: { img: {}, order: [] } },
       { returnDocument: "after", upsert: true }
     );
 
@@ -64,78 +63,114 @@ class UserService {
   }
 
   async OrderRoomUser(payload) {
-    
     const idUser = payload.info.idUser;
-    
+
     const result = await this.User.findOneAndUpdate(
-      {_id: ObjectId.isValid(idUser) ? new ObjectId(idUser) : null},
+      { _id: ObjectId.isValid(idUser) ? new ObjectId(idUser) : null },
       {
         $push: {
-          order: payload.info
+          order: payload.info,
         },
       },
-      { returnDocument: "after", }
+      { returnDocument: "after" }
     );
 
     return result;
   }
   async CancleOrderRoomUser(payload) {
-    
     const idUser = payload.idUser;
     const idOrder = payload.idOrder;
-    console.log(payload)
+    console.log(payload);
     const result = await this.User.findOneAndUpdate(
       {
-        _id:  ObjectId.isValid(idUser) ? new ObjectId(idUser) : null,
-        "order.idOrder":idOrder,
+        _id: ObjectId.isValid(idUser) ? new ObjectId(idUser) : null,
+        "order.idOrder": idOrder,
       },
       {
-         $set: { "order.$.statusOrder": "10" }
+        $set: { "order.$.statusOrder": "10" },
       },
-      { returnDocument: "after", }
+      { returnDocument: "after" }
     );
 
     return result;
   }
 
-
   async PayOrder(payload) {
-    
     const idUser = payload.idUser;
     const idOrder = payload.idOrder;
     // console.log(payload)
     const result = await this.User.findOneAndUpdate(
       {
-        _id:  ObjectId.isValid(idUser) ? new ObjectId(idUser) : null,
-        "order.idOrder":idOrder,
+        _id: ObjectId.isValid(idUser) ? new ObjectId(idUser) : null,
+        "order.idOrder": idOrder,
       },
       {
-         $set: { "order.$.pay": true }
+        $set: { "order.$.pay": true },
       },
-      { returnDocument: "after", }
+      { returnDocument: "after" }
     );
 
     return result;
   }
 
-
   async ConfirmOrder(payload) {
-    
     const idUser = payload.idUser;
     const idOrder = payload.idOrder;
-    console.log(payload)
+    console.log(payload);
     const result = await this.User.findOneAndUpdate(
       {
-        _id:  ObjectId.isValid(idUser) ? new ObjectId(idUser) : null,
-        "order.idOrder":idOrder,
+        _id: ObjectId.isValid(idUser) ? new ObjectId(idUser) : null,
+        "order.idOrder": idOrder,
       },
       {
-         $set: { "order.$.statusOrder": "2" }
+        $set: { "order.$.statusOrder": "2" },
       },
-      { returnDocument: "after", }
+      { returnDocument: "after" }
     );
 
     return result;
+  }
+
+  async completeOrderRoom(payload) {
+    const idUser = payload.idUser;
+    const idOrder = payload.idOrder;
+    console.log(payload);
+    const result = await this.User.findOneAndUpdate(
+      {
+        _id: ObjectId.isValid(idUser) ? new ObjectId(idUser) : null,
+        "order.idOrder": idOrder,
+      },
+      {
+        $set: { "order.$.statusOrder": "3" },
+      },
+      { returnDocument: "after" }
+    );
+
+    return result;
+  }
+
+  async DeleteOrderRoom(payload) {
+    const { idUser, idOrder } = payload;
+    console.log(payload);
+    if (!ObjectId.isValid(idUser)) {
+      return null; // hoặc xử lý lỗi tương ứng
+    }
+    try {
+      const result = await this.User.findOneAndUpdate(
+        {
+          _id: new ObjectId(idUser),
+          "order.idOrder": idOrder,
+        },
+        {
+          $pull: { order: { idOrder: idOrder } },
+        },
+        { returnDocument: "after" }
+      );
+      // console.log(result);
+      return result;
+    } catch (error) {
+      console.log(error);
+    }
   }
 }
 

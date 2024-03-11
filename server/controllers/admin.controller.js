@@ -9,10 +9,10 @@ const bcrypt =  require ("bcrypt");
 const multer = require("multer");
 
 exports.register = async (req, res, next) => {
-  const { name, email, password, phone , address } = req.body;
+  const { username, password, phone  } = req.body;
   console.log(req.body)
   try {
-    if (!name || !email || !password || !phone || !address){
+    if (!username || !password || !phone ){
       return res.status(200).json({ err: 1, msg: "Thông tin không được để trống !" })
     }
     const adminService = new AdminService(MongoDB.client);
@@ -38,14 +38,14 @@ exports.register = async (req, res, next) => {
 
 exports.login = async (req, res, next) => {
   // console.log(req.body)
-  const {  phone, password   } = req.body;
+  const {  username, password   } = req.body;
   try {
-    if ( !password || !phone ){
+    if ( !password || !username ){
       return res.status(200).json({ err: 1, msg: "Thông tin không được để trống !" })
     }
     const adminService = new AdminService(MongoDB.client);
-    const isRegisted = await adminService.check({"phone" : req.body.phone})
-    // console.log(isRegisted[0].phone)
+    const isRegisted = await adminService.check({"phone" : req.body.username})
+    console.log(isRegisted[0])
     if(!isRegisted[0]){ 
       return res.status(200).json({
         err : -1,
@@ -53,17 +53,17 @@ exports.login = async (req, res, next) => {
       }); 
     }
     else {
-      const isCorrect = bcrypt.compareSync(req.body.password, isRegisted[0].password)
-      const token = isCorrect && jwt.sign({password: isRegisted[0].password, phone: isRegisted[0].phone}, process.env.SECRET_KEY,{expiresIn:'1d'}) 
-      
-      const result = {
-        err : isCorrect ? 0 : 2,
-        msg : isCorrect ? "Đăng nhập thành công !" : "Sai mật Khẩu",
-        User : isRegisted[0],
-        token : token || null,
-      }
-      return res.status(200).json(result)
-
+      if(password === isRegisted[0].password)
+      return res.status(200).json({
+        err : 0,
+        msg : "Đăng Nhập thành Công ",
+        admin : isRegisted[0],
+      }); 
+    else
+    return  res.status(200).json({
+      err : -1,
+      msg : " Sai mật khẩu hoặc tài khoản !"
+    }); 
     }
    
   } catch (error) {
@@ -135,6 +135,25 @@ exports.getAllSector = async (req, res, next) => {
   }
 };
 
+
+exports.getAllAdmin = async (req, res, next) => {
+  try{
+    const adminService = new AdminService(MongoDB.client);
+    const data = await adminService.check();
+    const result = {
+      admins: data,
+    }
+    if(result){
+      return res.status(200).json(result);
+    }else{
+      return res.send("Đã xảy ra lỗi")
+    }
+    
+  } catch (error) {
+    // console.log(error)
+    return next(new ApiError(500, "Xảy ra lỗi trong quá trình truy xuat khu vực !"));
+  }
+};
 
 
 exports.addRoom = async (req, res, next) => {
@@ -249,5 +268,162 @@ exports.confirmOrderRoom = async (req, res, next) => {
   } catch (error) {
     console.log(error)
     return next(new ApiError(500, "Xảy ra lỗi trong quá trình xác nhận đơn đặt phòng !"));
+  }
+};
+
+exports.getInfoRoom = async (req, res, next) => {
+
+  // console.log(req.body)
+  try{
+   
+    const roomService = new RoomService(MongoDB.client);
+    const result1 = await roomService.checkByIdRoom(req.body)
+
+    return res.send(result1)
+  } catch (error) {
+    // console.log(error)
+    return next(new ApiError(500, "Xảy ra lỗi trong truy xuat phòng !"));
+  }
+};
+
+exports.completeOrderRoom = async (req, res, next) => {
+  // console.log(req.body)
+  try{
+    const userService = new UserService(MongoDB.client);
+    const result = await userService.completeOrderRoom(req.body);
+    // console.log(result)
+    if(result){
+      return res.status(200).json({
+        status: 1,
+        data : result,
+        msg: "Hoàn thành đơn thành công !"
+      });
+    }
+    else{
+      return res.status(200).json("code lỗi");
+    }
+    
+  } catch (error) {
+    console.log(error)
+    return next(new ApiError(500, "Xảy ra lỗi trong quá trình hoàn thành đơn đặt phòng !"));
+  }
+};
+exports.deleteOrderRoom = async (req, res, next) => {
+  // console.log(req.body)
+  try{
+    const userService = new UserService(MongoDB.client);
+    const result = await userService.DeleteOrderRoom(req.body);
+    // console.log(result)
+    if(result){
+      return res.status(200).json({
+        status: 1,
+        data : result,
+        msg: "Xóa đơn đặt thành công !"
+      });
+    }
+    else{
+      return res.status(200).json("code lỗi");
+    }
+    
+  } catch (error) {
+    console.log(error)
+    return next(new ApiError(500, "Xảy ra lỗi trong quá trình xóa đơn đặt phòng !"));
+  }
+};
+
+
+exports.addSector = async (req, res, next) => {
+  // console.log(req.body)
+  
+  try{
+    const sectorService = new SectorService(MongoDB.client);
+    const result = await sectorService.addSector(req.body);
+    if(result){
+      return res.status(200).json(result);
+    }
+    else{
+      return res.send("Đã xảy ra lỗi")
+    }
+    
+  } catch (error) {
+    // console.log(error)
+    return next(new ApiError(500, "Xảy ra lỗi trong quá trình tạo phong !"));
+  }
+};
+
+exports.deleteAdmin = async (req, res, next) => {
+  // console.log(req.body)
+  try{
+    const adminService = new AdminService(MongoDB.client);
+    const result = await adminService.deleteAdmin(req.body)
+    // const result = await adminService.deleteAdmin(req.body);
+    // console.log(result)
+    if (result.deletedCount === 0) {
+      return res.status(200).json({
+        status: -1,
+        data : result,
+        msg: "Không tìm thấy admin để xóa.!"
+      });
+   
+    }
+    if(result){
+      return res.status(200).json({
+        status: 1,
+        data : result,
+        msg: "Xóa đơn tài khoản quản trị viên thành công !"
+      });
+    }
+    else{
+      return res.status(200).json("code lỗi");
+    }
+  } catch (error) {
+    console.log(error)
+    return next(new ApiError(500, "Xảy ra lỗi trong quá trình xóa tài khoản quản trị viên !"));
+  }
+};
+
+exports.getInfoSector = async (req, res, next) => {
+
+  // console.log("req.body")
+  try{
+   
+    const sectorService = new SectorService(MongoDB.client);
+    const result1 = await sectorService.checkByIdSector(req.body)
+
+    return res.send(result1[0])
+  } catch (error) {
+    // console.log(error)
+    return next(new ApiError(500, "Xảy ra lỗi trong truy xuat Khu vực!"));
+  }
+};
+
+exports.addAdmin = async (req, res, next) => {
+  // console.log(req.body)
+  try{
+    const adminService = new AdminService(MongoDB.client);
+    const phone = await adminService.check({"phone" : req.body.phone});
+    if(phone.length > 0){
+      return res.status(200).json({
+        status: -1,
+        msg: "Tài khoản quản trị viên đã tồn tại !"
+      });}
+    
+    
+    const result = await adminService.addAdmin(req.body);
+    if(result){
+      return res.status(200).json({
+        status: 0,
+        msg: "Tạo Tài khoản quản trị viên Thành Công !",
+        data: result,
+      });
+      // return res.status(200).json(result);
+    }
+    else{
+      return res.send("Đã xảy ra lỗi")
+    }
+    
+  } catch (error) {
+    // console.log(error)
+    return next(new ApiError(500, "Xảy ra lỗi trong quá trình tạo account admin !"));
   }
 };

@@ -2,34 +2,24 @@ import actionTypes from "../actions/actionTypes";
 
 const initState = {
     IsLoggedIn: false,
-    token: null,
     msg: "",
     phoneUser: null,
     nameUser: null,
 };
 
 const authReducer = (state = initState, action) => {
+    // console.log(action.type)
     switch (action.type) {
-        case actionTypes.REGISTER_SUCCESS:
-            {
-                // console.log(action.data.User);
-                return {
-                    ...state,
-                    IsLoggedIn: true,
-                    token: action.data.token,
-                    phoneUser: action.data.User.phone,
-                    nameUser : action.data.User.name,
-                    
-                };}
+       
         case actionTypes.LOGIN_SUCCESS:{
-            console.log(action.data.User.phoneUser);
+            // console.log(action.data);
             return {
                 ...state,
                 IsLoggedIn: true,
-                token: action.data.token,
-                phoneUser: action.data.User.phone,
-                nameUser : action.data.User.name,
-                
+                phoneUser: action.data.phone,
+                nameUser : action.data.username,
+                isAdmin: action.data.isAdmin,
+                password : action.data.password,
             };}
 
         case actionTypes.REGISTER_FAIL:
@@ -38,14 +28,12 @@ const authReducer = (state = initState, action) => {
                 ...state,
                 IsLoggedIn: false,
                 msg: action.data,
-                token: null,
                 phoneUser: null
             };
         case actionTypes.LOGOUT:
             return {
                 ...state,
                 IsLoggedIn: false,
-                token: null,
                 msg: "",
                 phoneUser: null,
                 nameUser: null

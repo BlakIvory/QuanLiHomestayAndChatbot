@@ -1,17 +1,19 @@
 .App {
-  padding-top: 10px;
+  /* padding-top: 10px; */
   display: flex;
   flex-direction: column;
-  width: 100vw;
-  height: 100vh;
+  overflow-x: hidden; /* Ẩn thanh cuộn ngang */
+  /* overflow-y: hidden; Ẩn thanh cuộn dọc */
+  height: 100vh; /* Đặt chiều cao full màn hình */
+  width: 100vw; /* Đặt chiều rộng full màn hình */
 }
 
 .AppHeader {
-  height: 50px;
+  /* height: 50px; */
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 4px 20px 4px 12px;
+  /* padding: 4px 20px 4px 12px; */
   border-bottom: 1px solid rgba(0, 0, 0, 0.15);
 }
 .AppFooter {
@@ -19,7 +21,7 @@
   display: flex;
   justify-content: space-evenly;
   align-items: center;
-  padding: 4px 20px 4px 12px;
+  /* padding: 4px 20px 4px 12px; */
   border-top: 1px solid rgba(0, 0, 0, 0.15);
   position: absolute;
   bottom: 0;
@@ -30,9 +32,10 @@
   flex: 1;
   align-items: flex-start;
   justify-content: flex-start;
+  height: 100vh;
 }
 .PageContent {
-  padding-left: 12px;
+  /* padding-left: 12px; */
 }
 
 .SideMenu {

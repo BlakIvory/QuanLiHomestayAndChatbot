@@ -6,51 +6,60 @@ import  AddSectorForm from '../../components/AddSectorForm'
 const Sector = () => {
   const [loading, setLoading] = useState(false)
   const [dataSource, setDataSource] = useState([])
- 
+  const [showAddSectorPopup,  setShowAddSectorPopup] = useState(false)
   useEffect(() => {
     setLoading(true);
-    getOrders().then(res => {
-      setDataSource(res.products);
+    apiGetAllSector().then(res => {
+      // console.log(res)
+      setDataSource(res.data.sectors);
       setLoading(false);
     });
   }, []);
 
   return (
+    
     <div className='p-5'>
-      
+      {showAddSectorPopup && (
+      <AddSectorForm  setShowAddSectorPopup={setShowAddSectorPopup}></AddSectorForm>
+    )}
        <Space size={20} direction='vertical'>
        <div className='flex justify-between'>
           <Typography.Title level={4}>QUẢN LÝ KHU VỰC</Typography.Title>
           <Button className='bg-primary border text-green'
             size={40}
             icon={<PlusOutlined />}
-          
-          >Thêm Khu Vực</Button>
+            onClick={()=>setShowAddSectorPopup(true)}
+          >
+            Thêm Khu Vực
+          </Button>
 
         </div>
         <Table
         loading={loading}
+        rowKey="_id"
         columns={[
           {
             title: 'Tên khu vực',
-            dataIndex: 'id',
+            dataIndex: 'nameSector',
           },
           {
             title: 'Đặt điểm khu vực ',
-            dataIndex: 'title',
+            dataIndex: 'discSector',
           },
           {
             title: 'Vị trí',
-            dataIndex: 'áđá',
-            render: (value)=> <span>${value}</span>
+            dataIndex: 'addressSector',
+            
           },
           {
             title: 'Số lượng phòng',
-            dataIndex: 'sada',
+            dataIndex: 'totalRoomInSector',
+            align: 'center',
           },
           {
             title: 'tình trạng',
-            dataIndex: 'sda',
+            dataIndex: 'statusSector',
+            align: 'center',
           },
           {
             title: 'Chỉnh sửa',

@@ -1,3 +1,5 @@
+
+const { ObjectId } = require("mongodb");
 class SectorService {
     constructor(client) {
         this.Sector = client.db().collection("sectors");
@@ -7,7 +9,7 @@ class SectorService {
         const sector = {
             nameSector: payload.nameSector,
             discSector: payload.discSector,
-            noteSector: payload.noteSector,
+            addressSector: payload. addressSector,
             totalRoomInSector : payload.totalRoomInSector,
             statusSector: payload.statusSector
         
@@ -23,23 +25,26 @@ class SectorService {
         const cursor = await this.Sector.find(filter);
         return await cursor.toArray();
     }
+    
+  async checkByIdSector(filter) {
+    // console.log(filter);
+    const cursor = await this.Sector.find({
+      _id: ObjectId.isValid(filter.idSector) ? new ObjectId(filter.idSector) : null,
+    });
+    return await cursor.toArray();
+  }
 
-    async addSectorService(payload) {
-        //   console.log(payload)
-        const setor = await this.extractSectorData(payload);
+    async addSector(payload) {
+          console.log(payload)
+        const sector = await this.extractSectorData(payload);
         const result = await this.Sector.findOneAndUpdate(
-            setor,
+            sector,
             { $set: {totalRoomInSector: 0 ,statusSector : 0 } },
             { returnDocument: "after", upsert: true }
         );
+        console.log(result)
         return result;
     }
-
-
-
-
-
-
 
 }
 

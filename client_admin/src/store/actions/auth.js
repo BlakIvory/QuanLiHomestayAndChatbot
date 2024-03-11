@@ -1,13 +1,15 @@
 
 import actionTypes from './actionTypes';
-import { apiRegister,apiLogin } from '../../services/auth';
+
+import { apiAdminRegister, apiAdminLogin } from '../../api';
+import swal from 'sweetalert';
+import { useNavigate } from 'react-router-dom';
 export const register = (payload) => async (dispatch) => {
     try {
-        const response = await apiRegister(payload)
+        const response = await apiAdminRegister(payload)
         // console.log(response)
         if(response?.data.err === 0) 
         {
-           
             dispatch({
                 type: actionTypes.REGISTER_SUCCESS,
                 data:{ token: response.data.data.token,
@@ -33,24 +35,31 @@ export const register = (payload) => async (dispatch) => {
     }
 }
 
-export const login = (payload) => async (dispatch) => {
+export const login = (payload, navigate) => async (dispatch) => {
+
     try {
-        const response = await apiLogin(payload)
-        console.log(response.data.User)
+        // const navigate = useNavigate()
+        const response = await apiAdminLogin(payload)
+        // console.log(response)
         if(response?.data.err === 0) 
         {  
-            //  console.log(response.data)
+            //  console.log(response.data.admin.isAdmin)
             dispatch({
                 type: actionTypes.LOGIN_SUCCESS,
-                data:{ token: response.data.token,
-                    User   : response.data.User,
+                data:{ phone: response.data.admin.phone,
+                    password : response.data.admin.password,
+                    isAdmin: response.data.admin.isAdmin,
+                    username : response.data.admin.username,
                 }
             })
+            swal("Thành Công ! " , response.data.msg, 'success')
+            navigate('../')
         }else{
             dispatch({
                 type: actionTypes.LOGIN_FAIL,
                 data: response.data.msg
             })
+            swal("Thông báo ! " , response.data.msg, 'warning')
         }
 
     } catch (error) {

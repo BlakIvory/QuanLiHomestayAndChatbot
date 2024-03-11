@@ -65,7 +65,8 @@ const DashBoard = () => {
     }, [])
 
     return (
-        <Space size={20} direction='vertical'  >
+        <div className='ml-5'>
+            <Space size={20} direction='vertical'  >
             <Typography.Title level={4}> DashBoard</Typography.Title>
             <Space direction='horizontal' >
                 <DashBoardCard
@@ -130,6 +131,7 @@ const DashBoard = () => {
             </Space>
 
         </Space>
+        </div>
     )
 }
 
