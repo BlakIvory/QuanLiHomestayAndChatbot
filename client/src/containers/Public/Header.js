@@ -7,7 +7,7 @@ import { path } from '../../ultils/constant'
 import { useSelector,useDispatch} from 'react-redux'
 import * as actions from '../../store/actions'
 // import {apiInfoUser} from '../../services/auth';
-
+import '../containers.css'
 
 
 
@@ -33,7 +33,7 @@ const Header = () => {
 
 
     return (
-        <div className='w-full flex items-center justify-center'>
+        <div className='w-full flex items-center justify-center headerSticky'>
             <div className='w-1100 flex items-center justify-between'>
                 <Link to='/trangchu'>
                     <img className='w-[300px] h-[70px] object-cover'

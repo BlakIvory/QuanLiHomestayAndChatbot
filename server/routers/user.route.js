@@ -22,4 +22,8 @@ router.post("/cancleOrderRoom", users.cancleOrderRoom);
 
 router.post("/updatePaypalOrder", users.updatePaypalOrder);
 
+router.post("/infoSector", users.getInfoSector);
+
+router.get("/getAllSector", users.getAllSector);
+
 module.exports = router;

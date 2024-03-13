@@ -2,6 +2,7 @@ const ApiError = require("../api-error");
 const UserService = require("../services/user/user.service");
 const MongoDB = require("../utils/mongodb.util");
 const RoomService = require("../services/room/room.service");
+const SectorService = require("../services/sector/sector.service");
 // import { Jwt } from "jsonwebtoken";
 const { v4: uuidv4 } = require('uuid');
 const jwt = require('jsonwebtoken');
@@ -190,4 +191,40 @@ exports.updatePaypalOrder = async (req, res, next) => {
     return next(new ApiError(500, "Xảy ra lỗi trong truy xuat phòng !"));
   }
 };
+
+exports.getInfoSector = async (req, res, next) => {
+
+  // console.log(req.body)
+  try{
+   
+    const sectorService = new SectorService(MongoDB.client);
+    const result1 = await sectorService.checkByIdSector(req.body)
+// console.log(result1)
+    return res.send(result1[0])
+  } catch (error) {
+    // console.log(error)
+    return next(new ApiError(500, "Xảy ra lỗi trong truy xuat Khu vực!"));
+  }
+};
+
+exports.getAllSector = async (req, res, next) => {
+  try{
+    const sectorService = new SectorService(MongoDB.client);
+    const data = await sectorService.check();
+    const result = {
+      sectors: data,
+      length: data.length,
+    }
+    if(result){
+      return res.status(200).json(result);
+    }else{
+      return res.send("Đã xảy ra lỗi")
+    }
+    
+  } catch (error) {
+    // console.log(error)
+    return next(new ApiError(500, "Xảy ra lỗi trong quá trình truy xuat khu vực !"));
+  }
+};
+
 

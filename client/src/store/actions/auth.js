@@ -1,12 +1,14 @@
 
 import actionTypes from './actionTypes';
 import { apiRegister,apiLogin } from '../../services/auth';
+import swal from "sweetalert";
 export const register = (payload) => async (dispatch) => {
     try {
         const response = await apiRegister(payload)
-        // console.log(response)
+        console.log(response)
+
         if(response?.data.err === 0) 
-        {
+        {   swal('Thành Công', response.data.msg, 'success') 
            
             dispatch({
                 type: actionTypes.REGISTER_SUCCESS,
@@ -20,6 +22,7 @@ export const register = (payload) => async (dispatch) => {
                 
             })
         }else{
+            swal('Thông Báo !', response.data.msg, 'warning') 
             dispatch({
                 type: actionTypes.REGISTER_FAIL,
                 data: response.data.msg

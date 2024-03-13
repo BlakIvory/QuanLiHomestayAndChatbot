@@ -11,7 +11,7 @@ import {
   Popconfirm,
   Form,
   Select,
-  message
+  message,
 } from "antd";
 
 import {
@@ -221,7 +221,6 @@ const NhanVien = () => {
       title: "Quyền Admin",
       dataIndex: "isAdmin",
       align: "center",
-      // render: (isAdmin) => (isAdmin ? "Quản Lý" : "Nhân Viên"),
       render: (text, record) => {
         if (record._id === editingRow) {
           return (
@@ -243,15 +242,6 @@ const NhanVien = () => {
       ],
       onFilter: (value, record) => record.isAdmin === value,
     },
-    // {
-    //   title: "Xử Lí",
-    //   render: (text, record) => (
-    //     <span>
-    //       <Button icon={<EditOutlined />} />
-    //       <Button className="ml-1 bg-red-400" icon={<DeleteOutlined />} />
-    //     </span>
-    //   ),
-    // },
     {
       title: "Chỉnh sửa",
       render: (_, record) => {
@@ -265,30 +255,6 @@ const NhanVien = () => {
               >
                 Lưu
               </SaveOutlined>
-              <Popconfirm
-                // okButtonProps={{ danger: true }}
-                okButtonProps={{ style: { display: 'block', backgroundColor: 'red' ,danger: true} }}
-                title="Bạn có chắc chắn muốn xóa không?"
-                onConfirm={async () => {
-                  
-                  const result = await apiDeleteAdmin(record);
-                  if (result.status === 0) {
-                    swal("Thành Công !", result.msg, "success");
-                  } else {
-                    message.error("Có lỗi xảy ra!");
-                  }
-                }}
-                onCancel={() => {
-                  console.log("Hủy bỏ thao tác xóa");
-                }}
-                okText="Có"
-                cancelText="Không"
-              >
-                <DeleteOutlined
-                  className="m-1 flex items-center justify-center"
-                  style={{ fontSize: "20px", color: "red" }}
-                />
-              </Popconfirm>
             </div>
           );
         }
@@ -305,7 +271,8 @@ const NhanVien = () => {
               Chỉnh sửa
             </EditOutlined>
             <Popconfirm
-            danger
+              okType="danger"
+              //  okButtonProps={{ style: {  backgroundColor: 'red'  }}}
               title="Bạn có chắc chắn muốn xóa không?"
               onConfirm={async () => {
                 console.log(record);
@@ -351,7 +318,6 @@ const NhanVien = () => {
             Thêm Nhân Viên
           </Button>
         </div>
-
         <Table
           pagination={{
             pageSize: 6,

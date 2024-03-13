@@ -1,9 +1,15 @@
 import React, { useEffect, useState } from "react";
-import { apiCancleRoom, apiGetInfoRoom, apiUpdatePaypalOrder } from "../services";
+import {
+  apiCancleRoom,
+  apiGetInfoRoom,
+  apiUpdatePaypalOrder,
+  apiInfoSector,
+} from "../services";
 import { Image, Button } from "antd";
 import { PayPalButton } from "react-paypal-button-v2";
 import swal from "sweetalert";
 import Modal from "react-modal";
+
 
 Modal.setAppElement("#root");
 
@@ -15,7 +21,7 @@ const OrderRoomItem = (props) => {
   const [Room, setRoom] = useState({});
   const [current, setCurrent] = useState(0);
   const [amount, setAmount] = useState(0);
-  
+  const [infoSector, setInfoSector] = useState({})
   useEffect(() => {
     if (!OrderRoom || !OrderRoom.idRoom) return; // Kiểm tra xem OrderRoom có dữ liệu không
 
@@ -24,11 +30,26 @@ const OrderRoomItem = (props) => {
         const data = await apiGetInfoRoom({ idRoom: OrderRoom.idRoom });
         const roomData = data.data[0];
         setRoom(roomData);
+        fetchInfoSector(roomData.idSectorRoom);
       } catch (error) {
         console.error("Error fetching room data:", error);
       }
     };
     fetchInfoRoom();
+    // console.log(Room)
+    // console.log(OrderRoom)
+    const fetchInfoSector = async (idSectorRoom) => {
+      try {
+        const data = await apiInfoSector({ idSector: idSectorRoom });
+        const sectorData = data.data;
+        // console.log(sectorData)
+        setInfoSector(sectorData);
+      } catch (error) {
+        console.error("Error fetching sector data:", error);
+      }
+    };
+    fetchInfoSector()
+    
     setAmount(Number((OrderRoom.totalMoney / 24000).toFixed(2)));
 
     // console.log(OrderRoom);
@@ -37,21 +58,20 @@ const OrderRoomItem = (props) => {
   const handleClickPaypal = () => {
     setPaypal(!Paypal);
   };
-  const CallApiUpdatePayOrder = async()=>{
-      const result = await apiUpdatePaypalOrder(
-        {idUser : OrderRoom.idUser,
-        idOrder : OrderRoom.idOrder,
-        })
-      if(result.status ===200) return true;
-      if(result.status !==200) return false;
-  }
+  const CallApiUpdatePayOrder = async () => {
+    const result = await apiUpdatePaypalOrder({
+      idUser: OrderRoom.idUser,
+      idOrder: OrderRoom.idOrder,
+    });
+    if (result.status === 200) return true;
+    if (result.status !== 200) return false;
+  };
 
-
-  const handleClickCancelOrder = async() => {
-    console.log("object")
-    const result =  await apiCancleRoom(OrderRoom)
-    console.log(result)
-  }
+  const handleClickCancelOrder = async () => {
+    console.log("object");
+    const result = await apiCancleRoom(OrderRoom);
+    console.log(result);
+  };
 
   const handlePrevious = () => {
     setCurrent((prev) => (prev > 0 ? prev - 1 : Room.imgRoom.length - 1));
@@ -86,65 +106,65 @@ const OrderRoomItem = (props) => {
       <div className="w-[40%] col-1 gird  items-center ">
         <div className="flex w-full ">
           <div> Tên Phòng : </div>
-          {Room.nameRoom && <div className="ml-2 ">{Room.nameRoom}</div>}{" "}
+          {Room.nameRoom && <div className="ml-2 ">{Room.nameRoom}</div>}
         </div>
         <div className="flex w-full ">
           <div>Loại phòng : </div>
-          {Room.loaiRoom && <div className="ml-2 ">{Room.loaiRoom}</div>}{" "}
+          {Room.loaiRoom && <div className="ml-2 ">{Room.loaiRoom}</div>}
         </div>
         <div className="flex w-full ">
           <div>Khu vực : </div>
-          {Room.idSectorRoom && (
-            <div className="ml-2 ">{Room.idSectorRoom}</div>
-          )}{" "}
+          {infoSector && (
+            <div className="ml-2 ">{infoSector.nameSector}</div>
+          )}
         </div>
         <div className="flex w-full ">
           <div>Giá phòng : </div>
           {Room.giaRoom && (
-            <div className="ml-2 ">{Room.giaRoom}</div>
-          )} vnđ/đêm{" "}
+            <div className="ml-2 ">{Room.giaRoom.toLocaleString("vi-VN")}  vnđ/đêm</div>
+          )}
         </div>
-       
       </div>
       <div className="w-[30%]">
         <div className="flex">
           Người sử dụng :
           {OrderRoom.userInput && (
             <div className="ml-2">{OrderRoom.userInput}</div>
-          )}{" "}
+          )}
         </div>
         <div className="flex">
           Số điện thoại :
           {OrderRoom.phoneInput && (
             <div className="ml-2">{OrderRoom.phoneInput}</div>
-          )}{" "}
+          )}
         </div>
         <div className="">
-          Ngày đặt phòng :
-          {OrderRoom.dateInput && OrderRoom.dateInput.length <= 3 && (
-            <div className="ml-2">
-              {OrderRoom.dateInput.map((date,index) => (
-                <div key={index}>{date}</div>
-              ))}
+          {OrderRoom.dateInput && OrderRoom.dateInput.length === 1 && (
+            <div className="ml-2 flex">
+              <div>Ngày đặt phòng : </div>
+              <div className="ml-5">{OrderRoom.dateInput[0]}</div>
             </div>
           )}
-          {OrderRoom.dateInput && OrderRoom.dateInput.length > 3 && (
-            // <div className="ml-2">
-            //   <div>{OrderRoom.dateInput[0]}</div>
-            //   <div>.....</div>
-            //   <div>{OrderRoom.dateInput[OrderRoom.dateInput.length-1]}</div>
-            // </div>
+          {OrderRoom.dateInput && OrderRoom.dateInput.length > 1 && (
             <div className="ml-2">
-              {OrderRoom.dateInput.map((date,index) => <div key={index}>{date}</div>)}
+              <div className="flex">
+                <div>Ngày bắt đầu đặt : </div>
+                <div className="ml-5">{OrderRoom.dateInput[0]}</div>
+              </div>
+              <div className="flex">
+                <div>Ngày cuối đặt : </div>
+                <div className="ml-5">
+                  {OrderRoom.dateInput[OrderRoom.dateInput.length - 1]}
+                </div>
+              </div>
             </div>
           )}
         </div>
         <div className="flex">
           Tổng tiền :
           {OrderRoom.totalMoney && (
-            <div className="ml-2">{OrderRoom.totalMoney}</div>
-          )}{" "}
-          vnđ
+    <div className="ml-2">{OrderRoom.totalMoney.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")} vnđ</div>
+  )}       
         </div>
         <div className="flex">
           Trạng Thái Hóa đơn :
@@ -163,7 +183,7 @@ const OrderRoomItem = (props) => {
           {OrderRoom.statusOrder === "2" && (
             <div className="ml-2">Đã xác nhận</div>
           )}
-           {OrderRoom.statusOrder === "10" && (
+          {OrderRoom.statusOrder === "10" && (
             <div className="ml-2">Đã Hủy Đặt</div>
           )}
         </div>
@@ -174,14 +194,15 @@ const OrderRoomItem = (props) => {
           <Button className="">Đã Xác Nhận</Button>
         )} */}
 
-       
-
         <div className="flex gap-2">
-          {OrderRoom.pay && OrderRoom.statusOrder !== "10" && Paypal === false && OrderRoom.pay === "false" && (
-            <Button className="btn_X" onClick={handleClickPaypal}>
-              Thanh Toán Paypal
-            </Button>
-          )}
+          {OrderRoom.pay &&
+            OrderRoom.statusOrder !== "10" &&
+            Paypal === false &&
+            OrderRoom.pay === "false" && (
+              <Button className="btn_X" onClick={handleClickPaypal}>
+                Thanh Toán Paypal
+              </Button>
+            )}
           {Paypal && (
             <Button className="btn_X" onClick={handleClickPaypal}>
               Hủy Thanh Toán Paypal
@@ -189,61 +210,45 @@ const OrderRoomItem = (props) => {
           )}
           {OrderRoom.statusOrder && OrderRoom.statusOrder === "1" && (
             <div>
-              <Button className="btn_V" 
-              onClick={()=>{
-                // swal({
-                //   title: "Bạn có chắc chắn hủy đặt phòng",
-                //   text: "Bạn sẽ không thể hoàn tác quá trình này! , trường hợp đã thanh toán vui lòng liên hệ hotline để nhận lại tiền !  ",
-                //   type: "warning",
-                //   showCancleButton : true,
-                //   confirmButtonCorlor : "#17E9E0",
-                //   confirmButtonText  : "Hủy đặt phòng .",
-                //   closeOnConfirm : false,
-                // },
-                // function (){
-                //   swal("Đã hủy !", "Quá trình đặt phòng đã được hủy", "success",)
-                // })
-                swal({
-                  title: "Bạn có chắc không?",
-                  text: "Bạn sẽ không thể khôi phục lại tệp này!",
-                  icon: "warning",
-                  buttons: ['Trở Về', 'Hủy Đặt'],
-                  dangerMode: true,
-                })
-                .then((willDelete) => {
-                  if (willDelete) {
-                    handleClickCancelOrder()
-                    swal("Tệp của bạn đã được xóa!", {
-                      icon: "success",
-                    });
-                  } 
-                });
-              }} >
+              <Button
+                className="btn_V"
+                onClick={() => {
+                  swal({
+                    title: "Bạn có chắc không?",
+                    text: "Bạn sẽ không thể khôi phục lại thao tác này!",
+                    icon: "warning",
+                    buttons: ["Trở Về", "Hủy Đặt"],
+                    dangerMode: true,
+                  }).then((willDelete) => {
+                    if (willDelete) {
+                      handleClickCancelOrder();
+                      swal("Đơn đặt của bạn đã được xóa!", {
+                        icon: "success",
+                      }).then((value) => {window.location.reload()});
+                    }
+                  });
+                }}
+              >
                 Hủy đặt Phòng
               </Button>
-              
             </div>
           )}
-          
         </div>
         {Paypal && (
           <div className=" w-[280px] mt-5 ">
             <PayPalButton
               amount={amount}
-              // options={{
-              //   clientId: process.env.PAYPAL_CLIENT_ID
-              // }}
               // shippingPreference="NO_SHIPPING" // default is "GET_FROM_FILE"
               onSuccess={(details, data) => {
-                const res = CallApiUpdatePayOrder()
-                
-                if(res) {
+                const res = CallApiUpdatePayOrder();
+
+                if (res) {
                   swal(
                     "Thành Công ! ",
                     "Cảm ơn quý khách đã sử dụng dịch vụ ! ",
                     "success"
                   );
-                  window.location.reload()
+                  window.location.reload();
                 }
                 // OPTIONAL: Call your server to save the transaction
               }}

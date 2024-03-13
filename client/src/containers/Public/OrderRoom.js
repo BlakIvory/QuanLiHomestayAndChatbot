@@ -6,76 +6,132 @@ import icons from "../../ultils/icons";
 import dayjs from "dayjs";
 import moment from "moment";
 import customParseFormat from "dayjs/plugin/customParseFormat";
-import { DatePicker, Select, Slider } from "antd";
-
+import { DatePicker, Select, Slider, Input } from "antd";
+import { apiGetAllSector, apiGetAllRoom,apiInfoSector ,apiGetInfoRoom,apiGetInfoSector} from "../../services";
 dayjs.extend(customParseFormat);
-const dateFormat = "DD/MM/YYYY";
-const { RangePicker } = DatePicker;
+const { Option } = Select;
 
 const { CiSearch } = icons;
 const OrderRoom = () => {
   const [dataOrder, setDataOrder] = useState([]);
+  const [allSector, setAllSector] = useState();
+
   const { IsLoggedIn, nameUser, phoneUser, idUser } = useSelector(
     (state) => state.auth
   );
- 
-  const [searchPlace, setSearchPlace] = useState("");
+  useEffect(() => {
+    const fetchAllSector = async () => {
+      const response = await apiGetAllSector();
+      //   console.log(response.data);
+      setAllSector(response.data.sectors);
+    };
+    fetchAllSector();
+    // console.log(allSector);
+  }, []);
 
-  const validateDate = (data) => {
-    let d = new Date(data);
-    let date = new Date(d); // chuyển chuỗi thành đối tượng Date
-    let year = date.getFullYear(); // lấy năm
-    let month = date.getMonth() + 1; // lấy tháng (từ 0 đến 11)
-    let day = date.getDate(); // lấy ngày
-    let formattedDate = day + "/" + month + "/" + year; // định dạng ngày theo YYYY-MM-DD
-    // console.log(formattedDate);
-    return formattedDate.toString();
+  const [searchPlace, setSearchPlace] = useState("");
+  const [selectedTypeRoom, setSelectedTypeRoom] = useState(null);
+  const [selectSector, setSelectSector] = useState();
+  const [filterRoom, setFilterRoom] = useState(dataOrder);
+//   useEffect(() => {
+//     let filteredData = dataOrder;
+// // console.log(filterRoom)
+//     if (searchPlace) {
+//       filteredData = filteredData.filter((item) =>
+//         item.nameRoom.toLowerCase().includes(searchPlace)
+//       );
+//     }
+//     if (selectedTypeRoom) {
+//       filteredData = filteredData.filter(
+//         (item) => item.loaiRoom === selectedTypeRoom
+//       );
+//     }
+//     if (selectSector) {
+//       filteredData = filteredData.filter(
+//         (item) => item.idSectorRoom === selectSector
+//       );
+//     }
+//     setFilterRoom(filteredData);
+//   }, [searchPlace, selectedTypeRoom, selectSector, dataOrder]);
+
+
+
+  const handleChangeSelectRoomType = (value) => {
+    setSelectedTypeRoom(value);
   };
-  const [inputData, setInputData] = useState({
-    place: searchPlace,
-    dateStart: validateDate(new Date()),
-    dateEnd: validateDate(new Date()),
-    loaiPhong: "1-2 người",
+
+  // const handleChangePlace = () => {
+  //   console.log(e.target.value)
+  //   setSearchPlace(e.target.value);
+  //   // console.log(searchPlace)
+  // };
+
+  const handleChangeSelectSector = (value) => {
+    setSelectSector(value);
+  };
+
+  // Hàm lấy thông tin phòng và khu vực từ API
+const fetchRoomAndSectorInfo = async (order) => {
+  const roomInfo = await apiGetInfoRoom({ "idRoom": order.idRoom });
+  // console.log(roomInfo)
+  const sectorInfo = await apiInfoSector({ "idSector": "65e6f99bfd15b4972b02bfe0"});
+  // console.log(sectorInfo.data)
+  return { ...order, ...roomInfo.data[0], ...sectorInfo.data };
+};
+
+
+const normalize = (str) => {
+  return str.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+}
+
+const filterOrders = async () => {
+  const fetchedOrders = await Promise.all(dataOrder.map(fetchRoomAndSectorInfo));
+  const filteredData = fetchedOrders.filter(order => {
+    const nameRoomNormalized = normalize(order?.nameRoom.toLowerCase());
+    const searchPlaceNormalized = normalize(searchPlace.toLowerCase());
+    return (
+      (selectedTypeRoom ? order.loaiRoom === selectedTypeRoom : true) &&
+      (selectSector ? order.idSectorRoom === selectSector : true) &&
+      (searchPlace ? nameRoomNormalized.includes(searchPlaceNormalized) : true)
+    );
   });
-  const handleChangeSelect = (value) => {
-    inputData.loaiPhong = value;
-    // console.log(inputData)
-  };
-  const handleSubmitSearch = (value) => {
-    //goi API để search
-    console.log(inputData);
-  };
-  const handleChangeDate = (data) => {
-    if (data !== null) {
-      const dateStart = validateDate(data[0].$d);
-      // console.log(dateStart)
-      const dateEnd = validateDate(data[1].$d);
-      // console.log(dateStart)
-      inputData.dateStart = dateStart;
-      inputData.dateEnd = dateEnd;
-    }
-    // console.log(inputData)
-  };
+  setFilterRoom(filteredData);
+};
+
+// const filterOrders = async () => {
+//   const fetchedOrders = await Promise.all(dataOrder.map(fetchRoomAndSectorInfo));
+// // console.log(fetchedOrders)
+//   const filteredData = fetchedOrders.filter(order => {
+//     // console.log(order)
+//     return (
+//       (selectedTypeRoom ? order.loaiRoom === selectedTypeRoom : true) &&
+//       (selectSector ? order.idSectorRoom === selectSector : true) &&
+//       (searchPlace ? order?.nameRoom.toLowerCase().includes(searchPlace.toLowerCase()) : true)
+//     );
+//   });
+//   // console.log(filteredData)
+//   setFilterRoom(filteredData);
+// };
+
+// Gọi hàm lọc khi có sự thay đổi trong các tiêu chí lọc hoặc danh sách orders
+useEffect(() => {
+  filterOrders();
+}, [selectedTypeRoom, selectSector, searchPlace, dataOrder]);
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const getOrderInfo = async () => {
     const res = await apiInfoUser({ phone: phoneUser });
-    const result  = res.data.order
-    return result
+    const result = res.data.order;
+    return result;
   };
-  function disabledDate(current) {
-    // Can not select days after today
-    return current && current < moment().endOf("day");
-  }
 
   useEffect(() => {
-    const fetchInfoOrder = async ( )=>{
-      const data = await getOrderInfo()
-      setDataOrder(data)
-    }
-    fetchInfoOrder()
-    // console.log(dataOrder)
-  }, [getOrderInfo]);
+    const fetchInfoOrder = async () => {
+      const data = await getOrderInfo();
+      setDataOrder(data);
+    };
+    fetchInfoOrder();
+  }, []);
 
   return (
     <div className="w-1100 ">
@@ -84,35 +140,20 @@ const OrderRoom = () => {
       </div>
       <div>
         <div className="h-[70px] w-full rounded-md bg-slate-500 searchRooms flex justify-center items-center">
-          <div className="flex items-center">
-            <CiSearch className="ml-2" size={24} />
-            <input
+          <div className="flex items-center h-full">
+            <Input
+              prefix={<CiSearch className="ml-2" size={24} />}
               placeholder="Nhập nơi cần tìm ..."
-              onChange={(e) => {
-                // console.log(e.target.value);
-                setSearchPlace(e.target.value);
-              }}
+              // onChange={handleChangePlace}
+              onChange={(e)=>{console.log(e.target.value); setSearchPlace(e.target.value);}}
+              className="flex items-center h-full"
             />
           </div>
-          <RangePicker
-            className="w-[300px]   "
-            disabledDate={disabledDate}
-            defaultValue={[
-              dayjs(`${moment().format("DD/MM/YYYY")}`, dateFormat),
-              dayjs(`${moment().format("DD/MM/YYYY")}`, dateFormat),
-            ]}
-            placeholder={["Ngày Đi", "Ngày Về"]}
-            format={dateFormat}
-            onChange={(e) => {
-              handleChangeDate(e);
-            }}
-          />
-
           <Select
             className="round-md"
-            defaultValue="1-2 người"
+            placeholder="Loại phòng"
             style={{ width: 150 }}
-            onChange={handleChangeSelect}
+            onChange={handleChangeSelectRoomType}
             options={[
               {
                 label: "Loại Phòng",
@@ -124,14 +165,28 @@ const OrderRoom = () => {
               },
             ]}
           />
+          <Select
+            placeholder="Khu vực ..."
+            style={{ width: 120 }}
+            label="khu vực"
+            onChange={handleChangeSelectSector}
+          >
+            {allSector?.map((sector) => (
+              <Option key={sector._id} value={sector._id}>
+                {sector.nameSector}
+              </Option>
+            ))}
+          </Select>
 
-          <button className="searchRoomsButton" onClick={handleSubmitSearch}>
-            Tìm
-          </button>
+          <button className="searchRoomsButton"
+          onClick={()=>{
+            window.location.reload();
+          }}
+          >Đặt lại</button>
         </div>
       </div>
       <div>
-        <ListOrderRoom dataOrder={dataOrder}></ListOrderRoom>
+        <ListOrderRoom dataOrder={filterRoom}></ListOrderRoom>
       </div>
     </div>
   );

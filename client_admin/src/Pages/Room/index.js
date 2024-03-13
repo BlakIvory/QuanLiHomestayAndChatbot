@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from "react";
-import { Rate, Space, Table, Typography, Image, Button, Input } from "antd";
+import { Rate, Space, Table, Typography, Image, Button, Input, Select, InputNumber,  } from "antd";
 import {
   EditOutlined,
   DeleteOutlined,
@@ -13,12 +13,13 @@ import Highlighter from "react-highlight-words";
 import AddRoomForm from "../../components/AddRoomForm";
 import swal from "sweetalert";
 
+const { Option } = Select;
 const Room = () => {
   const [loading, setLoading] = useState(false);
   const [dataSource, setDataSource] = useState([]);
   //tim kiem + sap xep
   const [searchText, setSearchText] = useState("");
-  
+
   const [searchedColumn, setSearchedColumn] = useState("");
 
   const searchInput = useRef(null);
@@ -157,7 +158,11 @@ const Room = () => {
     fetchSectors();
     // console.log(sectors)
   }, []);
-
+  const roomTypes = [
+    { label: "1-2 người", value: "1-2 người" },
+    { label: "3-4 người", value: "3-4 người" },
+    { label: "5-7 người", value: "5-7 người" },
+  ];
   const columns = [
     {
       title: "Tên Phòng",
@@ -181,16 +186,17 @@ const Room = () => {
     {
       title: "Giá Phòng",
       dataIndex: "giaRoom",
-      width: "115px",
+      width: "170px",
       // render: (value) => <span>{value} vnđ</span>,
       sorter: (a, b) => a.giaRoom - b.giaRoom,
       sortDirections: ["ascend", "descend"],
       render: (text, record) => {
         if (record._id === editingRow) {
           return (
-            <Input
+            <InputNumber
+              step={10000}
               defaultValue={text}
-              onChange={(e) => console.log(e.target.value)}
+              onChange={(e) => console.log(e)}
             />
           );
         }
@@ -201,13 +207,60 @@ const Room = () => {
       title: "Loại Phòng",
       dataIndex: "loaiRoom",
       ...getColumnSearchProps("loaiRoom"),
+      // render: (text, record) => {
+      //   if (record._id === editingRow) {
+      //     return (
+      //       <Input
+      //         defaultValue={text}
+      //         onChange={(e) => console.log(e.target.value)}
+      //       />
+      //     );
+      //   }
+      //   return <span>{text.toLocaleString("vi-VN")} </span>;
+      // },
+      render: (text, record) => {
+        if (record._id === editingRow) {
+          return (
+            <Select
+              defaultValue={text}
+              style={{ width: 120 }}
+              onChange={(value) => console.log(value)}
+            >
+              {roomTypes.map((type) => (
+                <Option key={type.value} value={type.value}>
+                  {type.label}
+                </Option>
+              ))}
+            </Select>
+          );
+        }
+        return text;
+      },
     },
     {
       title: "Khu vực",
       dataIndex: "idSectorRoom",
       width: "100px",
       ...getColumnSearchProps("idSectorRoom"),
-      render: (idSectorRoom) => sectors[idSectorRoom] || "Loading...",
+      // render: (idSectorRoom) => sectors[idSectorRoom] || "Loading...",
+      render: (text, record) => {
+        if (record._id === editingRow) {
+          return (
+            <Select
+              defaultValue={text}
+              style={{ width: 120 }}
+              onChange={(value) => console.log(value)}
+            >
+              {Object.entries(sectors).map(([id, name]) => (
+                <Option key={id} value={id}>
+                  {name}
+                </Option>
+              ))}
+            </Select>
+          );
+        }
+        return <span>{sectors[text] || "Loading..."} </span>;
+      },
     },
     {
       title: "Hình Ảnh 1",

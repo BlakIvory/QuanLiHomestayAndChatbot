@@ -10,7 +10,7 @@ import { DatePicker, Form, Input, Button, Rate } from "antd";
 import customParseFormat from "dayjs/plugin/customParseFormat";
 import PayButton from "../../components/PayButton";
 import { LoginOutlined } from "@ant-design/icons";
-import { apiPostOrderRoom } from "../../services";
+import { apiInfoSector, apiPostOrderRoom } from "../../services";
 import Item from "antd/es/list/Item";
 
 import swal from "sweetalert";
@@ -45,6 +45,7 @@ const DetailRoom = () => {
   const [arrayDateInput, setArrayDateInput] = useState([]);
   const [paymentByPaypal, setPaymentByPaypal] = useState(false);
   const [disabledDateData, setDisabledDateData] = useState([]);
+  const [Sector, setSector] = useState({})
   const [amount, setAmount] = useState(10)
   // const [onError, setOnError] = useState(false)
   const [formData, setFormData] = useState({
@@ -173,13 +174,20 @@ const DetailRoom = () => {
     };
     const response = await apiOrder(datainput);
     if (response.status === 200)
-      swal("Thành Công !", " Đặt phòng thành công !", "success" );
-    window.location.reload()
+      swal("Thành Công !", " Đặt phòng thành công !", "success" ).then((value) => {
+        window.location.reload();
+      });
   };
 
-
+  useEffect(() => {
+    const fetchSectors = async () =>{
+      const response = await apiInfoSector({"idSector":idSectorRoom})
+      setSector(response.data)
+    }
+    fetchSectors()
+    // console.log(Sector)
+  }, [])
   
-
 
   return (
     <div className=" m-1 w-1100 ">
@@ -402,6 +410,12 @@ const DetailRoom = () => {
           </div>
           <div>Mô tả : {discRoom}</div>
         </div>
+        <div className="detailRoom_Charactic w-1100  ">
+          <div>Khu vực : {Sector.nameSector}</div>
+          <div>Điểm nổi bật của khu vực : {Sector.discSector}</div>
+          <div>Vị trí của khu vực : {Sector.addressSector}</div>
+        </div>
+
         <div className="bg-black w-1100 h-[2px] mt-5 mb-5 flex justify-center items-center"></div>
         <div className="comment_box w-1100  ">
           <div>Bình Luận : {cmtRoom.length}</div>

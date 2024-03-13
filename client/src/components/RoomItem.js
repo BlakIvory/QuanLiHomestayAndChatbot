@@ -3,7 +3,7 @@ import { Image } from 'antd';
 import { Rate } from 'antd';
 import { path } from '../ultils/constant'
 import { useNavigate } from 'react-router-dom';
-
+import { apiInfoSector } from '../services';
 require('./component.css')
 
 
@@ -25,7 +25,7 @@ const RoomItem = (props) => {
     const [imgBig, setImgBig] = useState(imgRoom[0].secure_url)
     const [rate, setRate] = useState(4.5) //test
     // console.log(imgRoom)
-
+    const [infoSector, setInfoSector] = useState()
 
 
     const handleClickPreview0 = () => {
@@ -70,8 +70,19 @@ const RoomItem = (props) => {
         }
         setRate(result)
     }
+    const fetchInfoSector = async (idSectorRoom) => {
+        try {
+          const data = await apiInfoSector({ idSector: idSectorRoom });
+          const sectorData = data.data;
+          // console.log(sectorData)
+          setInfoSector(sectorData);
+        } catch (error) {
+          console.error("Error fetching sector data:", error);
+        }
+      };
     useEffect(() => {
         danhgia(danhgiaRoom )
+        fetchInfoSector(idSectorRoom)
     }, [])
 
     const handleNavigationDetailRoom = () =>{
@@ -80,9 +91,7 @@ const RoomItem = (props) => {
 
     return (
         <div className='mt-1 flex w-full h-[170px] roomItem ' 
-        onClick={handleNavigationDetailRoom}
-       
-        >
+        onClick={handleNavigationDetailRoom}        >
             <div className='items-center w-[24%] mr-3'>
                 <div className=' flex justify-center items-center '>
                     <Image
@@ -135,7 +144,7 @@ const RoomItem = (props) => {
                 </div>
                 <div className=''>
                     <div className='t-sm'>Loại phòng : {loaiRoom}</div>
-                    <div className='t-sm flex'>Khu Vực : <div className='text-md'>{idSectorRoom}</div></div>
+                    <div className='t-sm flex'>Khu Vực : <div className='text-md ml-2'>{infoSector && infoSector.nameSector}</div></div>
                     <div className='t-sm'>Mô tả : </div><div>{discRoom}</div>
                 </div>
             </div>

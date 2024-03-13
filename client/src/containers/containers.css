@@ -6,10 +6,23 @@
     --rootColorXanh: #17E9E0;
 }
 
+.headerSticky {
+    position: sticky;
+    top: 0;
+    z-index: 9; /* Đảm bảo header nằm trên các phần tử khác */
+    background-color: var(--rootColorbackround);
+  }
+  
+  .navigationSticky {
+    position: sticky;
+    top: 65px; /* Hoặc top: [chiều cao của header] nếu bạn muốn navigation nằm dưới header */
+    z-index:10;
+  }
+
 .navbars{
     color:  white;
     font-size: medium;
-    z-index: 1;
+    z-index: 3;
 }
 
 .navbars li:hover{
