@@ -4,7 +4,7 @@ import moment from "moment";
 import dayjs from "dayjs";
 import customParseFormat from "dayjs/plugin/customParseFormat";
 import { DatePicker, Select, Slider, Input } from "antd";
-
+import { useLocation } from "react-router-dom";
 import { ListRooms, RoomItem } from "../../components";
 import { apiGetAllSector, apiGetAllRoom } from "../../services";
 
@@ -19,11 +19,14 @@ const { Option } = Select;
 const { CiSearch } = icons;
 
 const Rooms = () => {
+  const location = useLocation();
+  
   const [rollSliderStart, setRollSliderStart] = useState(100000);
   const [rollSliderEnd, setRollSliderEnd] = useState(2000000);
   const [allSector, setAllSector] = useState();
-
-  const [searchPlace, setSearchPlace] = useState("");
+ 
+  const { search } = location.state || {};
+  const [searchPlace, setSearchPlace] = useState(search);
   const [selectedTypeRoom, setSelectedTypeRoom] = useState(null);
   const [selectSector, setSelectSector] = useState();
   const formatter = (value) => `${value.toLocaleString()} nvđ`;

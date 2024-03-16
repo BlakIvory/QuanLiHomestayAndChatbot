@@ -80,6 +80,9 @@ const OrderRoomItem = (props) => {
   const handleNext = () => {
     setCurrent((prev) => (prev < Room.imgRoom.length - 1 ? prev + 1 : 0));
   };
+  function capitalizeFirstLetter(string) {
+    return string.charAt(0).toUpperCase() + string.slice(1);
+  }
 
   return (
     <div className="w-full  flex  rounded-lg bg-item mt-2 p-3">
@@ -106,7 +109,7 @@ const OrderRoomItem = (props) => {
       <div className="w-[40%] col-1 gird  items-center ">
         <div className="flex w-full ">
           <div> Tên Phòng : </div>
-          {Room.nameRoom && <div className="ml-2 ">{Room.nameRoom}</div>}
+          {Room.nameRoom && <div className="ml-2 ">{Room.nameRoom && capitalizeFirstLetter(Room.nameRoom)} </div>}
         </div>
         <div className="flex w-full ">
           <div>Loại phòng : </div>
@@ -115,7 +118,7 @@ const OrderRoomItem = (props) => {
         <div className="flex w-full ">
           <div>Khu vực : </div>
           {infoSector && (
-            <div className="ml-2 ">{infoSector.nameSector}</div>
+            <div className="ml-2 ">{infoSector.nameSector && capitalizeFirstLetter(infoSector.nameSector)}</div>
           )}
         </div>
         <div className="flex w-full ">

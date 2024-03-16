@@ -1,21 +1,27 @@
-import React from "react";
+import React, { useRef, useState } from "react";
 import { useNavigate, NavLink } from "react-router-dom";
 import { path } from "../../ultils/constant";
 import { useSelector, useDispatch } from "react-redux";
 import icons from "../../ultils/icons";
-// import { Image } from 'antd';
-import '../containers.css'
+import { Input } from "antd";
+import "../containers.css";
 const { CiSearch } = icons;
 
 const Navigation = () => {
   const { IsLoggedIn, nameUser } = useSelector((state) => state.auth);
+  const inputRef = useRef(null);
   const navigate = useNavigate();
 
+  const [searchPlace, setSearchPlace] = useState("");
 
-  
-
-
-
+  const handleSubmitSearch = (e)=>{
+    console.log(e.target.value)
+    setSearchPlace(e.target.value);
+    navigate('/xemphong', { state: { search: searchPlace } });
+    if (inputRef.current) {
+      inputRef.current.focus();
+    }
+  }
   return (
     <div className="w-full flex justify-center items-center h-[50px] bg-[#A64AC9] mt-2 navigationSticky">
       <div className="w-[800px] flex justify-between">
@@ -31,18 +37,14 @@ const Navigation = () => {
           />
         </div>
         <div className="flex justify-center items-center  ">
-         
-            <div className="flex items-center rounded-lg gap-2 bg-white h-[40px]">
-            <CiSearch className="ml-2" size={24} />
-            <input
+          <div className="flex items-center rounded-lg gap-2 bg-white ">
+            <Input
+             ref={inputRef}
+              prefix={<CiSearch className="ml-2" size={24} />}
               placeholder="Nhập nơi cần tìm ..."
-              onChange={(e) => {
-                // console.log(e.target.value);
-                // setSearchPlace(e.target.value);
-              }}
+              onPressEnter={handleSubmitSearch}
             />
-            </div>
-          
+          </div>
         </div>
         <div className="flex justify-center items-center  ">
           <ul className="flex items-center justify-center gap-3 navbars font-semibold">
