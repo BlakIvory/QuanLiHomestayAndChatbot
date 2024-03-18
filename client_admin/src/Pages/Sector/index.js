@@ -230,7 +230,7 @@ const Sector = () => {
               },
             },
             {
-              title: "tình trạng",
+              title: "Tình trạng",
               dataIndex: "statusSector",
               align: "center",
             },

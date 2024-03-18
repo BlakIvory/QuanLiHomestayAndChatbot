@@ -121,11 +121,11 @@ const Orders = () => {
           rowKey="idOrder"
           columns={[
             {
-              title: "người sử dụng",
+              title: "Người sử dụng",
               dataIndex: "userInput",
             },
             {
-              title: "số điện thoại",
+              title: "Số điện thoại",
               dataIndex: "phoneInput",
             },
             {
@@ -138,12 +138,12 @@ const Orders = () => {
               },
             },
             {
-              title: "ngày bắt đầu",
+              title: "Ngày bắt đầu",
               dataIndex: "dateInput",
               render: (value) => <span>{value[0]}</span>,
             },
             {
-              title: "số ngày",
+              title: "Số ngày",
               dataIndex: "dateInput",
               render: (value) => <span>{value.length}</span>,
             },

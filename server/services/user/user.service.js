@@ -141,7 +141,9 @@ class UserService {
         "order.idOrder": idOrder,
       },
       {
-        $set: { "order.$.statusOrder": "3" },
+        $set: { "order.$.statusOrder": "3" ,
+                "order.$.pay"  : "true" ,
+        },
       },
       { returnDocument: "after" }
     );
