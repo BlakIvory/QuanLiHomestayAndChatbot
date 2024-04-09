@@ -207,9 +207,9 @@ const Rooms = () => {
                   onChange={(e) =>
                     setRollSliderStart(Number(e.target.value.replace(/,/g, "")))
                   }
-                  className="input-class-name w-[50px] rounded-md mr-1" // Thêm class CSS của bạn ở đây
+                  className="input-class-name w-[60px] rounded-md mr-1 pl-1" // Thêm class CSS của bạn ở đây
                 />{" "}
-                vnđ
+               
               </div>
               <div className="justify-center items-center flex">
                 <input
@@ -218,7 +218,7 @@ const Rooms = () => {
                   onChange={(e) =>
                     setRollSliderEnd(Number(e.target.value.replace(/,/g, "")))
                   }
-                  className="input-class-name w-[70px] rounded-md mr-1" // Thêm class CSS của bạn ở đây
+                  className="input-class-name w-[70px] rounded-md mr-1 pl-1" // Thêm class CSS của bạn ở đây
                 />{" "}
                 vnđ
               </div>

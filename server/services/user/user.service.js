@@ -105,7 +105,7 @@ class UserService {
         "order.idOrder": idOrder,
       },
       {
-        $set: { "order.$.pay": true },
+        $set: { "order.$.pay": "true" },
       },
       { returnDocument: "after" }
     );
@@ -174,6 +174,33 @@ class UserService {
       console.log(error);
     }
   }
+
+  async UpdateInfoUser(payload) {
+    const idUser = payload.idUser;
+  
+    const updateFields = {};
+    if (payload.email) updateFields.email = payload.email;
+    if (payload.password) updateFields.password = payload.password;
+    if (payload.name) updateFields.name = payload.name;
+    if (payload.phone) updateFields.phone = payload.phone;
+    if (payload.address) updateFields.address = payload.address;
+    if (payload.img) updateFields.img = payload.img;
+    // Thêm các trường khác tương tự
+  
+    const result = await this.User.findOneAndUpdate(
+      {
+        _id: ObjectId.isValid(idUser) ? new ObjectId(idUser) : null,
+      },
+      {
+        $set: updateFields,
+      },
+      { returnDocument: "after" }
+    );
+  
+    return result;
+  }
+
+
 }
 
 module.exports = UserService;

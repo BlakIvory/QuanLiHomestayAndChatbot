@@ -81,6 +81,13 @@ class RoomService {
     // console.log(result)
     return result;
   }
+  async findRoomByIdSector(filter) {
+    // console.log(filter);
+    const cursor = await this.Room.find({
+      idSectorRoom: filter.enKhuVuc,
+    });
+    return await cursor.toArray();
+  }
 }
 
 module.exports = RoomService;

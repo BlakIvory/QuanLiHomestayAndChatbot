@@ -3,7 +3,7 @@ const cors = require("cors");
 
 const userRouter = require("./routers/user.route");
 const adminRouter = require("./routers/admin.route");
-
+const dialogflowRouter = require("./routers/dialogflow.route");
 const ApiError = require("./api-error");
 
 const app = express(); 
@@ -13,7 +13,7 @@ app.use(express.json());
 
 app.use("/api/user", userRouter);
 app.use("/api/admin", adminRouter);
-
+app.use("/api/dialogflow", dialogflowRouter);
 app.get("/", (req, res) => {
     res.json({message: "Welcome to website book homestay."});
 });

@@ -174,7 +174,7 @@ const DashBoard = () => {
                 }}
               />
             }
-            title={"Tổng Đơn Hoàn Thành"}
+            title={"Đơn Hoàn Thành"}
             value={orderComplete}
           ></DashBoardCard>
 
@@ -240,6 +240,10 @@ const DashBoard = () => {
             title={"Khách Hàng"}
             value={customer}
           ></DashBoardCard>
+        </Space>
+        <Space>
+          <RecentOrder></RecentOrder>
+          <DashBoardChart></DashBoardChart>
         </Space>
         <Space>
           <RecentOrder></RecentOrder>

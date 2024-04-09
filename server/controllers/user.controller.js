@@ -227,4 +227,29 @@ exports.getAllSector = async (req, res, next) => {
   }
 };
 
+exports.UpdateInfoUser = async (req, res, next) => {
+
+  try{
+   
+    const userService = new UserService(MongoDB.client);
+    const result = await userService.UpdateInfoUser(req.body)
+
+    return res.send({
+      "status": "1",
+      "msg": "Cập nhật thông tin tài khoản thành công !"
+    })
+  } catch (error) {
+    // console.log(error)
+    return next(new ApiError(500, "Xảy ra lỗi trong truy xuat phòng !"));
+  }
+};
+
+
+
+
+
+
+
+
+
 

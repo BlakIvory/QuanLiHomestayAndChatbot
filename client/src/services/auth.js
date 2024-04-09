@@ -43,6 +43,23 @@ export const apiInfoUser = (payload) => new Promise(async(resolve, reject)=>{
 })
 
 
+export const apiUpdateInfoUser = (payload) => new Promise(async(resolve, reject)=>{
+    try {
+        // console.log(payload)
+        const response = await axiosConfig({
+            method: 'post',
+            url: '/user/updateInfoUser',
+            data: payload
+        })
+        resolve(response)
+    } catch (error) {
+        reject(error)
+    }
+})
+
+
+
+
 
 
 

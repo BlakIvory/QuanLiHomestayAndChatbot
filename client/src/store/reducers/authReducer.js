@@ -11,7 +11,7 @@ const initState = {
 const authReducer = (state = initState, action) => {
   switch (action.type) {
     case actionTypes.REGISTER_SUCCESS: {
-      console.log(action.data.User);
+      // console.log(action.data.User);
       return {
         ...state,
         IsLoggedIn: true,
@@ -22,7 +22,7 @@ const authReducer = (state = initState, action) => {
       };
     }
     case actionTypes.LOGIN_SUCCESS: {
-      console.log(action.data.User);
+      // console.log(action.data.User);
       return {
         ...state,
         IsLoggedIn: true,

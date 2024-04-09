@@ -186,6 +186,9 @@ const OrderRoomItem = (props) => {
           {OrderRoom.statusOrder === "2" && (
             <div className="ml-2">Đã xác nhận</div>
           )}
+          {OrderRoom.statusOrder === "3" && (
+            <div className="ml-2">Đã hoàn thành</div>
+          )}
           {OrderRoom.statusOrder === "10" && (
             <div className="ml-2">Đã Hủy Đặt</div>
           )}

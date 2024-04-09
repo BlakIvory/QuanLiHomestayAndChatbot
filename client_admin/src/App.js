@@ -28,9 +28,9 @@ function App() {
   return (
     <div className=" App ">
       <Layout
-        style={{
-          minHeight: "100vh",
-        }}
+        // style={{
+        //   minHeight: "100vh",
+        // }}
       >
         <Sider
           collapsible

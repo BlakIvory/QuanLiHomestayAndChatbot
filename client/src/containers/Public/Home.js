@@ -3,9 +3,10 @@ import Header from "./Header";
 import Footer from "./Footer";
 import { Outlet } from "react-router-dom";
 import Navigation from "./Navigation";
+// import Chatbot from "../../Chatbot/Chatbot";
 import { FloatButton } from "antd";
-import Chatbot from "../../chatbot/chatbot";
 import { IoChatbubbleEllipses } from "react-icons/io5";
+
 import "../containers.css";
 const Home = () => {
   return (
@@ -15,14 +16,15 @@ const Home = () => {
       <div className="w-1100 flex flex-col items-center justify-start mb-5">
         <Outlet></Outlet>
       </div>
-      <FloatButton.Group
+      {/* <FloatButton.Group
         trigger="click"
         type="primary"
-        style={{ right: 24 }}
+        // style={{ right: 24 }}
         icon={<IoChatbubbleEllipses />}
       >
-        <Chatbot />
-      </FloatButton.Group>
+ 
+      </FloatButton.Group> */}
+      {/* <Chatbot /> */}
       <Footer></Footer>
     </div>
   );

@@ -24,6 +24,8 @@ router.post("/updatePaypalOrder", users.updatePaypalOrder);
 
 router.post("/infoSector", users.getInfoSector);
 
+router.post("/updateInfoUser", users.UpdateInfoUser);
+
 router.get("/getAllSector", users.getAllSector);
 
 module.exports = router;
