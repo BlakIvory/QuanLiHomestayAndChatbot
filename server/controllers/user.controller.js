@@ -154,16 +154,19 @@ exports.getInfoRoom = async (req, res, next) => {
 exports.cancleOrderRoom = async (req, res, next) => {
   const idUser = req.body.idUser;
   const idOrder = req.body.idOrder;
-  console.log(req.body)
+  // console.log(req.body.dateInput)
+  // console.log(req.body)
   const payload = {
     idUser: idUser,
     idOrder: idOrder,
+    dateOrderRoom: req.body.dateInput,
+    idRoom: req.body.idRoom,
   }
   try{
-   
+    const roomService = new RoomService(MongoDB.client);
     const userService = new UserService(MongoDB.client);
     const result1 = await userService.CancleOrderRoomUser(payload)
-
+    const result2 = await roomService.deleteDateRoom(payload)
     return res.send(result1)
   } catch (error) {
     // console.log(error)

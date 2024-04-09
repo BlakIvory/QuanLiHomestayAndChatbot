@@ -68,7 +68,7 @@ const OrderRoomItem = (props) => {
   };
 
   const handleClickCancelOrder = async () => {
-    console.log("object");
+    console.log(OrderRoom);
     const result = await apiCancleRoom(OrderRoom);
     console.log(result);
   };

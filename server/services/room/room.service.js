@@ -64,6 +64,17 @@ class RoomService {
     });
     return result;
   }
+
+  async deleteDateRoom(payload) {
+    console.log(payload);
+
+    const result = await this.Room.updateOne(
+      { _id:  ObjectId.isValid(payload.idRoom) ? new ObjectId(payload.idRoom) : null },
+      { $pull: { ordersRoom: { $in: payload.dateOrderRoom } } }
+  );
+    return result;
+  }
+
   async OrderRoom(payload) {
     // console.log(payload);
 
