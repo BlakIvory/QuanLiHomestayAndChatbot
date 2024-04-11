@@ -86,21 +86,21 @@ exports.cancleOrderRoom = async (req, res, next) => {
   }
 };
 
-exports.updatePaypalOrder = async (req, res, next) => {
-  const idUser = req.body.idUser;
-  const idOrder = req.body.idOrder;
+exports.updatePaypalOrder = async (payload) => {
+  // const idUser = "661361f72f203bf3cd806c4f";
+  const idOrder = payload.idOrder;
   // console.log(req.body)
-  const payload = {
-    idUser: idUser,
+  const input = {
+
     idOrder: idOrder,
   };
   try {
     const userService = new UserService(MongoDB.client);
-    const result1 = await userService.PayOrder(payload);
-    return res.send(result1);
+    const result1 = await userService.PayOrder(input);
+    return result1
   } catch (error) {
     // console.log(error)
-    return next(new ApiError(500, "Xảy ra lỗi trong truy xuat phòng !"));
+    return next(new ApiError(500, "Xảy ra lỗi trong truy xuất phòng !"));
   }
 };
 
@@ -170,7 +170,7 @@ exports.orderRoomByChatBot = async (payload) => {
     dateInput: payload.dateOrderRoom,
     totalMoney: payload.totalMoney,
     pay: false,
-    statusOrder: 1,
+    statusOrder: "1",
     idOrder: idv4,
   };
   const user = {

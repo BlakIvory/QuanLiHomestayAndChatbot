@@ -175,7 +175,7 @@ const Sector = () => {
               title: "Đặt điểm khu vực ",
               dataIndex: "discSector",
               ...getColumnSearchProps("discSector"),
-              sorter: (a, b) => a.userName.localeCompare(b.userName),
+              sorter: (a, b) => a.discSector.localeCompare(b.discSector),
               render: (text, record) => {
                 if (record._id === editingRow) {
                   return (

@@ -1,5 +1,8 @@
-import React, { useEffect, useState } from "react";
-import { Avatar, Button, Rate, Space, Table, Typography } from "antd";
+import React, { useEffect, useState, useRef } from "react";
+import { Avatar, Button, Rate, Space, Table, Typography, Input ,Select} from "antd";
+import { SearchOutlined } from "@ant-design/icons";
+import Highlighter from "react-highlight-words";
+
 import {
   apiConfirmOrderRoom,
   apiGetAllUser,
@@ -24,18 +27,28 @@ const Orders = () => {
     setLoading(true);
     apiGetAllUser().then((res) => {
       setDataSource(res.data.users);
-
       setLoading(false);
     });
   }, []);
+
   useEffect(() => {
-    // eslint-disable-next-line react-hooks/exhaustive-deps, no-const-assign
+
     if (dataSource.length > 0) {
-      const allOrder = dataSource.reduce(
+      let allOrder = dataSource.reduce(
         (acc, user) => [...acc, ...user.order],
         []
       );
+      allOrder.sort((a, b) => {
+        if (a.statusOrder === "1") return -1;
+        if (b.statusOrder === "1") return 1;
+        if (a.statusOrder === "10") return 1;
+        if (b.statusOrder === "10") return -1;
+        if (a.statusOrder === "2" && b.statusOrder !== "1") return -1;
+        if (b.statusOrder === "2" && a.statusOrder !== "1") return 1;
+        return 0;
+      });
       setData(allOrder);
+      
     }
   }, [dataSource]);
   // console.log(data)
@@ -69,7 +82,7 @@ const Orders = () => {
     }
   };
   const handleClickDeleteOrder = async (payload) => {
-    console.log(payload)
+    console.log(payload);
     const result = await apiDeleteOrderRoom(payload);
     console.log(result.data);
     if (result.data.status === 1) {
@@ -106,11 +119,122 @@ const Orders = () => {
     fetchRooms();
     // const roomIds = ["65b377dfdc9b573d146614dd","65deda99215212200ab94206"];
     roomIds.forEach((id) => getApiGetInfo(id));
-  }, [data]);
+  }, [data,dataSource]);
 
+  const [searchText, setSearchText] = useState("");
+  const [searchedColumn, setSearchedColumn] = useState("");
+  const searchInput = useRef(null);
+  const handleSearch = (selectedKeys, confirm, dataIndex) => {
+    confirm();
+    setSearchText(selectedKeys[0]);
+    setSearchedColumn(dataIndex);
+  };
+  const handleReset = (clearFilters) => {
+    clearFilters();
+    setSearchText("");
+  };
 
-
-
+  const getColumnSearchProps = (dataIndex) => ({
+    filterDropdown: ({
+      setSelectedKeys,
+      selectedKeys,
+      confirm,
+      clearFilters,
+      close,
+    }) => (
+      <div
+        style={{
+          padding: 8,
+        }}
+        onKeyDown={(e) => e.stopPropagation()}
+      >
+        <Input
+          ref={searchInput}
+          placeholder={`Search ${dataIndex}`}
+          value={selectedKeys[0]}
+          onChange={(e) =>
+            setSelectedKeys(e.target.value ? [e.target.value] : [])
+          }
+          onPressEnter={() => handleSearch(selectedKeys, confirm, dataIndex)}
+          style={{
+            marginBottom: 8,
+            display: "block",
+          }}
+        />
+        <Space>
+          <Button
+            onClick={() => handleSearch(selectedKeys, confirm, dataIndex)}
+            icon={<SearchOutlined />}
+            size="small"
+            style={{
+              width: 90,
+            }}
+          >
+            Tìm
+          </Button>
+          <Button
+            onClick={() => clearFilters && handleReset(clearFilters)}
+            size="small"
+            style={{
+              width: 90,
+            }}
+          >
+            Đặt lại
+          </Button>
+          <Button
+            type="link"
+            size="small"
+            onClick={() => {
+              confirm({
+                closeDropdown: false,
+              });
+              setSearchText(selectedKeys[0]);
+              setSearchedColumn(dataIndex);
+            }}
+          >
+            Lọc
+          </Button>
+          <Button
+            type="link"
+            size="small"
+            onClick={() => {
+              close();
+            }}
+          >
+            Đóng
+          </Button>
+        </Space>
+      </div>
+    ),
+    filterIcon: (filtered) => (
+      <SearchOutlined
+        style={{
+          color: filtered ? "#1677ff" : undefined,
+        }}
+      />
+    ),
+    onFilter: (value, record) =>
+      record[dataIndex].toString().toLowerCase().includes(value.toLowerCase()),
+    onFilterDropdownOpenChange: (visible) => {
+      if (visible) {
+        setTimeout(() => searchInput.current?.select(), 100);
+      }
+    },
+    render: (text) =>
+      searchedColumn === dataIndex ? (
+        <Highlighter
+          highlightStyle={{
+            backgroundColor: "#ffc069",
+            padding: 0,
+          }}
+          searchWords={[searchText]}
+          autoEscape
+          textToHighlight={text ? text.toString() : ""}
+        />
+      ) : (
+        text
+      ),
+  });
 
   return (
     <div className="p-5">
@@ -123,10 +247,14 @@ const Orders = () => {
             {
               title: "Người sử dụng",
               dataIndex: "userInput",
+              ...getColumnSearchProps("userInput"),
+              sorter: (a, b) => a.userInput.length - b.userInput.length,
+              sortDirections: ["descend", "ascend"],
             },
             {
               title: "Số điện thoại",
               dataIndex: "phoneInput",
+              ...getColumnSearchProps("phoneInput"),
             },
             {
               title: "Tên phòng",
@@ -140,16 +268,31 @@ const Orders = () => {
             {
               title: "Ngày bắt đầu",
               dataIndex: "dateInput",
+              sorter: (a, b) => {
+                const dateA = a.dateInput[0].split('/').reverse().join('');
+                const dateB = b.dateInput[0].split('/').reverse().join('');
+                return dateA.localeCompare(dateB);
+              },
               render: (value) => <span>{value[0]}</span>,
+              align: 'center',
             },
             {
               title: "Số ngày",
               dataIndex: "dateInput",
+              sorter: (a, b) => a.dateInput.length - b.dateInput.length,
               render: (value) => <span>{value.length}</span>,
+              align: 'center',
             },
             {
               title: "Trạng thái",
               dataIndex: "statusOrder",
+              filters: [
+                { text: "Chờ xác nhận", value: "1" },
+                { text: "Đã xác nhận", value: "2" },
+                { text: "Đã hoàn thành", value: "3" },
+                { text: "Đã hủy đặt", value: "10" },
+              ],
+              onFilter: (value, record) => record.statusOrder.indexOf(value) === 0,
               render: (value) => {
                 let status;
                 switch (value) {
@@ -166,7 +309,7 @@ const Orders = () => {
                     status = "Đã hủy đặt";
                     break;
                   default:
-                    status = "Không xác định"; // hoặc bất kỳ trạng thái mặc định nào bạn muốn hiển thị
+                    status = "Không xác định";
                 }
                 return <span>{status}</span>;
               },
@@ -174,6 +317,11 @@ const Orders = () => {
             {
               title: "Thanh toán",
               dataIndex: "pay",
+              filters: [
+                { text: "Đã thanh toán", value: "true" },
+                { text: "Chưa thanh toán", value: "false" },
+              ],
+              onFilter: (value, record) => record.pay.toString() === value,
               render: (value) => (
                 <span>
                   {value === "true" ? "Đã thanh toán" : "Chưa thanh toán"}
@@ -218,7 +366,7 @@ const Orders = () => {
                     style={{ fontSize: "20px", color: "blue" }}
                     onClick={() => {
                       // console.log(index)
-                      handleClickCompleteOrder(index)
+                      handleClickCompleteOrder(index);
                     }}
                   />
                   <DeleteOutlined
@@ -227,7 +375,7 @@ const Orders = () => {
                     style={{ fontSize: "20px", color: "red" }}
                     onClick={() => {
                       // console.log(index)
-                      handleClickDeleteOrder(index)
+                      handleClickDeleteOrder(index);
                     }}
                   />
                 </div>

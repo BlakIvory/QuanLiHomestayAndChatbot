@@ -360,7 +360,7 @@ const RecentOrder = () => {
         dataSource={dataSource}
         pagination={false}
       /> */}
-      <Card title="Danh Sách Phòng Đã Đặt" style={{ width: "550px", height: "400px" }}>
+      <Card title="Danh Thu Các Phòng" style={{ width: "550px", height: "400px" }}>
       <Table
         columns={columns}
         rowKey={"idRoom"}
@@ -450,7 +450,7 @@ const DashBoardChart = () => {
   };
 
   return (
-    <Card title="Biểu Đồ Doanh Thu" style={{ width: "600px", height: "400px" }}>
+    <Card title="Biểu Đồ Doanh Thu Trong Năm" style={{ width: "600px", height: "400px" }}>
       <Bar
         data={data}
         options={options}

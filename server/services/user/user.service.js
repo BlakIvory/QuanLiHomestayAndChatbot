@@ -96,21 +96,18 @@ class UserService {
   }
 
   async PayOrder(payload) {
-    const idUser = payload.idUser;
-    const idOrder = payload.idOrder;
-    // console.log(payload)
-    const result = await this.User.findOneAndUpdate(
-      {
-        _id: ObjectId.isValid(idUser) ? new ObjectId(idUser) : null,
-        "order.idOrder": idOrder,
-      },
-      {
-        $set: { "order.$.pay": "true" },
-      },
-      { returnDocument: "after" }
-    );
-
-    return result;
+    try {
+      // Cập nhật trạng thái thanh toán của đơn hàng dựa trên idOrder
+      const result = await this.User.findOneAndUpdate(
+        { "order.idOrder": payload.idOrder },
+        { $set: { "order.$.pay": "true" } },
+        { returnDocument: "after" }
+      );
+      return result;
+    } catch (error) {
+      console.error(error);
+      throw new Error("Có lỗi xảy ra khi cập nhật trạng thái thanh toán.");
+    }
   }
 
   async ConfirmOrder(payload) {

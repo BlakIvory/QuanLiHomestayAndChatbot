@@ -125,8 +125,6 @@ const Customer = () => {
         setDataSource(res.data.users)
         setLoading(false)
       })
-
-
   }, [])
 
 
