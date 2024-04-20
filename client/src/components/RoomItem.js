@@ -87,8 +87,14 @@ const RoomItem = (props) => {
   }, []);
 
   const handleNavigationDetailRoom = () => {
-    navigate(`/${path.DETAILROOM}`, { state: { detailData } });
+    if (typeof detailData !== 'undefined') {
+      navigate(`/${path.DETAILROOM}`, { state: { detailData } });
+    } else {
+      // Xử lý trường hợp khi detailData không tồn tại
+      console.log('Biến detailData không tồn tại.');
+    }
   };
+  
 
   return (
     <div

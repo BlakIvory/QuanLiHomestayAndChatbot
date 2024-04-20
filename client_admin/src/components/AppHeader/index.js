@@ -12,11 +12,14 @@ const AppHeader = () => {
   return (
     <div className="AppHeader ">
       <Space className="ml-5">
-        <Image
+        {/* <Image
           className="rounded-full"
           src="https://i.pinimg.com/736x/c1/bd/1b/c1bd1b17381d4cb949dc9f41e9617bc8.jpg"
           width={40}
-        ></Image>
+        ></Image> */}
+         <div className='logo-container'>
+        <img src={"https://cdn-icons-png.flaticon.com/512/6820/6820955.png"} alt='Logo'   style={{ width: '120px', height: '100px' }}  />
+      </div> 
       </Space>
       <Space><Typography.Title>HOMESTAY ADMIN DASHBOARD</Typography.Title></Space>
       <Space className="mr-5">

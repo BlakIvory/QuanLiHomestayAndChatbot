@@ -132,7 +132,12 @@ const Customer = () => {
 
     <div className='p-5'>
       <Space size={20} direction='vertical'>
-        <Typography.Title level={4}>QUẢN LÝ TÀI KHOẢN KHÁCH HÀNG</Typography.Title>
+        
+        <div className='flex items-center justify-center'>
+        <Typography.Title level={3}>QUẢN LÝ TÀI KHOẢN KHÁCH HÀNG</Typography.Title>
+        </div>
+
+
         <Table
           loading={loading}
           rowKey="_id"

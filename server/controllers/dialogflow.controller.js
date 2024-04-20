@@ -188,3 +188,45 @@ exports.orderRoomByChatBot = async (payload) => {
     return next(new ApiError(500, "Xảy ra lỗi trong quá trình đặt phòng !"));
   }
 };
+
+exports.checkRoomByChatBot = async (payload) => {
+    const date = payload.date
+    // console.log(date)
+  try {
+    const roomService = new RoomService(MongoDB.client);
+    const result = await roomService.findAvailableRooms(date)
+    // console.log(result)
+
+    return result;
+  } catch (error) {
+    console.log(error)
+    // return next(new ApiError(500, "Xảy ra lỗi trong quá trình đặt phòng !"));
+  }
+};
+
+exports.cancleOrderRoomByChatBot = async (payload) => {
+try {
+  const userService = new UserService(MongoDB.client);
+  const result = await userService.CancleOrderRoomByChatBot(payload)
+  return result;
+} catch (error) {
+  console.log(error)
+  // return next(new ApiError(500, "Xảy ra lỗi trong quá trình đặt phòng !"));
+}
+};
+
+
+exports.getInfoOrderRoomByChatBot = async (payload) => {
+  try {
+    const userService = new UserService(MongoDB.client);
+    const result = await userService.GetInfoOrderRoomByChatBot(payload)
+    return result;
+  } catch (error) {
+    console.log(error)
+    // return next(new ApiError(500, "Xảy ra lỗi trong quá trình đặt phòng !"));
+  }
+  };
+  
+
+
+

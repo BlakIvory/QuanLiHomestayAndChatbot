@@ -198,6 +198,80 @@ class UserService {
   }
 
 
+
+  async  CancleOrderRoomByChatBot(payload) {
+    const idOrder = payload.idOrder;
+
+    // Tìm order dựa trên idOrder
+    const order = await this.User.findOne({ "order.idOrder": idOrder });
+  
+    if (!order) {
+      return "Không tìm thấy order nào có id " + idOrder;
+    }
+  
+    const statusOrder = order.order.find((o) => o.idOrder === idOrder).statusOrder;
+  
+    if (statusOrder === "10") {
+      return {
+        status : 1,
+        msg :"Đơn đặt phòng đã được hủy trước đó. !"
+      };
+    } else if (statusOrder === "1" || statusOrder === "2") {
+      // Cập nhật statusOrder lên 10
+      const result = await this.User.findOneAndUpdate(
+        { "order.idOrder": idOrder },
+        { $set: { "order.$.statusOrder": "10" } },
+        { returnDocument: "after" }
+      );
+      console.log(result)
+      return {
+        result : result,
+        status : 0,
+      };
+    } else if(statusOrder === 3 ){
+      return {
+        status : 2,
+        msg :"Đơn đặt phòng đã được hoàn thành nên không thể hủy !."
+      };
+    }
+  }
+
+
+  async  GetInfoOrderRoomByChatBot(payload) {
+    try {
+      const idOrder = payload.idOrder;
+      // Kiểm tra idOrder không phải là undefined hoặc null
+      if (!idOrder) {
+        throw new Error('idOrder không được cung cấp hoặc không hợp lệ.');
+      }
+      // Tìm user dựa trên idOrder
+      const user = await this.User.findOne({ "order.idOrder": idOrder });
+      // Kiểm tra user có tồn tại và có mảng orders
+      if (!user || !user.order) {
+        console.log('Không tìm thấy user hoặc mảng orders với idOrder cung cấp.');
+        return null;
+      }
+      // Tìm order cụ thể trong mảng orders
+      const specificOrder = user.order.find(order => order.idOrder === idOrder);
+      // Kiểm tra specificOrder có tồn tại
+      if (!specificOrder) {
+        console.log('Không tìm thấy order cụ thể với idOrder cung cấp.');
+        return null;
+      }
+      // Trả về order tìm được
+      return specificOrder;
+    } catch (error) {
+      // Xử lý lỗi ở đây
+      console.error('Lỗi khi tìm kiếm order:', error);
+      return null;
+    }
+  }
+  
+  
+   
+  
+
+
 }
 
 module.exports = UserService;

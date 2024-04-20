@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import "./components.css";
-import axios from 'axios';
+import axios from "axios";
 
 import swal from "sweetalert";
 import {
@@ -27,17 +27,19 @@ const { Option } = Select;
 dayjs.extend(customParseFormat);
 
 const AddAdminForm = (props) => {
-    // const navigate = useNavigate()
-  const [imageFile, setImageFile] = useState( "https://th.bing.com/th/id/R.cf89e8e6daa9dabc8174c303e4d53d3a?rik=BcjJH68FR0CVvg&pid=ImgRaw&r=0");
+  // const navigate = useNavigate()
+  const [imageFile, setImageFile] = useState(
+    "https://th.bing.com/th/id/R.cf89e8e6daa9dabc8174c303e4d53d3a?rik=BcjJH68FR0CVvg&pid=ImgRaw&r=0"
+  );
   const dateFormat = "DD/MM/YYYY";
-//   const [formData, setFormData] = useState({
-//     userName: "",
-//     phone: "",
-//     birthYear: 0,
-//     avatar:imageFile,
-//     password: "",
-//     isAdmin: false,
-//   });
+  //   const [formData, setFormData] = useState({
+  //     userName: "",
+  //     phone: "",
+  //     birthYear: 0,
+  //     avatar:imageFile,
+  //     password: "",
+  //     isAdmin: false,
+  //   });
 
   function formatDate(date) {
     let day = ("0" + date.getDate()).slice(-2);
@@ -72,7 +74,7 @@ const AddAdminForm = (props) => {
     await axios
       .post("https://api.cloudinary.com/v1_1/doqqlyjb2/image/upload", form)
       .then((response) => {
-        // console.log(response.data); 
+        // console.log(response.data);
         setImageFile(response.data.secure_url);
         // setFormData({...formData,avatar : response.data.secure_url});
         // setFormData([...FormData, avatar: response.data.secure_url]);
@@ -83,43 +85,44 @@ const AddAdminForm = (props) => {
   };
 
   const apiPostAddAdmin = async (payload) => {
+    // console.log(payload)
     try {
       const result = await apiAddAdmin(payload);
       return result.data; // Đảm bảo rằng bạn trả về dữ liệu chính xác từ API
     } catch (error) {
-      console.error('Error when calling apiAddAdmin:', error);
+      console.error("Error when calling apiAddAdmin:", error);
       throw error; // Ném lỗi để có thể xử lý ở nơi gọi hàm này
     }
   };
-  
 
-    const onFinish = async(data) => {
-        // console.log(data.birthYear;l.$d);
-        // console.log(imageFile)
-        const date = formatDate(data.birthYear.$d);
-        const inputData = {
-        userName: data.userName,
-        phone: data.phone,
-        password: data.password,
-        isAdmin: data.isAdmin,
-        birthYear: date,
-        avatar: imageFile,
-        };
-        
-        const response = await apiPostAddAdmin(inputData)
-        if(response.status ===-1){
-            swal("Thông Báo !" , response.msg,"warning")
-            props.closeForm()
-            // window.location.reload()
-        }  
-        if(response.status ===0){
-            swal("Thành Công !" , response.msg,"success").then(() => {
-                window.location.reload();
-              });
-    
-        }   
+  const onFinish = async (data) => {
+    // console.log(data.birthYear;l.$d);
+    // console.log(imageFile)
+    const date = formatDate(data.birthYear.$d);
+    const inputData = {
+      userName: data.userName,
+      phone: data.phone,
+      password: data.password,
+      isAdmin: data.isAdmin,
+      birthYear: date,
+      avatar: imageFile,
     };
-    
+
+    const response = await apiAddAdmin(inputData);
+    // console.log(inputData)
+    console.log(response.data)
+    if (response.data.status === -1) {
+      swal("Thông Báo !", response.data.msg, "warning");
+      props.closeForm();
+      // window.location.reload()
+    }
+    if (response.data.status === 0) {
+      swal("Thành Công !", response.data.msg, "success").then(() => {
+        window.location.reload();
+      });
+    }
+  };
+
   const normFile = (e) => {
     if (Array.isArray(e)) {
       return e;
@@ -194,7 +197,7 @@ const AddAdminForm = (props) => {
                 format={dateFormat}
               />
             </Form.Item>
-         
+
             <Form.Item
               name="avatar"
               label="Hình ảnh"
@@ -236,13 +239,12 @@ const AddAdminForm = (props) => {
               rules={[{ required: true, message: "Vui lòng chọn chức vụ !" }]}
               label="Quyền truy cập : "
             >
-              <Select
-                // onChange={(value) => console.log(value)} // Hàm này sẽ được gọi với giá trị `true` hoặc `false`
-                initialValues={false} // Đặt giá trị mặc định là false cho Nhân Viên
-                placeholder="Chọn chức vụ"
-              >
-                <Option value={true}>Quản Lý</Option>
-                <Option value={false}>Nhân Viên</Option>
+              <Select mode="multiple" placeholder="Chọn chức vụ">
+                <Option value={"1"}>Quản Lý Nhân Viên</Option>
+                <Option value={"2"}>Quản Lý Tài Khoản</Option>
+                <Option value={"3"}>Quản Lý Đặt Phòng</Option>
+                <Option value={"4"}>Quản Lý Khu Vực</Option>
+                <Option value={"5"}>Quản Lý Phòng</Option>
               </Select>
             </Form.Item>
 

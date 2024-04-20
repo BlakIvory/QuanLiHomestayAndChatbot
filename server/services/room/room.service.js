@@ -99,6 +99,27 @@ class RoomService {
     });
     return await cursor.toArray();
   }
+
+  async findAvailableRooms(datesArray) {
+    // Tìm tất cả các phòng
+    const cursor = await this.Room.find({});
+    const allRooms = await cursor.toArray();
+  
+    // Lọc ra các phòng không có đơn đặt phòng nào trùng với mảng ngày đầu vào
+    const availableRooms = allRooms.filter(room => {
+      // Biến đổi mảng ordersRoom thành mảng các chuỗi ngày để so sánh
+      const orderDates = room.ordersRoom.flatMap(order => order);
+  
+      // Kiểm tra xem có ngày nào trong ordersRoom trùng với ngày trong datesArray không
+      return !datesArray.some(date => orderDates.includes(date));
+    });
+    console.log(availableRooms)
+    return availableRooms;
+  }
+  
+
+  
+  
 }
 
 module.exports = RoomService;

@@ -21,7 +21,9 @@ const Inventory = () => {
   return (
     <div className='p-5'>
        <Space size={20} direction='vertical'>
-       <Typography.Title level={4}>Kho Hàng</Typography.Title>
+      <div className='flex items-center justify-center'>
+      <Typography.Title level={4}>Kho Hàng</Typography.Title>
+      </div>
         <Table
         loading={loading}
         columns={[

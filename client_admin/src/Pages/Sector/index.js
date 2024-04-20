@@ -139,8 +139,8 @@ const Sector = () => {
         ></AddSectorForm>
       )}
       <Space size={20} direction="vertical">
-        <div className="flex justify-between">
-          <Typography.Title level={4}>QUẢN LÝ KHU VỰC</Typography.Title>
+        <div className="flex justify-around">
+          <Typography.Title level={3}>QUẢN LÝ KHU VỰC</Typography.Title>
           <Button
             className="bg-primary border text-green"
             size={40}

@@ -9,7 +9,7 @@
 .headerSticky {
   position: sticky;
   top: 0;
-  z-index: 99999999; /* Đảm bảo header nằm trên các phần tử khác */
+  z-index: 99; /* Đảm bảo header nằm trên các phần tử khác */
   background-color: var(--rootColorbackround);
 }
 

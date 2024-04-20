@@ -402,6 +402,7 @@ exports.addAdmin = async (req, res, next) => {
   try{
     const adminService = new AdminService(MongoDB.client);
     const phone = await adminService.check({"phone" : req.body.phone});
+  
     if(phone.length > 0){
       return res.status(200).json({
         status: -1,

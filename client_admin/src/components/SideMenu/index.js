@@ -1,64 +1,64 @@
-import React from 'react'
-import { Menu } from 'antd'
-import { AppstoreOutlined, ShopFilled, ShoppingCartOutlined,HomeOutlined, UserOutlined,MenuFoldOutlined,UsergroupAddOutlined } from '@ant-design/icons';
-import { useDispatch, useSelector } from "react-redux";
-
+import React from 'react';
+import { Menu } from 'antd';
+import {
+  AppstoreOutlined,
+  ShoppingCartOutlined,
+  HomeOutlined,
+  UserOutlined,
+  MenuFoldOutlined,
+  UsergroupAddOutlined,
+} from '@ant-design/icons';
+import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import './SideMenu.css';
+
 const SideMenu = () => {
-  const navigate = useNavigate()
-  const { IsLoggedIn , isAdmin} = useSelector(state => state.auth)
+  const navigate = useNavigate();
+  const { isAdmin } = useSelector(state => state.auth);
+
+  // Thẻ "Quản Lý DashBoard" luôn hiển thị
+  const defaultMenuItem = [
+    { label: 'Quản Lý DashBoard', icon: <AppstoreOutlined />, key: '/' },
+  ];
+
+  const adminMenuItems = [
+    { label: 'Quản lý Nhân Viên', icon: <UsergroupAddOutlined />, key: '/nhanvien', value: 1 },
+    { label: 'Quản Lý Khách Hàng', icon: <UserOutlined />, key: '/customers', value: 2 },
+    { label: 'Quản Lý Đặt Phòng', icon: <ShoppingCartOutlined />, key: '/orders', value: 3 },
+    { label: 'Quản Lý Khu Vực', icon: <MenuFoldOutlined />, key: '/sectors', value: 4 },
+    { label: 'Quản Lý Phòng', icon: <HomeOutlined />, key: '/rooms', value: 5 },
+  ];
+  // let menuItems
+  // if(isAdmin){
+  //   const filteredMenuItems = adminMenuItems.filter(item => isAdmin.includes(item.value.toString()));
+
+  // // Kết hợp thẻ mặc định với các thẻ được lọc dựa trên quyền admin
+  //  menuItems = [...defaultMenuItem, ...filteredMenuItems];
+  // }
+  const filteredMenuItems = Array.isArray(isAdmin) && isAdmin !== null ? adminMenuItems.filter(item => isAdmin.includes(item.value.toString())) : [];
+  // Kết hợp thẻ mặc định với các thẻ được lọc dựa trên quyền admin
+  const menuItems = [...defaultMenuItem, ...filteredMenuItems];
+
   return (
-    <div className='SideMenu h-full  '>
-     <Menu 
-     className='hg'
-     onClick={(item)=>{
-      //item.key
-      // console.log("object")
-      navigate(item.key)
-     }}
-     theme='dark'
-     items={[
-      {label : "",
-      
-    },
-      {label : "Quản Lý DashBoard",
-      icon : <AppstoreOutlined/>,
-      key : "/",
-    },
-    {label : "Quản Lý Tài Khoản",
-      key : "/customers",
-      icon : <UserOutlined></UserOutlined>
-    },
-    {label : "Quản Lý Đặt Phòng",
-      key : "/orders",
-      icon : <ShoppingCartOutlined></ShoppingCartOutlined>
-    },
-    {label : "Quản Lý Phòng",
-      key : "/rooms",
-      icon : <HomeOutlined />
-    },
-    {label : "Quản Lý Khu Vực",
-      key : "/sectors",
-      icon : <MenuFoldOutlined></MenuFoldOutlined>
-    },
-    // {label : "Quản lý Nhân Viên",
-    //   key : "/nhanvien",
-    //   icon : <UsergroupAddOutlined />,
-    // },
-
-    ...(isAdmin ? [{
-      label: "Quản lý Nhân Viên",
-      key: "/nhanvien",
-      icon: <UsergroupAddOutlined />,
-    }] : []),
-
-     ]}>
-
-     </Menu>
-     
+    <div className='SideMenu h-full'>
+      <div className='flex justify-center items-center'>
+        <img
+          src={"https://cdn-icons-png.flaticon.com/512/6820/6820955.png"}
+          alt='Logo'
+          style={{ width: '170px', height: '100px', cursor: 'pointer' }}
+          onClick={() => navigate('/')}
+        />
+      </div>
+      <Menu
+        className='hg'
+        onClick={(item) => {
+          navigate(item.key);
+        }}
+        theme='dark'
+        items={menuItems}
+      ></Menu>
     </div>
-  )
-}
+  );
+};
 
-export default SideMenu
+export default SideMenu;

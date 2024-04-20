@@ -145,7 +145,9 @@ const DashBoard = () => {
   return (
     <div className="ml-5">
       <Space size={20} direction="vertical">
-        <Typography.Title level={4}> DashBoard</Typography.Title>
+        {/* <div className="flex justify-center items-center">
+       <Typography.Title level={3}> DashBoard</Typography.Title>
+       </div> */}
         <Space direction="horizontal">
           <DashBoardCard
             icon={
@@ -245,10 +247,10 @@ const DashBoard = () => {
           <RecentOrder></RecentOrder>
           <DashBoardChart></DashBoardChart>
         </Space>
-        <Space>
+        {/* <Space>
           <RecentOrder></RecentOrder>
           <DashBoardChart></DashBoardChart>
-        </Space>
+        </Space> */}
       </Space>
     </div>
   );
@@ -288,7 +290,7 @@ const RecentOrder = () => {
               return {
                 key: order.idRoom,
                 roomName: roomName.data[0].nameRoom,
-                giaRoom:roomName.data[0].giaRoom,
+                giaRoom: roomName.data[0].giaRoom,
                 daysBooked: order.dateInput.length, // Tổng số ngày được đặt
                 totalRevenue: parseFloat(order.totalMoney), // Tổng doanh thu
               };
@@ -336,12 +338,12 @@ const RecentOrder = () => {
       align: "center",
     },
     {
-        title: "Đơn giá phòng",
-        dataIndex: "giaRoom",
-        key: "daysBooked",
-        align: "center",
-        render: (text) => `${text.toLocaleString()} VND`,
-      },
+      title: "Đơn giá phòng",
+      dataIndex: "giaRoom",
+      key: "daysBooked",
+      align: "center",
+      render: (text) => `${text.toLocaleString()} VND`,
+    },
     {
       title: "Tổng doanh thu",
       dataIndex: "totalRevenue",
@@ -360,15 +362,19 @@ const RecentOrder = () => {
         dataSource={dataSource}
         pagination={false}
       /> */}
-      <Card title="Danh Thu Các Phòng" style={{ width: "550px", height: "400px" }}>
-      <Table
-        columns={columns}
-        rowKey={"idRoom"}
-        loading={loading}
-        dataSource={dataSource}
-        pagination={false}
-      />
-    </Card>
+      <Card
+        title="Danh Thu Các Phòng"
+        style={{ width: "650px", height: "480px" }}
+      >
+        <Table
+          columns={columns}
+          rowKey="idRoom"
+          loading={loading}
+          dataSource={dataSource}
+          pagination={false}
+          scroll={{ y: 300 }} // Điều chỉnh giá trị y tùy theo kích thước bạn muốn
+        />
+      </Card>
     </div>
   );
 };
@@ -450,7 +456,10 @@ const DashBoardChart = () => {
   };
 
   return (
-    <Card title="Biểu Đồ Doanh Thu Trong Năm" style={{ width: "600px", height: "400px" }}>
+    <Card
+      title="Biểu Đồ Doanh Thu Trong Năm"
+      style={{ width: "550px", height: "480px" }}
+    >
       <Bar
         data={data}
         options={options}

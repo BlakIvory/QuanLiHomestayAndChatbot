@@ -1,5 +1,15 @@
 import React, { useEffect, useState, useRef } from "react";
-import { Rate, Space, Table, Typography, Image, Button, Input, Select, InputNumber,  } from "antd";
+import {
+  Rate,
+  Space,
+  Table,
+  Typography,
+  Image,
+  Button,
+  Input,
+  Select,
+  InputNumber,
+} from "antd";
 import {
   EditOutlined,
   DeleteOutlined,
@@ -383,8 +393,9 @@ const Room = () => {
       )}
 
       <Space size={20} direction="vertical">
-        <div className="flex justify-between">
-          <Typography.Title level={4}>QUẢN LÝ PHÒNG HOMESTAY</Typography.Title>
+        <div className="flex justify-around">
+          <Typography.Title level={3}>QUẢN LÝ PHÒNG HOMESTAY</Typography.Title>
+
           <Button
             className="bg-primary border text-green"
             size={40}

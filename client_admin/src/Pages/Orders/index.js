@@ -173,7 +173,7 @@ const Orders = () => {
             Tìm
           </Button>
           <Button
-            onClick={() => clearFilters && handleReset(clearFilters)}
+            onClick={() => clearFilters && handleReset(clearFilters) && handleSearch(selectedKeys, confirm, dataIndex)}
             size="small"
             style={{
               width: 90,
@@ -239,7 +239,9 @@ const Orders = () => {
   return (
     <div className="p-5">
       <Space size={20} direction="vertical">
-        <Typography.Title level={4}>QUẢN LÝ ĐẶT PHÒNG</Typography.Title>
+        <div className="flex justify-center items-center">
+        <Typography.Title level={3}>QUẢN LÝ ĐẶT PHÒNG</Typography.Title>
+        </div>
         <Table
           loading={loading}
           rowKey="idOrder"
@@ -276,12 +278,20 @@ const Orders = () => {
               render: (value) => <span>{value[0]}</span>,
               align: 'center',
             },
-            {
-              title: "Số ngày",
-              dataIndex: "dateInput",
-              sorter: (a, b) => a.dateInput.length - b.dateInput.length,
-              render: (value) => <span>{value.length}</span>,
-              align: 'center',
+            // {
+            //   title: "Số ngày",
+            //   dataIndex: "dateInput",
+            //   sorter: (a, b) => a.dateInput.length - b.dateInput.length,
+            //   render: (value) => <span>{value.length}</span>,
+            //   align: 'center',
+            // },
+             {
+              title: "Mã Đơn đặt",
+              dataIndex: "idOrder",
+              width: "150px",
+              sorter: (a, b) => a.idOrder.localeCompare(b.idOrder),
+              render: (value) => <span>{value}</span>,
+              // align: 'center',
             },
             {
               title: "Trạng thái",
@@ -331,9 +341,10 @@ const Orders = () => {
             {
               title: "Xác Nhận",
               dataIndex: "statusOrder",
+              align: 'center',
               render: (value, record) => (
                 <span>
-                  {value === "1" && (
+                  {value === "1" ? (
                     <Button
                       title="Xác nhận đơn đặt phòng"
                       className=" flex items-center justify-center"
@@ -346,7 +357,9 @@ const Orders = () => {
                     >
                       Xác Nhận
                     </Button>
-                  )}
+                  ) : 
+                  <span>Đã xác nhận</span>
+                  }
                 </span>
               ),
             },

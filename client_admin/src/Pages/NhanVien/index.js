@@ -217,31 +217,31 @@ const NhanVien = () => {
         return <span>{text.toLocaleString("vi-VN")}</span>;
       },
     },
-    {
-      title: "Quyền Admin",
-      dataIndex: "isAdmin",
-      align: "center",
-      render: (text, record) => {
-        if (record._id === editingRow) {
-          return (
-            <Select
-              defaultValue={text ? "true" : "false"}
-              style={{ width: 120 }}
-              onChange={(value) => console.log(value)}
-            >
-              <Option value="true">Quản Lý</Option>
-              <Option value="false">Nhân Viên</Option>
-            </Select>
-          );
-        }
-        return <span>{text ? "Quản Lý" : "Nhân Viên"}</span>;
-      },
-      filters: [
-        { text: "Quản Lý", value: true },
-        { text: "Nhân Viên", value: false },
-      ],
-      onFilter: (value, record) => record.isAdmin === value,
-    },
+    // {
+    //   title: "Quyền Admin",
+    //   dataIndex: "isAdmin",
+    //   align: "center",
+    //   render: (text, record) => {
+    //     if (record._id === editingRow) {
+    //       return (
+    //         <Select
+    //           defaultValue={text ? "true" : "false"}
+    //           style={{ width: 120 }}
+    //           onChange={(value) => console.log(value)}
+    //         >
+    //           <Option value="true">Quản Lý</Option>
+    //           <Option value="false">Nhân Viên</Option>
+    //         </Select>
+    //       );
+    //     }
+    //     return <span>{text ? "Quản Lý" : "Nhân Viên"}</span>;
+    //   },
+    //   filters: [
+    //     { text: "Quản Lý", value: true },
+    //     { text: "Nhân Viên", value: false },
+    //   ],
+    //   onFilter: (value, record) => record.isAdmin === value,
+    // },
     {
       title: "Chỉnh sửa",
       render: (_, record) => {
@@ -305,8 +305,9 @@ const NhanVien = () => {
         <AddAdminForm closeForm={() => setShowAddFormAdminPopup(false)} />
       )}
       <Space size={20} direction="vertical">
-        <div className="flex justify-between">
-          <Typography.Title level={4}>QUẢN LÝ NHÂN VIÊN</Typography.Title>
+        <div className="flex justify-around justify-center">
+      <Typography.Title level={3}>QUẢN LÝ NHÂN VIÊN</Typography.Title>
+  
           <Button
             className="bg-primary border text-green"
             size={40}
