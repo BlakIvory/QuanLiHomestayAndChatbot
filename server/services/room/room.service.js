@@ -38,7 +38,7 @@ class RoomService {
   }
 
   async addRoom(payload) {
-    //   console.log(payload)
+      // console.log(payload)
     const room = await this.extractRoomData(payload);
     const result = await this.Room.findOneAndUpdate(
       room,
@@ -47,7 +47,6 @@ class RoomService {
           statusRoom: 0,
           ordersRoom: [],
           danhgiaRoom: 5,
-          discRoom: "",
           cmtRoom: [],
         },
       },

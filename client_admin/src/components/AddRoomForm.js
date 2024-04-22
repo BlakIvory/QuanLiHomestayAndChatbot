@@ -85,10 +85,10 @@ const AddRoomForm = (props) => {
   }, []);
 
   const submitform = async () => {
-    console.log(formData)
+    // console.log(formData)
 
     const result = await apiAddRoom(formData);
-    // console.log(result)
+    console.log(result)
     if (result.status === 200) {
       swal("Thông báo !", "Thêm phòng mới thành công  !", "success").then(value =>  window.location.reload())
       props.setShowAddRoomPopup.bind("", false);

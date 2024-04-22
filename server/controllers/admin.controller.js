@@ -157,7 +157,7 @@ exports.getAllAdmin = async (req, res, next) => {
 
 
 exports.addRoom = async (req, res, next) => {
-  console.log(req.body)
+  // console.log(req.body.idSectorRoom)
   
   try{
     const inputData = {
@@ -168,7 +168,9 @@ exports.addRoom = async (req, res, next) => {
       imgRoom: req.body.imgRoom
     }
 
+    const sectorService = new SectorService(MongoDB.client);
     const roomService = new RoomService(MongoDB.client);
+    const result1 = await sectorService.addOneRoomInSector({"idSector": inputData.idSectorRoom})
     const result = await roomService.addRoom(inputData);
     if(result){
       return res.status(200).json("result");
@@ -426,5 +428,20 @@ exports.addAdmin = async (req, res, next) => {
   } catch (error) {
     // console.log(error)
     return next(new ApiError(500, "Xảy ra lỗi trong quá trình tạo account admin !"));
+  }
+};
+
+exports.addRoomInSector = async (req, res, next) => {
+
+  console.log(req.body)
+  try{
+   
+    const sectorService = new SectorService(MongoDB.client);
+    const result1 = await sectorService.addOneRoomInSector(req.body)
+
+    return res.send(result1)
+  } catch (error) {
+    // console.log(error)
+    return next(new ApiError(500, "Xảy ra lỗi trong truy xuat Khu vực!"));
   }
 };

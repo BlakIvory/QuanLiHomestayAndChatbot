@@ -379,9 +379,10 @@ const RecentOrder = () => {
   );
 };
 
+
 const DashBoardChart = () => {
   const [monthlyRevenue, setMonthlyRevenue] = useState({});
-  const currentYear = new Date().getFullYear(); // Lấy năm hiện tại
+  const [year, setYear] = useState(new Date().getFullYear()); // State mới để lưu trữ năm
 
   useEffect(() => {
     const fetchOrders = async () => {
@@ -402,22 +403,27 @@ const DashBoardChart = () => {
         return acc;
       }, {});
 
-      // Cập nhật doanh thu cho các tháng có dữ liệu
+      // Cập nhật doanh thu cho các tháng có dữ liệu và nằm trong năm được chọn
       completedOrders.forEach((order) => {
         const dateParts =
           order.dateInput[order.dateInput.length - 1].split("/");
         const date = new Date(+dateParts[2], dateParts[1] - 1, +dateParts[0]);
-        const month = date.toLocaleString("vi-VN", { month: "short" });
-        initialRevenueByMonth[month] += parseFloat(order.totalMoney);
+        if (date.getFullYear() === year) { // Kiểm tra nếu đơn hàng nằm trong năm được chọn
+          const month = date.toLocaleString("vi-VN", { month: "short" });
+          initialRevenueByMonth[month] += parseFloat(order.totalMoney);
+        }
       });
 
       setMonthlyRevenue(initialRevenueByMonth);
     };
 
     fetchOrders();
-  }, []);
+  }, [year]); // Thêm year vào dependency array để refetch khi năm thay đổi
 
-  //   console.log(Object.keys(monthlyRevenue).sort((a, b) => new Date(a) - new Date(b)))
+  const handleYearChange = (e) => {
+    setYear(Number(e.target.value)); // Cập nhật năm khi người dùng nhập vào
+  };
+
   const data = {
     labels: Object.keys(monthlyRevenue).sort(
       (a, b) => new Date(a) - new Date(b)
@@ -457,7 +463,18 @@ const DashBoardChart = () => {
 
   return (
     <Card
-      title="Biểu Đồ Doanh Thu Trong Năm"
+      title={
+        <>
+          Biểu Đồ Doanh Thu Trong Năm
+          <input
+            type="number"
+            className="border "
+            value={year}
+            onChange={handleYearChange}
+            style={{ marginLeft: '10px',  width:'60px' }} // Thêm input để nhập năm
+          />
+        </>
+      }
       style={{ width: "550px", height: "480px" }}
     >
       <Bar

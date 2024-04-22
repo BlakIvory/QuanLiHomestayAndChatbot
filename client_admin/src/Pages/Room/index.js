@@ -177,7 +177,7 @@ const Room = () => {
     {
       title: "Tên Phòng",
       dataIndex: "nameRoom",
-      width: "180px",
+
       ...getColumnSearchProps("nameRoom"),
       sorter: (a, b) => a.nameRoom.length - b.nameRoom.length,
       sortDirections: ["descend", "ascend"],
@@ -196,7 +196,6 @@ const Room = () => {
     {
       title: "Giá Phòng",
       dataIndex: "giaRoom",
-      width: "170px",
       // render: (value) => <span>{value} vnđ</span>,
       sorter: (a, b) => a.giaRoom - b.giaRoom,
       sortDirections: ["ascend", "descend"],
@@ -250,7 +249,7 @@ const Room = () => {
     {
       title: "Khu vực",
       dataIndex: "idSectorRoom",
-      width: "100px",
+   
       ...getColumnSearchProps("idSectorRoom"),
       // render: (idSectorRoom) => sectors[idSectorRoom] || "Loading...",
       render: (text, record) => {

@@ -217,31 +217,66 @@ const NhanVien = () => {
         return <span>{text.toLocaleString("vi-VN")}</span>;
       },
     },
-    // {
-    //   title: "Quyền Admin",
-    //   dataIndex: "isAdmin",
-    //   align: "center",
-    //   render: (text, record) => {
-    //     if (record._id === editingRow) {
-    //       return (
-    //         <Select
-    //           defaultValue={text ? "true" : "false"}
-    //           style={{ width: 120 }}
-    //           onChange={(value) => console.log(value)}
-    //         >
-    //           <Option value="true">Quản Lý</Option>
-    //           <Option value="false">Nhân Viên</Option>
-    //         </Select>
-    //       );
-    //     }
-    //     return <span>{text ? "Quản Lý" : "Nhân Viên"}</span>;
-    //   },
-    //   filters: [
-    //     { text: "Quản Lý", value: true },
-    //     { text: "Nhân Viên", value: false },
-    //   ],
-    //   onFilter: (value, record) => record.isAdmin === value,
-    // },
+    {
+      title: "Quyền",
+      dataIndex: "isAdmin",
+      align: "center",
+      render: (text, record) => {
+        if (record._id === editingRow) {
+          // Khi đang chỉnh sửa
+          return (
+            <Select
+              defaultValue={text.map(role => role.toString())}
+              mode="multiple"
+              style={{ width: '100%' }}
+              onChange={(value) => console.log(value)}
+            >
+              <Option value="1">Quản Lý Nhân Viên</Option>
+              <Option value="2">Quản Lý Khách Hàng</Option>
+              <Option value="3">Quản Lý Đặt Phòng</Option>
+              <Option value="4">Quản Lý Khu Vực</Option>
+              <Option value="5">Quản Lý Phòng</Option>
+            </Select>
+          );
+        } else {
+          // Khi không chỉnh sửa
+          return text.map((role) => {
+            let roleName;
+            switch (role) {
+              case "1":
+                roleName = "Quản Lý Nhân Viên";
+                break;
+              case "2":
+                roleName = "Quản Lý Khách Hàng";
+                break;
+              case "3":
+                roleName = "Quản Lý Đặt Phòng";
+                break;
+              case "4":
+                roleName = "Quản Lý Khu Vực";
+                break;
+              case "5":
+                roleName = "Quản Lý Phòng";
+                break;
+              default:
+                roleName = "";
+            }
+            return <div key={role}>{roleName}</div>; // Mỗi quyền trên một dòng riêng
+          });
+        }
+      },
+      filters: [
+        { text: "Quản Lý nhân viên", value: "1" },
+        { text: "Quản Lý Khách hàng", value: "2" },
+        { text: "Quản Lý Đặt Phòng", value: "3" },
+        { text: "Quản Lý Khu Vực", value: "4" },
+        { text: "Quản Lý Phòng", value: "5" },
+      ],
+      onFilter: (value, record) => {
+        // Kiểm tra xem mảng isAdmin có chứa giá trị lọc không
+        return record.isAdmin.includes(value);
+      },
+    },
     {
       title: "Chỉnh sửa",
       render: (_, record) => {

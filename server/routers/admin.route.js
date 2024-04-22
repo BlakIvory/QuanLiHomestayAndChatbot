@@ -40,4 +40,6 @@ router.post("/infoSector", admins.getInfoSector);
 
 router.post('/addAdmin', admins.addAdmin);
 
+router.post("/addRoomSector", admins.addRoomInSector);
+
 module.exports = router;
