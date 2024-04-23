@@ -54,12 +54,47 @@ class SectorService {
           ? new ObjectId(payload.idSector)
           : null,
       },
-      { $inc: { totalRoomInSector: 1 }},
+      { $inc: { totalRoomInSector: 1 } },
       { returnDocument: "after", upsert: true }
     );
     console.log(result);
     return result;
   }
+
+  async EditSector(payload) {
+    // Sao chép payload và loại bỏ idSector
+    const { idSector, ...updateData } = payload;
+    // Loại bỏ các trường có giá trị null hoặc undefined
+    Object.keys(updateData).forEach((key) => {
+      if (updateData[key] === null || updateData[key] === undefined|| updateData[key] === "") {
+        delete updateData[key];
+      }
+    });
+    // Kiểm tra và chuyển đổi idSector thành ObjectId hợp lệ
+    const filter = {
+      _id: ObjectId.isValid(idSector) ? new ObjectId(idSector) : null,
+    };
+    // Thực hiện cập nhật với dữ liệu đã loại bỏ các trường null hoặc undefined
+    const result = await this.Sector.findOneAndUpdate(
+      filter,
+      { $set: updateData },
+      { returnDocument: "after", upsert: true }
+    );
+
+    return result;
+  }
+
+
+  async DeleteSector(payload) {
+  // Kiểm tra và chuyển đổi idSector thành ObjectId hợp lệ
+  const filter = {
+    _id: ObjectId.isValid(payload.idSector) ? new ObjectId(payload.idSector) : null,
+  };
+  // Thực hiện xóa Sector với id tương ứng
+  const result = await this.Sector.findOneAndDelete(filter);
+
+  return result;
+}
 }
 
 module.exports = SectorService;

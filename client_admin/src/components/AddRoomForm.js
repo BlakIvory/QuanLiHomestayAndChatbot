@@ -29,6 +29,7 @@ const AddRoomForm = (props) => {
     nameRoom: nameRoom,
     giaRoom: giaRoom,
     loaiRoom: loaiRoom,
+    discRoom: discRoom,
     idSectorRoom: khuvucId,
     imgRoom: selectedFile,
     discRoom: discRoom,

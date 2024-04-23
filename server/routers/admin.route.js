@@ -42,4 +42,12 @@ router.post('/addAdmin', admins.addAdmin);
 
 router.post("/addRoomSector", admins.addRoomInSector);
 
+router.post("/editSector", admins.editSector);
+
+router.post("/deleteSector", admins.deleteSector);
+
+router.post("/editAdmin", admins.editAdmin);
+
+
+
 module.exports = router;

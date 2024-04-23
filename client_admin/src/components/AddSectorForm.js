@@ -2,7 +2,7 @@ import React, { useEffect, useState, useRef } from "react";
 import { IoMdCloseCircle } from "react-icons/io";
 import { PlusOutlined } from "@ant-design/icons";
 import axios from "axios";
-import { apiAddRoom, apiGetAllSector } from "../api";
+import { apiAddSector } from "../api";
 import swal from "sweetalert";
 
 import { Button, Form, Input, InputNumber, Select, Upload } from "antd";
@@ -22,13 +22,14 @@ const AddSectorForm = (props) => {
 
   const submitForm = async () => {
     // console.log(loi)
-    // console.log(formData);
+    console.log(formData);
 
-    const result = await apiAddRoom(formData);
+    const result = await apiAddSector(formData);
     // console.log(result)
     if (result.status === 200) {
       swal("Thông báo !", "Thêm phòng mới thành công  !", "success");
-      props.setShowAddRoomPopup.bind("", false);
+      props.setShowAddSectorPopup(false);
+      window.location.reload();
     } else {
       swal(
         "Thông báo !",
@@ -38,9 +39,6 @@ const AddSectorForm = (props) => {
     }
   };
 
-
-
-  
 
   return (
     <div

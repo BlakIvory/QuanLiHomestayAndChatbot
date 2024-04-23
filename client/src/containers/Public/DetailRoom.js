@@ -111,6 +111,7 @@ const DetailRoom = () => {
   const handleDateChange = (e) => {
     // console.log(e)
 
+   if(e){
     getDaysBetween(e[0].$d, e[1].$d);
 
     setFormData({ ...formData, dateInput: arrayDateInput });
@@ -126,6 +127,7 @@ const DetailRoom = () => {
     }
     setAmount(Number(((arrayDateInput.length*giaRoom)/24000).toFixed(2)))
    
+   }
   };
  
   useEffect(() => {
@@ -276,7 +278,7 @@ const DetailRoom = () => {
               <div className="font-semibold flex justify-around text_bigSize1">
                 Đặt Phòng
               </div>
-              <div className="flex justify-around items-center">
+              {/* <div className="flex justify-around items-center">
                 <Form.Item
                   label="Tên người Đặt :"
                   name="nameUser"
@@ -293,8 +295,8 @@ const DetailRoom = () => {
                 >
                   <Input placeholder="Nhập tên người đặt ..." />
                 </Form.Item>
-              </div>
-              <div className="flex justify-around items-center">
+              </div> */}
+              {/* <div className="flex justify-around items-center">
                 <Form.Item
                   label="Số Điện Thoại :"
                   name="phoneUser"
@@ -316,10 +318,10 @@ const DetailRoom = () => {
                 >
                   <Input placeholder="Nhập SĐT người đặt ..." />
                 </Form.Item>
-              </div>
+              </div> */}
               <div className="flex justify-around items-center">
                 <Form.Item
-                  label="Nhập ngày ở :"
+                  label="Nhập ngày nhận và trả phòng :"
                   name="dateOrder"
                   rules={[
                     {
@@ -408,12 +410,13 @@ const DetailRoom = () => {
           <div>
             <Rate value={danhgiaRoom} disabled allowHalf />
           </div>
-          <div>Mô tả : {discRoom}</div>
+          <div className="text-sm">Mô tả : {discRoom}</div>
         </div>
         <div className="detailRoom_Charactic w-1100  ">
           <div>Khu vực : {Sector.nameSector}</div>
-          <div>Điểm nổi bật của khu vực : {Sector.discSector}</div>
           <div>Vị trí của khu vực : {Sector.addressSector}</div>
+          <div className="text-sm">Điểm nổi bật của khu vực : {Sector.discSector}</div>
+          
         </div>
 
         <div className="bg-black w-1100 h-[2px] mt-5 mb-5 flex justify-center items-center"></div>

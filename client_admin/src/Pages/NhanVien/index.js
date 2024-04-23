@@ -1,23 +1,21 @@
 import React, { useState, useEffect, useRef } from "react";
+import moment from 'moment';
 
 import {
   Avatar,
   Button,
-  Rate,
   Space,
   Table,
   Typography,
   Input,
   Popconfirm,
-  Form,
   Select,
-  message,
+  DatePicker,
 } from "antd";
 
 import {
   EditOutlined,
   DeleteOutlined,
-  UnorderedListOutlined,
   SearchOutlined,
   PlusOutlined,
   SaveOutlined,
@@ -25,7 +23,7 @@ import {
 import swal from "sweetalert";
 import AddAdminForm from "../../components/AddAdminForm";
 import Highlighter from "react-highlight-words";
-import { apiDeleteAdmin, apiGetAllAdmin } from "../../api";
+import { apiDeleteAdmin, apiEditAdmin, apiGetAllAdmin } from "../../api";
 const { Option } = Select;
 const NhanVien = () => {
   const [dataSource, setDataSource] = useState([]);
@@ -42,6 +40,14 @@ const NhanVien = () => {
   }, []);
 
   const [showAddFormAdminPopup, setShowAddFormAdminPopup] = useState(false);
+  const [editData, setEditData] = useState({
+    _id: "",
+    userName: "",
+    phone: "",
+    birthYear: "",
+    password: "",
+    isAdmin: [],
+  })
 
   const getColumnSearchProps = (dataIndex) => {
     return {
@@ -105,27 +111,21 @@ const NhanVien = () => {
 
   const [editingRow, setEditingRow] = useState(null);
 
-  const handleSaveClick = (record) => {
+  const handleSaveClick =  async(record) => {
     // Lưu các giá trị đã chỉnh sửa vào backend hoặc cập nhật state
     // Để đơn giản, chúng ta chỉ cập nhật state
-    setDataSource((prevData) => {
-      const updatedData = prevData.map((item) => {
-        if (item._id === record._id) {
-          return {
-            ...item,
-            nameRoom: record.nameRoom,
-            giaRoom: record.giaRoom,
-            loaiRoom: record.loaiRoom,
-          };
-        }
-        return item;
+    const result = await apiEditAdmin(editData)
+    console.log(result)
+     if(result.data.status ===1){
+      swal("Thành Công !" ,result.data.msg,"success").then((value) => {
+        window.location.reload();
       });
-      return updatedData;
-    });
+     }
     setEditingRow(null);
   };
 
   const handleEditClick = (record) => {
+    setEditData({...editData, _id: record._id})
     setEditingRow(record._id);
   };
 
@@ -141,7 +141,7 @@ const NhanVien = () => {
           return (
             <Input
               defaultValue={text}
-              onChange={(e) => console.log(e.target.value)}
+              onChange={(e) => setEditData({...editData , userName:e.target.value})}
             />
           );
         }
@@ -162,7 +162,7 @@ const NhanVien = () => {
           return (
             <Input
               defaultValue={text}
-              onChange={(e) => console.log(e.target.value)}
+              onChange={(e) => setEditData({...editData, phone: e.target.value})}
             />
           );
         }
@@ -170,38 +170,40 @@ const NhanVien = () => {
       },
     },
     {
-      title: "Năm Sinh",
+      title: "Ngày Sinh",
       dataIndex: "birthYear",
       sorter: (a, b) => a.birthYear - b.birthYear,
       align: "center",
+      width: "150px",
       render: (text, record) => {
         if (record._id === editingRow) {
           return (
-            <Input
-              defaultValue={text}
-              onChange={(e) => console.log(e.target.value)}
+            <DatePicker
+              // defaultValue={moment(text, 'DD/MM/YYYY')}
+              format={'DD/MM/YYYY'}
+              onChange={(date, dateString) => setEditData({...editData, birthYear: dateString})}
             />
           );
         }
-        return <span>{text.toLocaleString("vi-VN")}</span>;
+        return <span>{text}</span>;
       },
-    },
-    {
-      title: "Tài Khoản",
-      dataIndex: "phone",
-      sorter: (a, b) => a.phone - b.phone,
-      render: (text, record) => {
-        if (record._id === editingRow) {
-          return (
-            <Input
-              defaultValue={text}
-              onChange={(e) => console.log(e.target.value)}
-            />
-          );
-        }
-        return <span>{text.toLocaleString("vi-VN")}</span>;
-      },
-    },
+    },    
+    // {
+    //   title: "Tài Khoản",
+    //   dataIndex: "phone",
+    //   sorter: (a, b) => a.phone - b.phone,
+    //   render: (text, record) => {
+    //     if (record._id === editingRow) {
+    //       return (
+    //         <Input
+    //           defaultValue={text}
+    //           onChange={(e) => console.log(e.target.value)}
+    //         />
+    //       );
+    //     }
+    //     return <span>{text.toLocaleString("vi-VN")}</span>;
+    //   },
+    // },
     {
       title: "Mật Khẩu",
       dataIndex: "password",
@@ -210,7 +212,7 @@ const NhanVien = () => {
           return (
             <Input
               defaultValue={text}
-              onChange={(e) => console.log(e.target.value)}
+              onChange={(e) => setEditData({...editData, password : e.target.value})}
             />
           );
         }
@@ -220,16 +222,16 @@ const NhanVien = () => {
     {
       title: "Quyền",
       dataIndex: "isAdmin",
-      align: "center",
+      // align: "center",
       render: (text, record) => {
         if (record._id === editingRow) {
           // Khi đang chỉnh sửa
           return (
             <Select
-              defaultValue={text.map(role => role.toString())}
+              defaultValue={text.map((role) => role.toString())}
               mode="multiple"
-              style={{ width: '100%' }}
-              onChange={(value) => console.log(value)}
+              style={{ width: "100%" }}
+              onChange={(value) => setEditData({...editData, isAdmin: value})}
             >
               <Option value="1">Quản Lý Nhân Viên</Option>
               <Option value="2">Quản Lý Khách Hàng</Option>
@@ -310,12 +312,15 @@ const NhanVien = () => {
               //  okButtonProps={{ style: {  backgroundColor: 'red'  }}}
               title="Bạn có chắc chắn muốn xóa không?"
               onConfirm={async () => {
-                console.log(record);
-                const result = await apiDeleteAdmin(record);
-                if (result.status === 0) {
-                  swal("Thành Công !", result.msg, "success");
+                // console.log(record);
+                const result = await apiDeleteAdmin({ _id: record._id });
+                console.log(result);
+                if (result.data.status === 1) {
+                  swal("Thành Công !", result.data.msg, "success").then((value) => {
+                    window.location.reload();
+                  });;
                 } else {
-                  message.error("Có lỗi xảy ra!");
+                  swal("Thông báo !", result.data.msg, "warning");
                 }
               }}
               onCancel={() => {
@@ -341,8 +346,8 @@ const NhanVien = () => {
       )}
       <Space size={20} direction="vertical">
         <div className="flex justify-around justify-center">
-      <Typography.Title level={3}>QUẢN LÝ NHÂN VIÊN</Typography.Title>
-  
+          <Typography.Title level={3}>QUẢN LÝ NHÂN VIÊN</Typography.Title>
+
           <Button
             className="bg-primary border text-green"
             size={40}

@@ -194,7 +194,7 @@ export const apiAddSector = (payload) => new Promise(async(resolve, reject)=>{
       console.log(payload)
       const response = await axiosConfig({
           method: 'post',
-          url: '/admin/addRoom',
+          url: '/admin/addSector',
           data:payload,
       })
       resolve(response)
@@ -216,7 +216,32 @@ export const apiGetInfoSector = (payload) => new Promise(async(resolve, reject)=
       reject(error)
   }
 })
-
+export const apiEditSector = (payload) => new Promise(async(resolve, reject)=>{
+    try {
+  
+        const response = await axiosConfig({
+            method: 'post',
+            url: '/admin/editSector',
+            data:payload,
+        })
+        resolve(response)
+    } catch (error) {
+        reject(error)
+    }
+  })
+  export const apiDeleteSector = (payload) => new Promise(async(resolve, reject)=>{
+    try {
+  
+        const response = await axiosConfig({
+            method: 'post',
+            url: '/admin/deleteSector',
+            data:payload,
+        })
+        resolve(response)
+    } catch (error) {
+        reject(error)
+    }
+  })
 
 
 export const apiAddAdmin = (payload) => new Promise(async(resolve, reject)=>{
@@ -249,4 +274,16 @@ export const apiAddAdmin = (payload) => new Promise(async(resolve, reject)=>{
         reject(error)
     }
   })
+  export const apiEditAdmin = (payload) => new Promise(async(resolve, reject)=>{
+    try {
   
+        const response = await axiosConfig({
+            method: 'post',
+            url: '/admin/editAdmin',
+            data:payload,
+        })
+        resolve(response)
+    } catch (error) {
+        reject(error)
+    }
+  })

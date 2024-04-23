@@ -308,7 +308,7 @@ router.post("", async (req, res) => {
 
       // Tìm order con có idOrder khớp với idOrder được cung cấp
       const matchingOrder = data.order.find(
-        (order) => order.idOrder === parameters.enIdOrder
+        (order) => order.idOrder === parameters.EnIdOrder
       );
       if (!matchingOrder) {
         return res.send({

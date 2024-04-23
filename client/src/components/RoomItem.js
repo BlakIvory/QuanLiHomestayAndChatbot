@@ -87,14 +87,13 @@ const RoomItem = (props) => {
   }, []);
 
   const handleNavigationDetailRoom = () => {
-    if (typeof detailData !== 'undefined') {
+    if (typeof detailData !== "undefined") {
       navigate(`/${path.DETAILROOM}`, { state: { detailData } });
     } else {
       // Xử lý trường hợp khi detailData không tồn tại
-      console.log('Biến detailData không tồn tại.');
+      console.log("Biến detailData không tồn tại.");
     }
   };
-  
 
   return (
     <div
@@ -139,8 +138,10 @@ const RoomItem = (props) => {
         </div>
       </div>
       <div className="w-[50%]">
-        <div className="roomName">{nameRoom && capitalizeFirstLetter(nameRoom)}</div>
-       
+        <div className="roomName">
+          {nameRoom && capitalizeFirstLetter(nameRoom)}
+        </div>
+
         <div>
           <Rate
             allowHalf
@@ -157,8 +158,14 @@ const RoomItem = (props) => {
               {infoSector && capitalizeFirstLetter(infoSector.nameSector)}
             </div>
           </div>
-          <div className="t-sm">Mô tả : </div>
-          <div>{discRoom}</div>
+          <div className="t-sm">
+            Mô tả :
+            <div>
+              {discRoom.length > 150
+                ? `${discRoom.substring(0, 150)}...`
+                : discRoom}
+            </div>
+          </div>
         </div>
       </div>
       <div className="giaRoomContainer w-[26%] mr-5">

@@ -11,7 +11,7 @@ import {
   message,
   InputNumber,
 } from "antd";
-import { apiGetAllSector, apiDeleteAdmin } from "../../api";
+import { apiGetAllSector, apiDeleteAdmin, apiEditSector, apiDeleteSector } from "../../api";
 
 import {
   EditOutlined,
@@ -39,7 +39,12 @@ const Sector = () => {
   }, []);
 
   const [searchText, setSearchText] = useState("");
-
+  const [editData, setEditData] = useState({
+    idSector: "",
+    nameSector: "",
+    discSector: "",
+    addressSector: "",
+  });
   const searchInput = useRef();
 
   const getColumnSearchProps = (dataIndex) => {
@@ -104,30 +109,20 @@ const Sector = () => {
 
   const [editingRow, setEditingRow] = useState(null);
 
-  const handleSaveClick = (record) => {
-    // Lưu các giá trị đã chỉnh sửa vào backend hoặc cập nhật state
-    // Để đơn giản, chúng ta chỉ cập nhật state
-    // console.log(record)
-    setDataSource((prevData) => {
-      console.log(prevData);
-      const updatedData = prevData.map((item) => {
-        if (item._id === record._id) {
-          return {
-            ...item,
-            nameRoom: record.nameRoom,
-            giaRoom: record.giaRoom,
-            loaiRoom: record.loaiRoom,
-          };
-        }
-        // console.log(item)
-        return item;
-      });
-      return updatedData;
-    });
+  const handleSaveClick = async (record) => {
+    setEditData({ ...editData, idSector: record._id });
+    console.log(editData);
+    // Gọi apiEditSector sau khi đã cập nhật editData
+    const result = await apiEditSector(editData);
+    if(result.status ===200){
+      window.location.reload();
+    }
+
     setEditingRow(null);
   };
 
   const handleEditClick = (record) => {
+    setEditData({ ...editData, idSector: record._id });
     setEditingRow(record._id);
   };
 
@@ -157,14 +152,19 @@ const Sector = () => {
             {
               title: "Tên khu vực",
               dataIndex: "nameSector",
-              ...getColumnSearchProps("userSector"),
-              sorter: (a, b) => a.userName.localeCompare(b.userName),
+              ...getColumnSearchProps("nameSector"),
+              sorter: (a, b) => a.nameSector.localeCompare(b.nameSector),
               render: (text, record) => {
                 if (record._id === editingRow) {
                   return (
                     <Input
                       defaultValue={text}
-                      onChange={(e) => console.log(e.target.value)}
+                      onChange={(e) => {
+                        setEditData({
+                          ...editData,
+                          nameSector: e.target.value,
+                        });
+                      }}
                     />
                   );
                 }
@@ -174,16 +174,21 @@ const Sector = () => {
             {
               title: "Đặt điểm khu vực ",
               dataIndex: "discSector",
+              width: "500px",
               ...getColumnSearchProps("discSector"),
               sorter: (a, b) => a.discSector.localeCompare(b.discSector),
               render: (text, record) => {
                 if (record._id === editingRow) {
                   return (
                     <Input
-                      initValue={text}
+                      defaultValue={text}
                       onChange={(e) => {
                         if (e && e.target) {
-                          console.log(e.target.value);
+                          
+                          setEditData({
+                            ...editData,
+                            discSector: e.target.value,
+                          });
                         } else {
                           console.log("Event or target is undefined");
                         }
@@ -198,13 +203,19 @@ const Sector = () => {
               title: "Vị trí",
               dataIndex: "addressSector",
               ...getColumnSearchProps("addressSector"),
-              sorter: (a, b) => a.userName.localeCompare(b.userName),
+              sorter: (a, b) => a.addressSector.localeCompare(b.addressSector),
               render: (text, record) => {
                 if (record._id === editingRow) {
                   return (
                     <Input
                       defaultValue={text}
-                      onChange={(e) => console.log(e.target.value)}
+                      onChange={(e) => {
+                  
+                        setEditData({
+                          ...editData,
+                          addressSector: e.target.value,
+                        });
+                      }}
                     />
                   );
                 }
@@ -216,23 +227,8 @@ const Sector = () => {
               dataIndex: "totalRoomInSector",
               align: "center",
               render: (text, record) => {
-                if (record._id === editingRow) {
-                  return (
-                    <InputNumber
-                      initValue={text}
-                      onChange={(e) => {
-                        console.log(e)
-                      }}
-                    />
-                  );
-                }
                 return <span>{text}</span>;
               },
-            },
-            {
-              title: "Tình trạng",
-              dataIndex: "statusSector",
-              align: "center",
             },
             {
               title: "Chỉnh sửa",
@@ -267,10 +263,13 @@ const Sector = () => {
                       //  okButtonProps={{ style: {  backgroundColor: 'red'  }}}
                       title="Bạn có chắc chắn muốn xóa không?"
                       onConfirm={async () => {
-                        console.log(record);
-                        const result = await apiDeleteAdmin(record);
-                        if (result.status === 0) {
-                          swal("Thành Công !", result.msg, "success");
+                        // console.log(record);
+                        const result = await apiDeleteSector({"idSector" : record._id});
+                        console.log(result)
+                        if (result.data.status === 0) {
+                          swal("Thành Công !", "Xóa khu vực thành công !", "success").then((value) => {
+                            window.location.reload();
+                          });;
                         } else {
                           message.error("Có lỗi xảy ra!");
                         }

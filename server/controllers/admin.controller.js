@@ -163,6 +163,7 @@ exports.addRoom = async (req, res, next) => {
     const inputData = {
       nameRoom: req.body.nameRoom,
       idSectorRoom : req.body.idSectorRoom,
+      discRoom : req.body.discRoom,
       giaRoom : req.body.giaRoom,
       loaiRoom : req.body.loaiRoom,
       imgRoom: req.body.imgRoom
@@ -372,7 +373,7 @@ exports.deleteAdmin = async (req, res, next) => {
       return res.status(200).json({
         status: 1,
         data : result,
-        msg: "Xóa đơn tài khoản quản trị viên thành công !"
+        msg: "Xóa tài khoản quản trị viên thành công !"
       });
     }
     else{
@@ -443,5 +444,62 @@ exports.addRoomInSector = async (req, res, next) => {
   } catch (error) {
     // console.log(error)
     return next(new ApiError(500, "Xảy ra lỗi trong truy xuat Khu vực!"));
+  }
+};
+
+
+exports.editSector = async (req, res, next) => {
+
+  // console.log(req.body)
+  try{
+
+    const sectorService = new SectorService(MongoDB.client);
+    const result1 = await sectorService.EditSector(req.body)
+
+    return res.send(result1)
+  } catch (error) {
+    // console.log(error)
+    return next(new ApiError(500, "Xảy ra lỗi trong truy xuat Khu vực!"));
+  }
+};
+
+exports.deleteSector = async (req, res, next) => {
+
+  // console.log(req.body)
+  try{
+
+    const sectorService = new SectorService(MongoDB.client);
+    const data = await sectorService.DeleteSector(req.body)
+    const result = {
+      status : 0,
+      data : data,
+    }
+    return res.send(result)
+  } catch (error) {
+    // console.log(error)
+    return next(new ApiError(500, "Xảy ra lỗi trong truy xuat Khu vực!"));
+  }
+};
+
+
+exports.editAdmin = async (req, res, next) => {
+  // console.log(req.body)
+  try{
+    const adminService = new AdminService(MongoDB.client);
+    const result = await adminService.EditAdmin(req.body)
+   
+    if(result){
+      return res.status(200).json({
+        status: 1,
+        data : result,
+        msg: "Thay đổi tài khoản quản trị viên thành công !"
+      });
+    }
+    else{
+      return res.status(200).json("code lỗi");
+    }
+  } catch (error) {
+    console.log(error)
+    return next(new ApiError(500, "Xảy ra lỗi trong quá trình xóa tài khoản quản trị viên !"));
   }
 };

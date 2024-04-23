@@ -8,6 +8,7 @@ import {
   Button,
   Input,
   Select,
+  Popconfirm,
   InputNumber,
 } from "antd";
 import {
@@ -289,12 +290,21 @@ const Room = () => {
         <Image width={100} src={value.imgRoom[2].secure_url} />
       ),
     },
+    // {
+    //   title: "Đánh giá",
+    //   key: "danhgiaRoom",
+    //   dataIndex: "danhgiaRoom",
+    //   render: (rating) => {
+    //     return <Rate value={rating} allowHalf disabled></Rate>;
+    //   },
+    // },
     {
-      title: "Đánh giá",
-      key: "danhgiaRoom",
-      dataIndex: "danhgiaRoom",
-      render: (rating) => {
-        return <Rate value={rating} allowHalf disabled></Rate>;
+      title: "Mô tả",
+      key: "discRoom",
+      width: "300px",
+      dataIndex: "discRoom",
+      render: (text) => {
+        return <span>{text}</span>;
       },
     },
     {
@@ -335,16 +345,33 @@ const Room = () => {
             >
               Chỉnh sửa
             </EditOutlined>
-            <DeleteOutlined
-              className="m-1 flex items-center justify-center"
-              style={{ fontSize: "20px", color: "red" }}
-              onClick={async () => {
-                const result = await apiDeleteRoom(record);
-                if (result.status === 0) {
-                  swal("Thành Công !", result.msg, "success");
-                }
-              }}
-            />
+            <Popconfirm
+                      okType="danger"
+                      //  okButtonProps={{ style: {  backgroundColor: 'red'  }}}
+                      title="Bạn có chắc chắn muốn xóa không?"
+                      onConfirm={async () => {
+                        console.log(record);
+                        const result = await apiDeleteRoom({"_id" : record._id});
+                        console.log(result)
+                        if (result.data.status === 0) {
+                          swal("Thành Công !", "Xóa phòng thành công !", "success").then((value) => {
+                            window.location.reload();
+                          });;
+                        } else {
+                          console.log("Có lỗi xảy ra!");
+                        }
+                      }}
+                      onCancel={() => {
+                        console.log("Hủy bỏ thao tác xóa");
+                      }}
+                      okText="Có"
+                      cancelText="Không"
+                    >
+                      <DeleteOutlined
+                        className="m-1 flex items-center justify-center"
+                        style={{ fontSize: "20px", color: "red" }}
+                      />
+                    </Popconfirm>
           </div>
         );
       },
