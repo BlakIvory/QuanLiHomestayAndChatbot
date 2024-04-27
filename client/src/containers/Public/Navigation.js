@@ -80,7 +80,7 @@ const Navigation = () => {
                     color: isActive ? "#FCCD04" : "white",
                   })}
                 >
-                  Đặt Phòng
+                 Đơn Đặt Phòng
                 </NavLink>
 
                 <NavLink

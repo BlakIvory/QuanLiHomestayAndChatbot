@@ -143,20 +143,20 @@ const OrderRoomItem = (props) => {
         </div>
         <div className="">
           {OrderRoom.dateInput && OrderRoom.dateInput.length === 1 && (
-            <div className="ml-2 flex">
+            <div className="flex">
               <div>Ngày đặt phòng : </div>
-              <div className="ml-5">{OrderRoom.dateInput[0]}</div>
+              <div className="ml-2">{OrderRoom.dateInput[0]}</div>
             </div>
           )}
           {OrderRoom.dateInput && OrderRoom.dateInput.length > 1 && (
-            <div className="ml-2">
+            <div className="">
               <div className="flex">
                 <div>Ngày bắt đầu đặt : </div>
-                <div className="ml-5">{OrderRoom.dateInput[0]}</div>
+                <div className="ml-2">{OrderRoom.dateInput[0]}</div>
               </div>
               <div className="flex">
                 <div>Ngày cuối đặt : </div>
-                <div className="ml-5">
+                <div className="ml-2">
                   {OrderRoom.dateInput[OrderRoom.dateInput.length - 1]}
                 </div>
               </div>
