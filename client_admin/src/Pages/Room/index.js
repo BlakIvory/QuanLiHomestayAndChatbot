@@ -19,7 +19,7 @@ import {
   PlusOutlined,
   SaveOutlined,
 } from "@ant-design/icons";
-import { apiDeleteRoom, apiGetAllRoom, apiGetAllSector } from "../../api";
+import { apiDeleteRoom, apiEditRoom, apiGetAllRoom, apiGetAllSector } from "../../api";
 import Highlighter from "react-highlight-words";
 import AddRoomForm from "../../components/AddRoomForm";
 import swal from "sweetalert";
@@ -36,6 +36,16 @@ const Room = () => {
   const searchInput = useRef(null);
 
   const [showAddRoomPopup, setShowAddRoomPopup] = useState(false);
+
+  const [editData, setEditData] = useState({
+    _id: "",
+    nameRoom: "",
+    giaRoom: "",
+    loaiRoom  : "",
+    discRoom: "",
+    idSectorRoom: "",
+  })
+
 
   const handleSearch = (selectedKeys, confirm, dataIndex) => {
     confirm();
@@ -178,7 +188,6 @@ const Room = () => {
     {
       title: "Tên Phòng",
       dataIndex: "nameRoom",
-
       ...getColumnSearchProps("nameRoom"),
       sorter: (a, b) => a.nameRoom.length - b.nameRoom.length,
       sortDirections: ["descend", "ascend"],
@@ -187,7 +196,7 @@ const Room = () => {
           return (
             <Input
               defaultValue={text}
-              onChange={(e) => console.log(e.target.value)}
+              onChange={(e) => setEditData({...editData, nameRoom: e.target.value})}
             />
           );
         }
@@ -206,7 +215,7 @@ const Room = () => {
             <InputNumber
               step={10000}
               defaultValue={text}
-              onChange={(e) => console.log(e)}
+              onChange={(e) => setEditData({...editData, giaRoom: e})}
             />
           );
         }
@@ -217,24 +226,16 @@ const Room = () => {
       title: "Loại Phòng",
       dataIndex: "loaiRoom",
       ...getColumnSearchProps("loaiRoom"),
-      // render: (text, record) => {
-      //   if (record._id === editingRow) {
-      //     return (
-      //       <Input
-      //         defaultValue={text}
-      //         onChange={(e) => console.log(e.target.value)}
-      //       />
-      //     );
-      //   }
-      //   return <span>{text.toLocaleString("vi-VN")} </span>;
-      // },
       render: (text, record) => {
         if (record._id === editingRow) {
           return (
             <Select
               defaultValue={text}
               style={{ width: 120 }}
-              onChange={(value) => console.log(value)}
+              onChange={(value) => 
+                setEditData({...editData,  loaiRoom : value})
+                // console.log(value)
+              }
             >
               {roomTypes.map((type) => (
                 <Option key={type.value} value={type.value}>
@@ -259,7 +260,10 @@ const Room = () => {
             <Select
               defaultValue={text}
               style={{ width: 120 }}
-              onChange={(value) => console.log(value)}
+              onChange={(e) => 
+                setEditData({...editData, idSectorRoom: e})
+                // console.log(e)
+              }
             >
               {Object.entries(sectors).map(([id, name]) => (
                 <Option key={id} value={id}>
@@ -301,10 +305,24 @@ const Room = () => {
     {
       title: "Mô tả",
       key: "discRoom",
-      width: "300px",
+      width: "250px",
       dataIndex: "discRoom",
-      render: (text) => {
-        return <span>{text}</span>;
+      ...getColumnSearchProps("discRoom"),
+      sorter: (a, b) => a.discRoom.length - b.discRoom.length,
+      sortDirections: ["descend", "ascend"],
+      render: (text, record) => {
+        if (record._id === editingRow) {
+          return (
+            <Input
+              defaultValue={text}
+              onChange={(e) => 
+                setEditData({...editData, discRoom: e.target.value})
+                // console.log(e.target.value)
+              }
+            />
+          );
+        }
+        return text;
       },
     },
     {
@@ -391,25 +409,15 @@ const Room = () => {
 
   const handleEditClick = (record) => {
     setEditingRow(record._id);
+    setEditData({...editData, _id: record._id});
   };
-  const handleSaveClick = (record) => {
-    // Lưu các giá trị đã chỉnh sửa vào backend hoặc cập nhật state
-    // Để đơn giản, chúng ta chỉ cập nhật state
-    setDataSource((prevData) => {
-      const updatedData = prevData.map((item) => {
-        if (item._id === record._id) {
-          return {
-            ...item,
-            nameRoom: record.nameRoom,
-            giaRoom: record.giaRoom,
-            loaiRoom: record.loaiRoom,
-          };
-        }
-        return item;
-      });
-      return updatedData;
-    });
-    setEditingRow(null);
+  const handleSaveClick = async(record) => {
+    const result = await apiEditRoom(editData)
+    if(result.data.status === 1){
+      swal("Thành Công!" , result.data.msg, "success").then((value) => { window.location.reload();})
+    }else{
+      swal("Thông báo !" , result.data.msg, "waring")
+    }
   };
 
   return (
@@ -421,7 +429,6 @@ const Room = () => {
       <Space size={20} direction="vertical">
         <div className="flex justify-around">
           <Typography.Title level={3}>QUẢN LÝ PHÒNG HOMESTAY</Typography.Title>
-
           <Button
             className="bg-primary border text-green"
             size={40}

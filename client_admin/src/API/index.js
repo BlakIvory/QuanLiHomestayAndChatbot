@@ -287,3 +287,16 @@ export const apiAddAdmin = (payload) => new Promise(async(resolve, reject)=>{
         reject(error)
     }
   })
+
+  export const apiEditRoom = (payload) => new Promise(async(resolve, reject)=>{
+    try {
+        const response = await axiosConfig({
+            method: 'post',
+            url: '/admin/editRoom',
+            data:payload,
+        })
+        resolve(response)
+    } catch (error) {
+        reject(error)
+    }
+  })

@@ -115,7 +115,7 @@ const Sector = () => {
     // Gọi apiEditSector sau khi đã cập nhật editData
     const result = await apiEditSector(editData);
     if(result.status ===200){
-      window.location.reload();
+      swal("Thành Công !","Thông báo cập nhật thông tin khu vực thành công !","success").then((value)=>{window.location.reload();});
     }
 
     setEditingRow(null);

@@ -503,3 +503,25 @@ exports.editAdmin = async (req, res, next) => {
     return next(new ApiError(500, "Xảy ra lỗi trong quá trình xóa tài khoản quản trị viên !"));
   }
 };
+
+exports.editRoom = async (req, res, next) => {
+  // console.log(req.body)
+  try{
+    const roomService = new RoomService(MongoDB.client);
+    const result = await roomService.EditRoom(req.body)
+   
+    if(result){
+      return res.status(200).json({
+        status: 1,
+        data : result,
+        msg: "Thay đổi thông tin phòng thành công !"
+      });
+    }
+    else{
+      return res.status(200).json("code lỗi");
+    }
+  } catch (error) {
+    console.log(error)
+    return next(new ApiError(500, "Xảy ra lỗi trong quá trình cật nhật thông tin phòng !"));
+  }
+};

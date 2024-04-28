@@ -115,10 +115,34 @@ class RoomService {
     console.log(availableRooms)
     return availableRooms;
   }
-  
 
-  
-  
+
+  async EditRoom(payload) {
+    const updateObject = Object.keys(payload).reduce((acc, key) => {
+      // Chỉ thêm các trường có giá trị khác rỗng vào đối tượng cập nhật
+      if (payload[key] !== "") {
+        acc[key] = payload[key];
+      }
+      return acc;
+    }, {});
+    delete updateObject._id;
+    // console.log(updateObject)
+    // Nếu updateObject không trống, tiến hành cập nhật
+    if (Object.keys(updateObject).length > 0) { 
+      const result = await this.Room.findOneAndUpdate(
+        {
+          _id: ObjectId.isValid(payload._id) ? new ObjectId(payload._id) : null,
+        },
+        { $set: updateObject },
+        { returnDocument: "after", upsert: true }
+      );
+      console.log(result)
+      return result;
+    } else {
+      // Nếu không có gì để cập nhật, có thể trả về một thông báo hoặc xử lý khác
+      throw new Error("Không có dữ liệu để cập nhật");
+    }
+  }  
 }
 
 module.exports = RoomService;

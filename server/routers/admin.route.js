@@ -48,6 +48,6 @@ router.post("/deleteSector", admins.deleteSector);
 
 router.post("/editAdmin", admins.editAdmin);
 
-
+router.post("/editRoom", admins.editRoom);
 
 module.exports = router;
