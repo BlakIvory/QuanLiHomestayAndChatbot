@@ -168,7 +168,10 @@ const AddRoomForm = (props) => {
                   placeholder="Tên phòng ..."
                 />
               </Form.Item>
-              <Form.Item label="Loại Phòng : ">
+              <Form.Item label="Loại Phòng : "
+              rules={[
+                { required: true, message: "Vui lòng nhập thông tin !" },
+              ]}>
                 <div className="flex row w-[200px]">
                   <Select
                     name="loaiRoom"
@@ -185,15 +188,14 @@ const AddRoomForm = (props) => {
                 </div>
               </Form.Item>
               <Form.Item
-               
+             
                 label="Khu vực phòng : "
-                rules={[
-                  { required: true, message: "Vui lòng nhập thông tin !" },
-                ]}
+                rules={[{ required: true, message: 'Vui lòng nhập thông tin!' }]}
               >
                 <div className="flex row w-[200px]">
                   <Select
                     name="idSectorRoom"
+                    placeholder="Chọn khu vực"
                     onChange={(option , label) => {
                         console.log(option, label)
                       setKhuvucId(option);

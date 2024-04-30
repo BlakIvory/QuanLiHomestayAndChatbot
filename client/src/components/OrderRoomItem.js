@@ -253,8 +253,7 @@ const OrderRoomItem = (props) => {
                     "Thành Công ! ",
                     "Cảm ơn quý khách đã sử dụng dịch vụ ! ",
                     "success"
-                  );
-                  window.location.reload();
+                  ).then((value) => {window.location.reload();});
                 }
                 // OPTIONAL: Call your server to save the transaction
               }}
