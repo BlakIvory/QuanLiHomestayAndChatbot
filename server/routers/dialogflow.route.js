@@ -24,60 +24,7 @@ router.post("", async (req, res) => {
   }
 
   // Hàm này sẽ liệt kê tất cả các phòng
-  // async function inTotalRoom() {
-  //   try {
-  //     const data = await dialogflow.getAllRoom();
-  //     const rooms = data.map(
-  //       (room) =>
-  //         `phòng ${room.nameRoom} - giá ${room.giaRoom}vnđ/Đêm - loại phòng : ${room.loaiRoom}.`
-  //     );
-  //     console.log(rooms)
-  //     // return res.send({
-  //     //   fulfillmentText: `Tổng cộng ở đây có hơn ${data.length} phòng bao gồm tất cả các loại phòng. Tên các phòng là: ${rooms} . Bạn đã chọn được phòng ưng ý nào ạ?`,
-  //     // });
 
-  //     return res.send({
-  //       "fulfillmentMessages": [
-  //         {
-  //           "payload": {
-  //             "richContent": [
-  //               [
-  //                 {
-  //                   "type": "list",
-  //                   "title": "List item 1 title",
-  //                   "subtitle": "List item 1 subtitle",
-  //                   "event": {
-  //                     "name": "",
-  //                     "languageCode": "",
-  //                     "parameters": {}
-  //                   }
-  //                 },
-  //                 {
-  //                   "type": "divider"
-  //                 },
-  //                 {
-  //                   "type": "list",
-  //                   "title": "List item 2 title",
-  //                   "subtitle": "List item 2 subtitle",
-  //                   "event": {
-  //                     "name": "",
-  //                     "languageCode": "",
-  //                     "parameters": {}
-  //                   }
-  //                 }
-  //               ]
-  //             ]
-  //           }
-  //         }
-  //       ]
-  //     }
-  //     );
-  //   } catch (error) {
-  //     return res.send({
-  //       fulfillmentText: "Xin lỗi, có lỗi xảy ra khi xử lý yêu cầu của bạn.",
-  //     });
-  //   }
-  // }
   async function inTotalRoom() {
     try {
       const data = await dialogflow.getAllRoom();
@@ -86,7 +33,7 @@ router.post("", async (req, res) => {
       const accordionPayload = {
         type: "accordion",
         title: `Danh sách phòng tại Homestay24h bao gồm ${data.length} phòng`,
-        subtitle: 'gõ "tôi muốn đặt phòng" để thực hiện đặt phòng',
+        subtitle: 'gõ "&lt;Tên phòng&gt;" để thực hiện đặt phòng',
       };
 
       // Tạo custom payload cho danh sách các phòng
@@ -383,26 +330,66 @@ router.post("", async (req, res) => {
 
       const data = await dialogflow.checkRoomByChatBot({ date: dateList });
       if (data.length > 0) {
-        const rooms = data.map(
-          (room) =>
-            `phòng ${
-              room.nameRoom
-            } - giá ${room.giaRoom.toLocaleString()}vnđ/Đêm - loại phòng : ${
-              room.loaiRoom
-            }.`
-        );
-        return res.send({
-          fulfillmentText: `Chúng tôi sẽ tìm phòng trống cho bạn từ ngày ${enIn} đến ngày ${enOut}, Sau đây là danh sách ${data.length} phòng trống bao gồm tên phòng và giá phòng  : ${rooms} . Vui lòng gõ "tôi muốn đặt phòng" và làm theo hướng dẫn để tiến hành đặt phòng ."`,
-        });
-      }
-      const rooms = data.map(
-        (room) =>
-          `phòng ${
-            room.nameRoom
-          } - giá ${room.giaRoom.toLocaleString()}vnđ/Đêm - loại phòng : ${
+        // const rooms = data.map(
+        //   (room) =>
+        //     `phòng ${
+        //       room.nameRoom
+        //     } - giá ${room.giaRoom.toLocaleString()}vnđ/Đêm - loại phòng : ${
+        //       room.loaiRoom
+        //     }.`
+        // );
+        const accordionPayload = {
+          type: "accordion",
+          title: "Danh sách phòng tại khu vực bạn đã chọn :",
+          subtitle: `gõ "tôi muốn đặt phòng" để thực hiện đặt phòng`,
+        };
+
+        // // Tạo custom payload cho danh sách các phòng
+        const listItemsPayload = {
+          type: "list",
+          title: "",
+          subtitle: "",
+          image : {
+            src: {
+              rawUrl: "",
+            },
+          }
+        };
+
+        // // Tạo danh sách các phòng dựa trên dữ liệu từ API
+        const listItems = data.map((room) => {
+          const listItem = { ...listItemsPayload };
+          listItem.title = `${capitalizeFirstLetter(room.nameRoom)} - ${
             room.loaiRoom
-          }.`
-      );
+          } `;
+          listItem.subtitle = `${room.giaRoom} vnđ/Đêm`;
+          listItem.image.src.rawUrl = `${room.imgRoom[0].secure_url}`
+          return listItem;
+        });
+
+        // Tạo cấu trúc rich content
+        const richContent = [
+          [accordionPayload],
+          listItems,
+          [{ type: "divider" }],
+        ];
+
+        // // Tạo message fulfillment cuối cùng
+        const fulfillmentMessage = {
+          fulfillmentMessages: [
+            {
+              payload: {
+                richContent: richContent,
+              },
+            },
+          ],
+        };
+        return res.send(fulfillmentMessage);
+        // return res.send({
+        //   fulfillmentText: `Chúng tôi sẽ tìm phòng trống cho bạn từ ngày ${enIn} đến ngày ${enOut}, Sau đây là danh sách ${data.length} phòng trống bao gồm tên phòng và giá phòng  : ${rooms} . Vui lòng gõ "tôi muốn đặt phòng" và làm theo hướng dẫn để tiến hành đặt phòng ."`,
+        // });
+      }
+
       return res.send({
         fulfillmentText: `Xin lỗi vì sự bất tiện này ! Hiện tại từ ngày ${enIn} đến ngày ${enOut} chúng tôi đã hết phòng trống . Xin cảm ơn quý khách đã tin tưởng đến với Homestay24h`,
       });
@@ -437,7 +424,6 @@ router.post("", async (req, res) => {
           fulfillmentText: `Đơn đặt phòng ${idOrder} đã được hủy thành công !`,
         });
       }
-      
     } catch (error) {
       console.error(error);
       return res.send({
@@ -452,21 +438,23 @@ router.post("", async (req, res) => {
       // console.log(parameters)
       const idOrder = parameters.EnIdOrder;
       // console.log(idOrder)
-      const data = await dialogflow.getInfoOrderRoomByChatBot({"idOrder": idOrder})
-      console.log(data)
+      const data = await dialogflow.getInfoOrderRoomByChatBot({
+        idOrder: idOrder,
+      });
+      console.log(data);
       const paymentStatus = data.pay ? "Đã thanh toán" : "Chưa thanh toán";
-      let orderStatus =""
-      if(data.statusOrder==="1"){
-        orderStatus = "Chờ xác nhận"
+      let orderStatus = "";
+      if (data.statusOrder === "1") {
+        orderStatus = "Chờ xác nhận";
       }
-      if(data.statusOrder==="2"){
-        orderStatus = "Đã xác nhận thông tin"
+      if (data.statusOrder === "2") {
+        orderStatus = "Đã xác nhận thông tin";
       }
-      if(data.statusOrder==="3"){
-        orderStatus = "Đã hoàn thành đơn"
+      if (data.statusOrder === "3") {
+        orderStatus = "Đã hoàn thành đơn";
       }
-      if(data.statusOrder==="10"){
-        orderStatus = "Đã hủy đơn"
+      if (data.statusOrder === "10") {
+        orderStatus = "Đã hủy đơn";
       }
       const fulfillmentMessage = {
         fulfillmentMessages: [
@@ -475,26 +463,28 @@ router.post("", async (req, res) => {
               richContent: [
                 [
                   {
-                    "type": "accordion",
-                    "title": "Thông Tin Đơn Đặt Phòng",
-                    "subtitle": `Mã Đơn hàng : ${data.idOrder}`,
-                    "text": [
+                    type: "accordion",
+                    title: "Thông Tin Đơn Đặt Phòng",
+                    subtitle: `Mã Đơn hàng : ${data.idOrder}`,
+                    text: [
                       `Họ và Tên : ${data.userInput}\n`,
                       `Số điện thoại : ${data.phoneInput}\n`,
                       `Ngày nhận phòng : ${data.dateInput[0]}\n`,
-                      `Ngày trả phòng : ${data.dateInput[data.dateInput.length - 1]}\n`,
+                      `Ngày trả phòng : ${
+                        data.dateInput[data.dateInput.length - 1]
+                      }\n`,
                       `Tổng tiền : ${data.totalMoney}`,
                       `Thanh toán : ${paymentStatus}`,
                       `Trạng thái đơn  : ${orderStatus}`,
                     ],
-                  }
-                ]
-              ]
+                  },
+                ],
+              ],
             },
           },
         ],
       };
-      return res.send(fulfillmentMessage) 
+      return res.send(fulfillmentMessage);
     } catch (error) {
       console.error(error);
       return res.send({

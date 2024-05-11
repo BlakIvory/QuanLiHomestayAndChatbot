@@ -1,6 +1,10 @@
 import React, { useState, useEffect } from "react";
-import { Layout, Row, Col, Avatar } from "antd";
-import { apiInfoUser, apiUpdateInfoUser } from "../../services/auth";
+import { Layout, Row, Col, Avatar, Form } from "antd";
+import {
+  apiInfoUser,
+  apiUpdateInfoUser,
+  apiChangePassword,
+} from "../../services/auth";
 import { useSelector } from "react-redux";
 import { Typography, Space, Image } from "antd";
 import { Input, Button } from "antd";
@@ -14,7 +18,9 @@ const { Text } = Typography;
 const CaNhan = () => {
   const [userInfo, setUserInfo] = useState(null);
   const { IsLoggedIn, phoneUser, idUser } = useSelector((state) => state.auth);
-
+  const [oldPassword, setOldPassword] = useState("");
+  const [newPassword, setNewPassword] = useState("");
+  const [editPassword, setEditPassword] = useState(false);
   const [editInfo, setEditInfo] = useState(false);
 
   const [Avatar, setAvatar] = useState(
@@ -79,8 +85,29 @@ const CaNhan = () => {
 
   const handleClickUpdateInfo = async () => {
     const result = await apiUpdateInfoUser(updateInfo);
-    console.log(result.data)
-    if(result.data.status==="1") swal("Thành Công !" , result.data.msg, "success").then(()=>{window.location.reload()})
+    console.log(result.data);
+    if (result.data.status === "1")
+      swal("Thành Công !", result.data.msg, "success").then(() => {
+        window.location.reload();
+      });
+    // console.log(result);
+  };
+  const handleClickUpdatePassword = async () => {
+    const result = await apiChangePassword({
+      phone: phoneUser,
+      oldPassword: oldPassword,
+      newPassword: newPassword,
+    });
+    console.log(result.data);
+    if (result.data.err === 0)
+      swal("Thành Công !", result.data.msg, "success").then(() => {
+        window.location.reload();
+      })
+    else{
+      swal("Thông báo !", result.data.msg, "warning").then(() => {
+        window.location.reload();
+      })
+    }
     // console.log(result);
   };
 
@@ -268,40 +295,107 @@ const CaNhan = () => {
               className="mt-2 mb-2"
               style={{ height: "2px", backgroundColor: "gray" }}
             />
-            
-            {editInfo ?
-            <div>
-              <Button
-            className="ml-4"
-        
-            onClick={() => {
-              handleClickUpdateInfo();
-              setEditInfo((prev) => !prev);
-            }}
-          >
-            Lưu
-          </Button>
-          <Button
-            className="ml-4"
-            danger
-            onClick={() => {
-              
-              setEditInfo((prev) => !prev);
-            }}
-          >
-            Hủy
-          </Button>
-            </div>
-            :<Button
-            className="bg-blue-300"
-            onClick={() => {
-              setEditInfo((prev) => !prev);
-             
-            }}
-          >
-            Cập nhật thông tin
-          </Button>
-          }
+
+            <Row gutter={16}>
+              <Col span={12}>
+                {editInfo ? (
+                  <div>
+                    <Button
+                      className="ml-4"
+                      onClick={() => {
+                        handleClickUpdateInfo();
+                        setEditInfo((prev) => !prev);
+                      }}
+                    >
+                      Lưu
+                    </Button>
+                    <Button
+                      className="ml-4"
+                      danger
+                      onClick={() => {
+                        setEditInfo((prev) => !prev);
+                      }}
+                    >
+                      Hủy
+                    </Button>
+                  </div>
+                ) : (
+                  <Button
+                    className="bg-blue-300"
+                    onClick={() => {
+                      setEditInfo((prev) => !prev);
+                    }}
+                  >
+                    Cập nhật thông tin
+                  </Button>
+                )}
+              </Col>
+              <Col span={12}>
+                {!editPassword && (
+                  <Button
+                    className="bg-blue-300"
+                    onClick={() => {
+                      setEditPassword((prev) => !prev);
+                      console.log(editPassword);
+                    }}
+                  >
+                    Cập nhật mật khẩu
+                  </Button>
+                )}
+                {editPassword && (
+                  <Form onFinish={handleClickUpdatePassword}>
+                    <Form.Item
+                      name="oldPassword"
+                      rules={[
+                        {
+                          required: true,
+                          message: "Vui lòng nhập mật khẩu hiện tại!",
+                        },
+                      ]}
+                      label="Mật khẩu cũ : "
+                    >
+                      <Input placeholder="Vui lòng nhập họ và tên ..." onChange={(e)=>{ 
+                        // console.log(e) 
+                        setOldPassword(e.target.value)}} />
+                    </Form.Item>
+                    <Form.Item
+                      name="newPassword"
+                      rules={[
+                        {
+                          required: true,
+                          message: "Vui lòng nhập mật khẩu mới!",
+                        },
+                        {
+                          min: 8,
+                          message: "Mật khẩu phải có ít nhất 8 ký tự!",
+                        },
+                      ]}
+                      label="Mật khẩu mới : "
+                    >
+                      <Input placeholder="Vui lòng nhập mật khẩu mới..." onChange={(e)=>{setNewPassword(e.target.value)}} />
+                    </Form.Item>
+                    <Form.Item className="flex justify-center items-center gap-10  ">
+                      <Button
+                        type="danger"
+                        htmlType="submit"
+                        className="bg-blue-300"
+                      >
+                        Đổi mật khẩu
+                      </Button>
+                      <Button
+                        className="ml-4"
+                        danger
+                        onClick={() => {
+                          setEditPassword((prev) => !prev);
+                        }}
+                      >
+                        Hủy
+                      </Button>
+                    </Form.Item>
+                  </Form>
+                )}
+              </Col>
+            </Row>
           </Col>
         </Row>
       </Content>

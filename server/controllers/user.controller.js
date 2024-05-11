@@ -60,7 +60,7 @@ exports.login = async (req, res, next) => {
       
       const result = {
         err : isCorrect ? 0 : 2,
-        msg : isCorrect ? "Đăng nhập thành công !" : "Sai mật Khẩu",
+        msg : isCorrect ? "Đăng nhập thành công !" : "Nhập sai tài khoản hoặc mật Khẩu!",
         User : isRegisted[0],
         token : token || null,
       }
@@ -73,6 +73,52 @@ exports.login = async (req, res, next) => {
     return next(new ApiError(500, "Xảy ra lỗi trong quá trình đăng nhập vào hệ thống !"));
   }
 };
+
+exports.changePassword = async (req, res, next) => {
+  const { phone, oldPassword, newPassword } = req.body;
+  console.log(req.body)
+  try {
+    if (!oldPassword || !newPassword || !phone) {
+      return res.status(200).json({ err: 1, msg: "Thông tin không được để trống!" });
+    }
+    const userService = new UserService(MongoDB.client);
+    const registeredUser = await userService.check({ "phone": phone });
+    // console.log(registeredUser[0])
+    if (!registeredUser[0]) {
+      return res.status(200).json({
+        err: -1,
+        msg: "Tài khoản không tồn tại!"
+      });
+    } else {
+      const isCorrect = bcrypt.compareSync(oldPassword, registeredUser[0].password)
+      // console.log(isCorrect)
+      if (isCorrect) {
+        // Tiến hành cập nhật mật khẩu mới tại đây
+        const updateResult = await userService.updatePassword(req.body);
+        if (updateResult) {
+          return res.status(200).json({
+            err: 0,
+            msg: "Thay đổi mật khẩu thành công!"
+          });
+        } else {
+          return res.status(200).json({
+            err: -1,
+            msg: "Không thể cập nhật mật khẩu!"
+          });
+        }
+      } else {
+        return res.status(200).json({
+          err: -1,
+          msg: "Sai mật khẩu cũ!"
+        });
+      }
+    }
+  } catch (error) {
+    console.log(error);
+    return next(new ApiError(500, "Xảy ra lỗi trong quá trình thay đổi mật khẩu!"));
+  }
+};
+
 
 exports.infoUser = async (req, res, next) => {
   // console.log(req)

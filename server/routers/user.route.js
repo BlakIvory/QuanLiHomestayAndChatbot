@@ -28,4 +28,5 @@ router.post("/updateInfoUser", users.UpdateInfoUser);
 
 router.get("/getAllSector", users.getAllSector);
 
+router.post('/changePassword', users.changePassword);
 module.exports = router;

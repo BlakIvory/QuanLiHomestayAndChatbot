@@ -267,8 +267,36 @@ class UserService {
     }
   }
   
-  
-   
+  async DeleteUserById(payload) {
+    console.log('Deleting user with id:', payload.idAdmin);
+    if (!ObjectId.isValid(payload.idAdmin)) {
+      return null; // hoặc xử lý lỗi tương ứng
+    }
+    try {
+      const result = await this.User.findOneAndDelete({
+        _id: new ObjectId(payload.idAdmin)
+      });
+      return result;
+    } catch (error) {
+      console.log(error);
+    }
+  }
+  async updatePassword(payload) {
+   console.log(payload)
+    try {
+      // Mã hóa mật khẩu mới
+    const hashedNewPassword = bcrypt.hashSync(payload.newPassword, bcrypt.genSaltSync());
+    // Cập nhật mật khẩu trong cơ sở dữ liệu
+    const result = await this.User.findOneAndUpdate(
+      { phone: payload.phone },
+      { $set: { password: hashedNewPassword } },
+      { returnDocument: "after" }
+    );
+    return result;
+    } catch (error) {
+      console.log(error);
+    }
+  }
   
 
 

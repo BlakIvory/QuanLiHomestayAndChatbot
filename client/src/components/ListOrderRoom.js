@@ -16,13 +16,19 @@ const ListOrderRoom = (props) => {
   
   return (
     <div>
-      {dataOrder.map((order,index)=>
+      {dataOrder.length === 0 &&
+      <div className='h-[400px] w-full p-[20px] flex justify-center items-center font-semibold text-4xl'>
+        Hiện tại, bạn chưa có đơn đặt phòng nào!
+      </div>
+      }
+      {dataOrder && dataOrder.map((order,index)=>
       (
       <div className='' key={order.idRoom + '-' + index }>
         <OrderRoomItem order={order}  />
-        </div>
+      </div>
       )
       )}
+      {}
     </div>
   )
 }

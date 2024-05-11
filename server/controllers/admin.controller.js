@@ -525,3 +525,21 @@ exports.editRoom = async (req, res, next) => {
     return next(new ApiError(500, "Xảy ra lỗi trong quá trình cật nhật thông tin phòng !"));
   }
 };
+
+
+exports.deleteCustomer = async (req, res, next) => {
+
+  // console.log(req.body)
+  try{
+
+    const userService = new UserService(MongoDB.client);
+    const data = await userService.DeleteUserById(req.body)
+    const result = {
+      status : 1,
+    }
+    return res.send(result)
+  } catch (error) {
+    // console.log(error)
+    return next(new ApiError(500, "Xảy ra lỗi trong truy xuat Khu vực!"));
+  }
+};

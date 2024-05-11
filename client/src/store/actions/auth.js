@@ -22,7 +22,7 @@ export const register = (payload) => async (dispatch) => {
                 
             })
         }else{
-            swal('Thông Báo !', response.data.msg, 'warning') 
+            swal('Thông Báo !', response.data.msg, 'warning').then((value) =>{window.location.reload()})
             dispatch({
                 type: actionTypes.REGISTER_FAIL,
                 data: response.data.msg
@@ -40,7 +40,7 @@ export const register = (payload) => async (dispatch) => {
 export const login = (payload) => async (dispatch) => {
     try {
         const response = await apiLogin(payload)
-        console.log(response.data.User)
+        console.log(response.data)
         if(response?.data.err === 0) 
         {  
             //  console.log(response.data)
@@ -51,6 +51,7 @@ export const login = (payload) => async (dispatch) => {
                 }
             })
         }else{
+            swal("Thông Báo !",response.data.msg,"warning").then((value) =>{window.location.reload()})
             dispatch({
                 type: actionTypes.LOGIN_FAIL,
                 data: response.data.msg

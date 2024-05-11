@@ -57,6 +57,22 @@ export const apiUpdateInfoUser = (payload) => new Promise(async(resolve, reject)
     }
 })
 
+export const apiChangePassword= (payload) => new Promise(async(resolve, reject)=>{
+    try {
+        // console.log(payload)
+        const response = await axiosConfig({
+            method: 'post',
+            url: '/user/changePassword',
+            data: payload
+        })
+        resolve(response)
+    } catch (error) {
+        reject(error)
+    }
+})
+
+
+
 
 
 

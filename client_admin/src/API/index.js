@@ -300,3 +300,20 @@ export const apiAddAdmin = (payload) => new Promise(async(resolve, reject)=>{
         reject(error)
     }
   })
+
+  export const apiDeleteCustomer = (payload) => new Promise(async(resolve, reject)=>{
+    try {
+        // console.log(payload)
+        const input = {
+            "idAdmin": payload._id
+        }
+        const response = await axiosConfig({
+            method: 'post',
+            url: '/admin/deleteCustomer',
+            data: input,
+        })
+        resolve(response)
+    } catch (error) {
+        reject(error)
+    }
+  })

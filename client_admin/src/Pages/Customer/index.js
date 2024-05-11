@@ -1,9 +1,9 @@
 import React, { useEffect, useState, useRef } from 'react'
-import { Avatar, Rate, Space, Table, Typography, Button, Input, } from 'antd'
-import { getCustomer, getInventory, getOrders, apiGetAllUser } from '../../api'
-import { SearchOutlined } from '@ant-design/icons';
+import { Space, Table, Typography, Button, Input, Popconfirm} from 'antd'
+import { apiGetAllUser, apiDeleteCustomer } from '../../api'
+import { SearchOutlined,  DeleteOutlined, } from '@ant-design/icons';
 import Highlighter from 'react-highlight-words';
-
+import swal from "sweetalert";
 
 const Customer = () => {
   const [loading, setLoading] = useState(false)
@@ -178,8 +178,46 @@ const Customer = () => {
               //   return <span>{a.address},{a.city}</span>
               // }
             },
-
-          ]}
+            {
+              title: 'Xử lí',
+              dataIndex: 'address',
+              render: (_, record) => {
+                return (
+                  <div className="flex">
+                 
+                    <Popconfirm
+                      okType="danger"
+                      //  okButtonProps={{ style: {  backgroundColor: 'red'  }}}
+                      title="Bạn có chắc chắn muốn xóa không?"
+                      onConfirm={async () => {
+                        console.log(record);
+                        const result = await apiDeleteCustomer({ _id: record._id });
+                        console.log(result);
+                        if (result.data.status === 1) {
+                          swal("Thành Công !", "Xóa thông tin khách hàng thành công !", "success").then((value) => {
+                            window.location.reload();
+                          });;
+                        } else {
+                          swal("Thông báo !","Xóa thông tin khách hàng không thành công !" , "warning");
+                        }
+                      }}
+                      onCancel={() => {
+                        console.log("Hủy bỏ thao tác xóa");
+                      }}
+                      okText="Có"
+                      cancelText="Không"
+                    >
+                      <DeleteOutlined
+                        className="m-1 flex items-center justify-center"
+                        style={{ fontSize: "20px", color: "red" }}
+                      />
+                    </Popconfirm>
+                  </div>
+                );
+              }
+            }
+          ]
+        }
           dataSource={dataSource}
           pagination={{
             pageSize: 6

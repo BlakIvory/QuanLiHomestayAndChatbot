@@ -50,4 +50,8 @@ router.post("/editAdmin", admins.editAdmin);
 
 router.post("/editRoom", admins.editRoom);
 
+router.post('/deleteCustomer', admins.deleteCustomer);
+
+
+
 module.exports = router;

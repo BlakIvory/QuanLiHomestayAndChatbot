@@ -87,7 +87,7 @@ const Login = () => {
           />
         </div >
         <div className=' m-2 '> Bạn chưa có tài khoản ? 
-          <small className='text-[blue] hover:underline hover:text-[orange] cursor-pointer'>
+          <small className='text-[blue] hover:underline hover:text-[orange] cursor-pointer ml-2'>
              <Link to="/register">Tạo tài khoản mới !</Link>
           </small>
         </div>

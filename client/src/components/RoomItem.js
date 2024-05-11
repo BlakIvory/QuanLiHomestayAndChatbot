@@ -174,7 +174,7 @@ const RoomItem = (props) => {
             <div className="text-sm">{rate}</div>
             <div className="text-sm">{cmtRoom.length} Nhận Xét</div>
           </div>
-          <div className="totalImg">{danhgiaRoom}</div>
+          {/* <div className="totalImg">{danhgiaRoom}</div> */}
         </div>
         <div className="giaRoom  mt-16">{giaRoom.toLocaleString()} vnđ</div>
       </div>

@@ -164,7 +164,7 @@ const Register = () => {
         </div>
         <div className=" m-2 ">
           Bạn đã có tài khoản ?
-          <small className="text-[blue] hover:underline hover:text-[orange] cursor-pointer">
+          <small className="text-[blue] hover:underline hover:text-[orange] cursor-pointer ml-2">
             <Link to="/login"> Đăng Nhập ngay !</Link>
           </small>
         </div>
