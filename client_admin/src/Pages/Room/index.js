@@ -412,12 +412,16 @@ const Room = () => {
     setEditData({...editData, _id: record._id});
   };
   const handleSaveClick = async(record) => {
-    const result = await apiEditRoom(editData)
+    if(editData){
+      const result = await apiEditRoom(editData)
+      console.log(result)
     if(result.data.status === 1){
       swal("Thành Công!" , result.data.msg, "success").then((value) => { window.location.reload();})
     }else{
-      swal("Thông báo !" , result.data.msg, "waring")
+      swal("Thông báo !" , result.data.msg, "warning").then((value) => { window.location.reload();})
     }
+    }
+    
   };
 
   return (

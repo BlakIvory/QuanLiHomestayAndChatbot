@@ -518,7 +518,11 @@ exports.editRoom = async (req, res, next) => {
       });
     }
     else{
-      return res.status(200).json("code lỗi");
+      return res.status(200).json({
+        status: 0,
+        data : result,
+        msg: "Thay đổi thông tin phòng không thành công !"
+      });
     }
   } catch (error) {
     console.log(error)

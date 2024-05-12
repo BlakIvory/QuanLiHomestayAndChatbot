@@ -126,7 +126,7 @@ class RoomService {
       return acc;
     }, {});
     delete updateObject._id;
-    // console.log(updateObject)
+  
     // Nếu updateObject không trống, tiến hành cập nhật
     if (Object.keys(updateObject).length > 0) { 
       const result = await this.Room.findOneAndUpdate(
@@ -136,13 +136,15 @@ class RoomService {
         { $set: updateObject },
         { returnDocument: "after", upsert: true }
       );
-      console.log(result)
+      console.log(result);
       return result;
     } else {
-      // Nếu không có gì để cập nhật, có thể trả về một thông báo hoặc xử lý khác
-      throw new Error("Không có dữ liệu để cập nhật");
+      console.log("Không có giá trị nào khác rỗng để cập nhật.");
+      return null;
     }
   }  
+
+
 }
 
 module.exports = RoomService;
